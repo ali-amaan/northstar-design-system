@@ -1,0 +1,8 @@
+Northstar design system
+Code: MIT (see LICENSE). Fonts in packages/fonts: SIL Open Font License 1.1.
+
+Third-party data:
+- Natural Earth 1:50m admin-0 — public domain
+- world-atlas 2.0.2 — ISC
+- i18n-iso-countries 7.14.0 — MIT
+- Unicode CLDR 47 — Unicode License v3
