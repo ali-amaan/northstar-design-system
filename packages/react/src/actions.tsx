@@ -2,6 +2,7 @@
 import { useNorthstar, type Material } from './provider.js';
 import { usePointerTracking } from './internal/interaction.js';
 import { cx, mergeRefs, type Size, type Tone } from './internal/util.js';
+import { rovingKeyDown } from './internal/layers.js';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -16,7 +17,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   success?: boolean;
   /** Accessible text added while `success` is set. Default "Done". */
   successLabel?: string;
-  /** `glass` gives secondary and ghost buttons the translucent material. Default `solid`. */
+  /** `glass` gives secondary and ghost buttons the liquid-glass material. Default `solid`. */
   material?: Material;
   /** Leans toward the pointer by a few pixels and springs back. Pointer only; off under reduced motion. */
   magnetic?: boolean;
@@ -94,14 +95,77 @@ export interface IconButtonProps extends Omit<ButtonProps, 'children'> {
   /** Required accessible name. */
   label: string;
   icon: React.ReactNode;
+  /**
+   * Icon-led: `true` shows the icon and, on hover and keyboard focus, eases
+   * open to reveal the full label (never truncated). `always` keeps the label
+   * shown. Default false: icon only, with the label as a native tooltip.
+   */
+  expand?: boolean | 'always';
 }
 
-export function IconButton({ label, icon, className, title, ...rest }: IconButtonProps) {
+export function IconButton({ label, icon, expand = false, className, title, ...rest }: IconButtonProps) {
+  if (expand) {
+    return (
+      <Button {...rest} title={title} className={cx('ns-icon-button', 'ns-icon-button--expand', expand === 'always' && 'ns-icon-button--open', className)}>
+        <span className="ns-icon-button__icon" aria-hidden="true">
+          {icon}
+        </span>
+        <RevealLabel>{label}</RevealLabel>
+      </Button>
+    );
+  }
   return (
     <Button {...rest} aria-label={label} title={title ?? label} className={cx('ns-icon-button', className)}>
       {icon}
     </Button>
   );
+}
+
+/**
+ * A label that is collapsed to zero width and eases open (grid 0fr → 1fr) when
+ * an ancestor control is hovered or focused, so the whole text shows and
+ * nothing is cut with an ellipsis. It stays in the accessibility tree.
+ */
+export function RevealLabel({ className, children, ...rest }: React.HTMLAttributes<HTMLSpanElement>) {
+  return (
+    <span {...rest} className={cx('ns-reveal-label', className)}>
+      <span className="ns-reveal-label__inner">{children}</span>
+    </span>
+  );
+}
+
+export interface ToolbarProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Required accessible name. */
+  label: string;
+  orientation?: 'horizontal' | 'vertical';
+  /** Sits on liquid glass, floating. Default false. */
+  glass?: boolean;
+}
+
+/** A toolbar of icon-led items: arrow keys move between them, Home and End jump. */
+export function Toolbar({ label, orientation = 'horizontal', glass = false, className, onKeyDown, ...rest }: ToolbarProps) {
+  return (
+    <div
+      role="toolbar"
+      aria-label={label}
+      aria-orientation={orientation}
+      {...rest}
+      className={cx('ns-toolbar', `ns-toolbar--${orientation}`, glass && 'ns-liquid ns-liquid--sm ns-liquid--floating ns-liquid--tint-subtle', className)}
+      onKeyDown={(e) => {
+        onKeyDown?.(e);
+        rovingKeyDown(e, '.ns-toolbar__item', orientation);
+      }}
+    />
+  );
+}
+
+export interface ToolbarItemProps extends Omit<IconButtonProps, 'expand'> {
+  /** Default true: the label reveals on hover and focus. */
+  expand?: boolean | 'always';
+}
+
+export function ToolbarItem({ expand = true, variant = 'ghost', className, ...rest }: ToolbarItemProps) {
+  return <IconButton {...rest} expand={expand} variant={variant} className={cx('ns-toolbar__item', className)} />;
 }
 
 export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {

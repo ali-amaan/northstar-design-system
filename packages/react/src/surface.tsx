@@ -9,7 +9,7 @@ import { cx, mergeRefs } from './internal/util.js';
 type SurfaceTag = 'div' | 'section' | 'article' | 'aside' | 'header' | 'footer' | 'nav' | 'li';
 
 export interface SurfaceProps extends React.HTMLAttributes<HTMLElement> {
-  /** `glass` (default) is translucent with blur, rim and specular sheen; `solid` is opaque. */
+  /** `glass` (default) is liquid glass: refraction at the rim, specular and rim light; `solid` is opaque. */
   material?: Material;
   /** Specular highlight follows the pointer. */
   reactive?: boolean;
@@ -21,10 +21,11 @@ export interface SurfaceProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 /**
- * The glass primitive. A layered material: fill, glacier tint, backdrop blur
- * and saturation, a specular rim on the top edge and a soft sheen. Falls back
- * to the opaque `material.solid` when transparency is reduced, in forced
- * colours, and where backdrop-filter is unsupported.
+ * The material primitive. `glass` is liquid glass (see LiquidGlass): the
+ * backdrop refracts at the rim on Chromium, blur and specular elsewhere. Falls
+ * back to the opaque `material.solid` when transparency is reduced, in forced
+ * colours, and where backdrop-filter is unsupported. Borderless by default:
+ * separation comes from tone, shadow and the rim light.
  */
 export function Surface({ material = 'glass', reactive = false, depth = 2, radius = 12, as: Tag = 'div', className, ref, ...rest }: SurfaceProps) {
   const track = usePointerTracking<HTMLElement>(reactive);
@@ -35,6 +36,11 @@ export function Surface({ material = 'glass', reactive = false, depth = 2, radiu
       className={cx('ns-surface', `ns-material--${material}`, `ns-depth-${depth}`, `ns-radius-${radius}`, reactive && 'ns-reactive', className)}
     />
   );
+}
+
+/** Wraps secondary actions so they ease in when the enclosing card, row or list item is hovered or holds focus. */
+export function HoverActions({ className, ...rest }: React.HTMLAttributes<HTMLSpanElement>) {
+  return <span {...rest} className={cx('ns-hover-actions', className)} />;
 }
 
 /* ------------------------------------------------------------------- Card */
@@ -52,6 +58,8 @@ export interface CardProps extends Omit<React.HTMLAttributes<HTMLElement>, 'titl
   description?: React.ReactNode;
   /** Shown at the end of the header row. */
   actions?: React.ReactNode;
+  /** Secondary actions that ease in on hover and focus-within (always shown on touch). */
+  revealActions?: boolean;
   footer?: React.ReactNode;
   as?: 'div' | 'section' | 'article' | 'li';
   ref?: React.Ref<HTMLElement>;
@@ -64,6 +72,7 @@ export function Card({
   title,
   description,
   actions,
+  revealActions = false,
   footer,
   as: Tag = 'div',
   className,
@@ -93,7 +102,7 @@ export function Card({
             {title && <h3 className="ns-card__title">{title}</h3>}
             {description && <p className="ns-card__description">{description}</p>}
           </div>
-          {actions && <div className="ns-card__actions">{actions}</div>}
+          {actions && <div className={cx('ns-card__actions', revealActions && 'ns-hover-actions')}>{actions}</div>}
         </div>
       )}
       {children !== undefined && children !== null && <div className="ns-card__body">{children}</div>}

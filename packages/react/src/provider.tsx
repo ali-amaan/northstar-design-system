@@ -2,13 +2,14 @@
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { cx } from './internal/util.js';
+import { useLiquidDefs } from './glass.js';
 
 const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 export type ThemeSetting = 'night' | 'day' | 'system';
 export type ResolvedTheme = 'night' | 'day';
 export type Density = 'compact' | 'default' | 'comfortable';
-/** Surface material. `glass` is translucent with a backdrop blur; it falls back to solid on its own. */
+/** Surface material. `glass` is liquid glass (refraction on Chromium, blur and specular elsewhere); it falls back to solid on its own. */
 export type Material = 'solid' | 'glass';
 
 /** Every user-visible string the basic components render. English is the default. */
@@ -30,6 +31,13 @@ export interface Messages {
   notifications: string;
   remove: (label: string) => string;
   sidebar: string;
+  flowSteps: string;
+  flowProgress: string;
+  flowComplete: string;
+  step: (n: number, total: number) => string;
+  flowNext: (step: string) => string;
+  flowBack: string;
+  flowFinish: string;
 }
 
 export const en: Messages = {
@@ -50,6 +58,13 @@ export const en: Messages = {
   notifications: 'Notifications',
   remove: (label) => `Remove ${label}`,
   sidebar: 'Sidebar',
+  flowSteps: 'Steps',
+  flowProgress: 'Progress',
+  flowComplete: 'complete',
+  step: (n, total) => `Step ${n} of ${total}`,
+  flowNext: (step) => `Continue to ${step}`,
+  flowBack: 'Back',
+  flowFinish: 'Finish',
 };
 
 export interface NorthstarContextValue {
@@ -86,6 +101,8 @@ export interface NorthstarProviderProps extends Omit<React.HTMLAttributes<HTMLDi
   material?: Material;
   /** Also write data-theme/data-density on <html> (for full-page apps). */
   applyToDocument?: boolean;
+  /** Insert the shared liquid-glass filter defs (once per document). Default true. */
+  liquidGlass?: boolean;
   onThemeChange?: (theme: ThemeSetting) => void;
   children?: React.ReactNode;
 }
@@ -106,6 +123,7 @@ export function NorthstarProvider({
   messages,
   material = 'solid',
   applyToDocument = false,
+  liquidGlass = true,
   onThemeChange,
   className,
   children,
@@ -114,6 +132,7 @@ export function NorthstarProvider({
   const [theme, setThemeState] = useState<ThemeSetting>(themeProp);
   useEffect(() => setThemeState(themeProp), [themeProp]);
   const [system, setSystem] = useState<ResolvedTheme | null>(null);
+  useLiquidDefs(liquidGlass);
 
   useEffect(() => {
     if (theme !== 'system' || typeof window === 'undefined' || !window.matchMedia) return;

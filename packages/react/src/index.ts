@@ -1,12 +1,18 @@
 export { NorthstarProvider, useNorthstar, Portal, en } from './provider.js';
 export type { NorthstarProviderProps, NorthstarContextValue, Messages, ThemeSetting, ResolvedTheme, Density, Material } from './provider.js';
 
-export { Surface, Card, Panel } from './surface.js';
+export { Surface, Card, Panel, HoverActions } from './surface.js';
+export { LiquidGlass, LiquidFilter, displacementMap, useLiquidDefs, LIQUID } from './glass.js';
+export type { LiquidGlassProps, LiquidSize } from './glass.js';
+export { FlowSteps, FlowStep, NextAction, Flow, useFlow } from './flow.js';
+export type { FlowStepsProps, FlowStepProps, NextActionProps } from './flow.js';
+export { Reveal, withViewTransition, useViewTransition, canViewTransition, prefersReducedMotion } from './motion.js';
+export type { RevealProps } from './motion.js';
 export type { SurfaceProps, CardProps, CardVariant, PanelProps } from './surface.js';
 export type { Size, Tone } from './internal/util.js';
 
-export { Button, IconButton, Link, ButtonGroup } from './actions.js';
-export type { ButtonProps, ButtonVariant, IconButtonProps, LinkProps, ButtonGroupProps } from './actions.js';
+export { Button, IconButton, RevealLabel, Toolbar, ToolbarItem, Link, ButtonGroup } from './actions.js';
+export type { ButtonProps, ButtonVariant, IconButtonProps, ToolbarProps, ToolbarItemProps, LinkProps, ButtonGroupProps } from './actions.js';
 
 export { Field, useFieldProps, Input, Textarea, Select, Combobox, Checkbox, RadioGroup, Radio, Switch, Slider, NumberInput, SearchInput } from './forms.js';
 export type {

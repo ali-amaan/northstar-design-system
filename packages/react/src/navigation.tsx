@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useId, useLayoutEffect, useRef } 
 import type { Material } from './provider.js';
 import { useNorthstar } from './provider.js';
 import { rovingKeyDown } from './internal/layers.js';
+import { withViewTransition } from './motion.js';
 import { cx, useControllable } from './internal/util.js';
 import { ChevronLeft, ChevronRight } from './internal/icons.js';
 
@@ -33,14 +34,22 @@ export interface TabsRootProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   orientation?: 'horizontal' | 'vertical';
   /** How the selected tab is marked. Default `line`. */
   indicator?: TabsIndicator;
+  /** Cross-fade panels with the View Transitions API where supported. Default false. */
+  transition?: boolean;
 }
 
-function TabsRoot({ value, defaultValue, onValueChange, orientation = 'horizontal', indicator = 'line', className, ...rest }: TabsRootProps) {
-  const [v, setV] = useControllable(value, defaultValue ?? '', onValueChange);
+function TabsRoot({ value, defaultValue, onValueChange, orientation = 'horizontal', indicator = 'line', transition = false, className, ...rest }: TabsRootProps) {
+  const [v, setRaw] = useControllable(value, defaultValue ?? '', onValueChange);
+  const root = useRef<HTMLDivElement>(null);
+  const setV = (next: string) => {
+    if (next === v) return;
+    if (transition) withViewTransition(() => setRaw(next), root.current?.querySelector<HTMLElement>(':scope > .ns-tabs__content, :scope .ns-tabs__content'));
+    else setRaw(next);
+  };
   const baseId = `ns-tabs-${useId().replace(/:/g, '')}`;
   return (
     <TabsContext.Provider value={{ value: v, setValue: setV, baseId, orientation, indicator }}>
-      <div {...rest} className={cx('ns-tabs', `ns-tabs--${orientation}`, indicator !== 'line' && 'ns-tabs--pill', indicator === 'glass' && 'ns-tabs--glass', className)} />
+      <div {...rest} ref={root} className={cx('ns-tabs', `ns-tabs--${orientation}`, transition && 'ns-tabs--vt', indicator !== 'line' && 'ns-tabs--pill', indicator === 'glass' && 'ns-tabs--glass', className)} />
     </TabsContext.Provider>
   );
 }
@@ -262,14 +271,16 @@ export function Pagination({ pageCount, page, defaultPage, onPageChange, sibling
 
 export interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
   label?: string;
+  /** Icon rail: items show their icon and the rail eases open to full labels on hover and focus. */
+  collapsed?: boolean;
   header?: React.ReactNode;
   footer?: React.ReactNode;
 }
 
-export function Sidebar({ label, header, footer, className, children, ...rest }: SidebarProps) {
+export function Sidebar({ label, collapsed = false, header, footer, className, children, ...rest }: SidebarProps) {
   const { messages } = useNorthstar();
   return (
-    <nav aria-label={label ?? messages.sidebar} {...rest} className={cx('ns-sidebar', className)}>
+    <nav aria-label={label ?? messages.sidebar} {...rest} className={cx('ns-sidebar', collapsed && 'ns-sidebar--collapsed', className)}>
       {header && <div className="ns-sidebar__header">{header}</div>}
       <div className="ns-sidebar__body">{children}</div>
       {footer && <div className="ns-sidebar__footer">{footer}</div>}
@@ -311,7 +322,9 @@ export function SidebarItem({ icon, active = false, meta, className, children, .
             {icon}
           </span>
         )}
-        <span className="ns-sidebar__text">{children}</span>
+        <span className="ns-sidebar__text ns-reveal-label">
+          <span className="ns-reveal-label__inner">{children}</span>
+        </span>
         {meta !== undefined && <span className="ns-sidebar__meta">{meta}</span>}
       </a>
     </li>

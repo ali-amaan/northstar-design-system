@@ -18,7 +18,7 @@ const decls = (list, indent = "  ") =>
   list.map((t) => `${indent}${t.name}: ${t.value};`).join("\n");
 const durations = night.scales.filter((t) => t.type === "duration");
 // Glass fills that become the opaque solid when the user asks for less transparency.
-const glass = night.semantic.filter((t) => t.path === "material.glass.fill" || t.path === "material.glass.tint");
+const glass = night.semantic.filter((t) => ["material.glass.fill", "material.glass.tint", "material.liquid.tint"].includes(t.path));
 
 // ---- tokens.css
 const css = `/* @northstar-js/tokens — generated from src/*.json. Do not edit. */

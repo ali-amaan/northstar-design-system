@@ -48,6 +48,13 @@ const MATERIAL_ROLES = [
   "material.glow",
   "material.spotlight",
   "material.shadow",
+  "material.hairline",
+  "material.liquid.tint",
+  "material.liquid.highlight",
+  "material.liquid.rim",
+  "material.liquid.rim-low",
+  "material.liquid.inner",
+  "material.liquid.shadow",
 ];
 
 /** SPEC §3.2, verbatim. */
@@ -179,5 +186,14 @@ describe("layers", () => {
         /^cubic-bezier\(/,
       );
     }
+  });
+});
+
+describe("liquid glass and motion scales", () => {
+  it("defines refraction presets and the long, soft motion steps", () => {
+    const s = tokens.scales as Record<string, unknown>;
+    expect(Number(s["material.liquid.scale.sm"])).toBeLessThan(Number(s["material.liquid.scale.md"]));
+    expect(Number(s["material.liquid.scale.md"])).toBeLessThan(Number(s["material.liquid.scale.lg"]));
+    for (const k of ["motion.duration.micro", "motion.duration.layout", "motion.duration.reveal", "motion.duration.stagger", "motion.easing.glide", "motion.spring.layout"]) expect(s[k], k).toBeDefined();
   });
 });

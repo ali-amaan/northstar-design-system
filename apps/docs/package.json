@@ -11,6 +11,7 @@
   "dependencies": {
     "@northstar-js/contracts": "workspace:*",
     "@northstar-js/fonts": "workspace:*",
+    "@northstar-js/icons": "workspace:*",
     "@northstar-js/react": "workspace:*",
     "@northstar-js/tokens": "workspace:*",
     "react": "19.1.0",

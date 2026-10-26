@@ -54,7 +54,7 @@
     "$description": "Glass: translucent layered fill, rim highlight, specular sheen and a glacier glow. Components fall back to material.solid when transparency is reduced or backdrop-filter is unsupported.",
     "glass": {
       "$type": "color",
-      "fill": { "$value": "rgba(20, 22, 27, 0.62)" },
+      "fill": { "$value": "rgba(20, 22, 27, 0.4)" },
       "tint": { "$value": "rgba(147, 180, 224, 0.06)", "$description": "Glacier tint layered over the fill." },
       "edge": { "$value": "rgba(232, 234, 238, 0.12)", "$description": "Hairline border of a glass layer." },
       "rim": { "$value": "rgba(255, 255, 255, 0.16)", "$description": "Specular rim on the top edge." },
@@ -63,6 +63,16 @@
     "solid": { "$type": "color", "$value": "{night.2}", "$description": "Opaque fallback for glass." },
     "glow": { "$type": "color", "$value": "{glacier.alpha-35}", "$description": "Glacier glow around focused and pressed controls." },
     "spotlight": { "$type": "color", "$value": "rgba(147, 180, 224, 0.16)", "$description": "Pointer-tracked spotlight wash." },
-    "shadow": { "$type": "shadow", "$value": "0 24px 48px -12px rgba(0, 0, 0, 0.6)" }
+    "shadow": { "$type": "shadow", "$value": "0 24px 48px -12px rgba(0, 0, 0, 0.6)" },
+    "hairline": { "$type": "color", "$value": "rgba(232, 234, 238, 0.06)", "$description": "The only border a borderless surface keeps, where separation needs it." },
+    "liquid": {
+      "$description": "Liquid glass layers: glacier tint, specular highlight, rim, inner glow and drop shadow.",
+      "tint": { "$type": "color", "$value": "rgba(147, 180, 224, 0.05)" },
+      "highlight": { "$type": "other", "$value": "radial-gradient(120% 80% at 18% 0%, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 55%)" },
+      "rim": { "$type": "color", "$value": "rgba(255, 255, 255, 0.22)" },
+      "rim-low": { "$type": "color", "$value": "rgba(255, 255, 255, 0.06)", "$description": "Lower rim and hairline." },
+      "inner": { "$type": "color", "$value": "rgba(255, 255, 255, 0.05)", "$description": "Inner shadow light." },
+      "shadow": { "$type": "shadow", "$value": "0 10px 30px -10px rgba(0, 0, 0, 0.55)" }
+    }
   }
 }

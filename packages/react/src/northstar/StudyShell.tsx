@@ -2,6 +2,7 @@
 import type { ReactNode } from 'react';
 import type { Study, StudyTab } from '@northstar-js/contracts';
 import { Tabs } from '../navigation.js';
+import { FlowStep, FlowSteps, NextAction } from '../flow.js';
 import { cx, useControllable } from '../internal/util.js';
 import { StudyStatus } from './StudyStatus.js';
 import { studyMessages, type WithMessages } from './messages.js';
@@ -28,11 +29,24 @@ export interface StudyShellProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   crumb?: ReactNode;
   /** Right-hand properties rail. */
   aside?: ReactNode;
+  /**
+   * Guided mode: the four tabs become a flow (Brief → Population → Research →
+   * Responses) with progress, animated step changes and one next action.
+   */
+  guided?: boolean;
+  /** Guided mode: steps that cannot be left yet (e.g. an unfinished brief). */
+  blockedTabs?: readonly StudyTab[];
+  /** Guided mode: a short line beside the next action, per step. */
+  stepHints?: Partial<Record<StudyTab, ReactNode>>;
+  /** Guided mode: the next action on the last step. */
+  onFinish?: () => void;
+  /** Guided mode: label of the last step's action. */
+  finishLabel?: ReactNode;
 }
 
 /** The study workspace: title bar, the four tabs Brief → Population → Research → Responses, content and an optional rail. */
 export function StudyShell({
-  study, tab, defaultTab, onTabChange, panels, tabMeta, tabActions, actions, saveState, crumb, aside, messages, className, children, ...rest
+  study, tab, defaultTab, onTabChange, panels, tabMeta, tabActions, actions, saveState, crumb, aside, guided = false, blockedTabs, stepHints, onFinish, finishLabel, messages, className, children, ...rest
 }: StudyShellProps) {
   const m = studyMessages(messages);
   const [current, setCurrent] = useControllable<StudyTab>(tab, defaultTab ?? study.tab ?? 'brief', onTabChange);
@@ -56,7 +70,25 @@ export function StudyShell({
           )}
           {actions}
         </div>
-        <Tabs.Root value={current} onValueChange={(v) => setCurrent(v as StudyTab)} className="ns-study-shell__tabs">
+        {guided ? (
+          <FlowSteps
+            value={current}
+            onValueChange={(v) => setCurrent(v as StudyTab)}
+            onComplete={onFinish}
+            label={m.studySections}
+            className="ns-study-shell__flow"
+          >
+            {STUDY_TABS.map((t) => (
+              <FlowStep key={t} value={t} title={m.tabs[t]} textTitle={m.tabs[t]} blocked={blockedTabs?.includes(t)} description={tabMeta?.[t]}>
+                {panels?.[t] ?? children}
+                <div className="ns-study-shell__next">
+                  <NextAction hint={stepHints?.[t]} finishLabel={finishLabel} />
+                </div>
+              </FlowStep>
+            ))}
+          </FlowSteps>
+        ) : (
+        <Tabs.Root value={current} onValueChange={(v) => setCurrent(v as StudyTab)} transition className="ns-study-shell__tabs">
           <div className="ns-study-shell__tabbar">
             <Tabs.List label={m.studySections} className="ns-study-shell__tablist">
               {STUDY_TABS.map((t) => (
@@ -72,6 +104,7 @@ export function StudyShell({
             {panels?.[current] ?? children}
           </Tabs.Content>
         </Tabs.Root>
+        )}
       </div>
       {aside && (
         <aside className="ns-study-shell__aside" aria-label={m.studyProperties}>

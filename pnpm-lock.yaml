@@ -35,6 +35,9 @@ importers:
       '@northstar-js/fonts':
         specifier: workspace:*
         version: link:../../packages/fonts
+      '@northstar-js/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
       '@northstar-js/react':
         specifier: workspace:*
         version: link:../../packages/react

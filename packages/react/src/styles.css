@@ -1368,3 +1368,320 @@
   .ns-study-status[data-motion] .ns-study-status__mark,
   .ns-illustration__orbit { animation: none !important; }
 }
+
+/* ===================================================== liquid layer
+   Liquid glass, borderless surfaces, icon-led controls, flows and long,
+   soft motion. Loaded last so it refines everything above. */
+
+/* ------------------------------------------------- borderless surfaces */
+
+.ns-surface,
+.ns-card,
+.ns-panel { border-color: transparent; }
+.ns-card.ns-material--solid,
+.ns-panel.ns-material--solid,
+.ns-surface.ns-material--solid { box-shadow: inset 0 0 0 1px var(--ns-material-hairline), var(--ns-elevation-1); }
+.ns-surface.ns-material--solid.ns-depth-3 { box-shadow: inset 0 0 0 1px var(--ns-material-hairline), var(--ns-elevation-3); }
+.ns-panel__head { border-bottom-color: var(--ns-material-hairline); }
+.ns-card__footer { border-top: 0; padding-top: 0; }
+.ns-card {
+  transition: transform var(--ns-motion-duration-layout) var(--ns-motion-easing-glide),
+    box-shadow var(--ns-motion-duration-layout) var(--ns-motion-easing-glide),
+    background-color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover);
+}
+.ns-card--interactive:hover,
+.ns-card--interactive:has(:focus-visible) {
+  border-color: transparent;
+  box-shadow: inset 0 0 0 1px var(--ns-material-hairline), var(--ns-elevation-2), 0 18px 40px -22px var(--ns-material-glow);
+}
+.ns-table-wrap { border-color: transparent; box-shadow: inset 0 0 0 1px var(--ns-material-hairline); }
+.ns-sidebar { border-right: 0; }
+.ns-sidebar__footer { border-top-color: var(--ns-material-hairline); }
+.ns-top-bar { border-bottom-color: var(--ns-material-hairline); }
+.ns-tabs__list { border-bottom-color: var(--ns-material-hairline); }
+.ns-study-panel { border-color: transparent; box-shadow: inset 0 0 0 1px var(--ns-material-hairline); }
+.ns-study-shell__bar,
+.ns-study-shell__tabbar { border-bottom-color: var(--ns-material-hairline); }
+.ns-study-shell__aside { border-left-color: var(--ns-material-hairline); }
+
+/* Buttons: tonal, not outlined. The secondary button is a quiet fill. */
+.ns-button--secondary,
+.ns-button--secondary:disabled { border-color: transparent; }
+.ns-button:active:not(:disabled):not(.ns-button--primary) { border-color: transparent; }
+.ns-button-group--attached { gap: 1px; }
+.ns-button-group--attached > .ns-button + .ns-button { margin-left: 0; }
+
+/* Hover in and out on the same soft curve; nothing snaps. */
+.ns-button {
+  transition: background-color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    border-color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    box-shadow var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    padding var(--ns-motion-duration-layout) var(--ns-motion-spring-layout),
+    transform var(--ns-motion-duration-release) var(--ns-motion-spring-release);
+}
+.ns-sidebar__item,
+.ns-tabs__trigger,
+.ns-menu__item,
+.ns-option,
+.ns-breadcrumbs a,
+.ns-tag {
+  transition: background-color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    box-shadow var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    border-color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover);
+}
+.ns-tabs__list[data-indicator='ready'] .ns-tabs__indicator {
+  transition: transform var(--ns-motion-duration-layout) var(--ns-motion-spring-layout),
+    width var(--ns-motion-duration-layout) var(--ns-motion-spring-layout),
+    height var(--ns-motion-duration-layout) var(--ns-motion-spring-layout);
+}
+
+/* ----------------------------------------------------------- liquid glass */
+
+.ns-liquid,
+.ns-material--glass,
+.ns-button--glass.ns-button--secondary,
+.ns-button--glass.ns-button--ghost:hover:not(:disabled),
+.ns-tabs--glass .ns-tabs__list {
+  --ns-liquid-ring: inset 0 1px 0 0 var(--ns-material-liquid-rim), inset 0 -1px 0 0 var(--ns-material-liquid-rim-low),
+    inset 0 0 0 0.5px var(--ns-material-liquid-rim-low), inset 0 0 16px 0 var(--ns-material-liquid-inner);
+  background: var(--ns-material-liquid-highlight),
+    linear-gradient(var(--ns-material-liquid-tint), var(--ns-material-liquid-tint)),
+    var(--ns-material-glass-fill);
+  border-color: transparent;
+  -webkit-backdrop-filter: blur(var(--ns-material-liquid-fallback-blur)) saturate(var(--ns-material-saturate));
+  backdrop-filter: blur(var(--ns-material-liquid-fallback-blur)) saturate(var(--ns-material-saturate));
+  box-shadow: var(--ns-liquid-ring);
+}
+.ns-liquid { position: relative; isolation: isolate; border-radius: var(--ns-liquid-radius, 16px); color: var(--ns-color-text-1); }
+.ns-liquid--tint-none { background: var(--ns-material-liquid-highlight), var(--ns-material-glass-fill); }
+.ns-liquid--tint-signal { background: var(--ns-material-liquid-highlight), linear-gradient(var(--ns-color-signal-wash), var(--ns-color-signal-wash)), var(--ns-material-glass-fill); }
+.ns-liquid--floating,
+.ns-material--glass:not(.ns-depth-1):not(.ns-button) { box-shadow: var(--ns-liquid-ring), var(--ns-material-liquid-shadow); }
+.ns-liquid__defs { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+.ns-material--glass .ns-panel__head { border-bottom-color: var(--ns-material-liquid-rim-low); }
+
+/* True refraction where url() backdrop filters work (Chromium). */
+html[data-ns-liquid='refract'] :is(.ns-liquid--md, .ns-liquid:not(.ns-liquid--sm):not(.ns-liquid--lg), .ns-material--glass) {
+  -webkit-backdrop-filter: var(--ns-liquid-filter, url(#ns-liquid-md)) saturate(1.25);
+  backdrop-filter: var(--ns-liquid-filter, url(#ns-liquid-md)) saturate(1.25);
+}
+html[data-ns-liquid='refract'] :is(.ns-liquid--sm, .ns-depth-1.ns-material--glass, .ns-button--glass.ns-button--secondary, .ns-button--glass.ns-button--ghost:hover:not(:disabled), .ns-tabs--glass .ns-tabs__list, .ns-toast.ns-material--glass, .ns-tooltip.ns-material--glass) {
+  -webkit-backdrop-filter: var(--ns-liquid-filter, url(#ns-liquid-sm)) saturate(1.25);
+  backdrop-filter: var(--ns-liquid-filter, url(#ns-liquid-sm)) saturate(1.25);
+}
+html[data-ns-liquid='refract'] :is(.ns-liquid--lg, .ns-depth-3.ns-material--glass, .ns-dialog.ns-material--glass, .ns-sheet.ns-material--glass) {
+  -webkit-backdrop-filter: var(--ns-liquid-filter, url(#ns-liquid-lg)) blur(2px) saturate(1.25);
+  backdrop-filter: var(--ns-liquid-filter, url(#ns-liquid-lg)) blur(2px) saturate(1.25);
+}
+.ns-tabs--glass .ns-tabs__indicator {
+  background: var(--ns-material-liquid-highlight), linear-gradient(var(--ns-material-spotlight), var(--ns-material-spotlight)), var(--ns-material-glass-fill);
+  box-shadow: inset 0 1px 0 var(--ns-material-liquid-rim), inset 0 0 0 0.5px var(--ns-material-liquid-rim-low), 0 6px 16px -8px var(--ns-material-glow);
+}
+
+/* ------------------------------------------------------ icon-led controls */
+
+.ns-reveal-label {
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  min-width: 0;
+  transition: grid-template-columns var(--ns-motion-duration-layout) var(--ns-motion-spring-layout),
+    opacity var(--ns-motion-duration-320) var(--ns-motion-easing-hover);
+}
+.ns-reveal-label__inner { min-width: 0; overflow: hidden; }
+.ns-icon-button--expand {
+  width: auto;
+  min-width: var(--ns-h, var(--ns-size-control-md));
+  padding: 0 calc((var(--ns-h, var(--ns-size-control-md)) - var(--ns-size-icon-sm)) / 2);
+}
+.ns-icon-button--expand .ns-button__label { display: inline-flex; align-items: center; }
+.ns-icon-button__icon { display: inline-flex; flex: none; }
+.ns-icon-button--expand .ns-reveal-label { grid-template-columns: 0fr; opacity: 0; }
+.ns-icon-button--expand .ns-reveal-label__inner { white-space: nowrap; transition: padding var(--ns-motion-duration-layout) var(--ns-motion-spring-layout); }
+.ns-icon-button--expand:is(:hover, :focus-visible, .ns-icon-button--open) .ns-reveal-label { grid-template-columns: 1fr; opacity: 1; }
+.ns-icon-button--expand:is(:hover, :focus-visible, .ns-icon-button--open) .ns-reveal-label__inner { padding-left: var(--ns-space-6); padding-right: var(--ns-space-2); }
+
+.ns-toolbar { display: inline-flex; align-items: center; gap: var(--ns-space-2); padding: var(--ns-space-4); border-radius: var(--ns-radius-12); }
+.ns-toolbar--vertical { flex-direction: column; align-items: stretch; }
+.ns-toolbar.ns-liquid { --ns-liquid-radius: 14px; }
+.ns-toolbar .ns-toolbar__item { border-radius: var(--ns-radius-8); }
+
+/* Sidebar: labels show in full; they wrap rather than end in an ellipsis. */
+.ns-sidebar__text { flex: 1; overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; }
+.ns-sidebar__item { min-height: var(--ns-size-control-sm); height: auto; }
+.ns-sidebar--collapsed { width: auto; min-width: 56px; }
+.ns-sidebar--collapsed .ns-sidebar__item { gap: 0; }
+.ns-sidebar--collapsed .ns-sidebar__icon { width: var(--ns-size-icon-sm); justify-content: center; }
+.ns-sidebar--collapsed .ns-sidebar__text { flex: 0 1 auto; grid-template-columns: 0fr; opacity: 0; }
+.ns-sidebar--collapsed .ns-sidebar__text .ns-reveal-label__inner { white-space: nowrap; transition: padding var(--ns-motion-duration-layout) var(--ns-motion-spring-layout); }
+.ns-sidebar--collapsed .ns-sidebar__meta,
+.ns-sidebar--collapsed .ns-sidebar__title { opacity: 0; white-space: nowrap; transition: opacity var(--ns-motion-duration-320) var(--ns-motion-easing-hover); }
+.ns-sidebar--collapsed:is(:hover, :focus-within) .ns-sidebar__text { grid-template-columns: 1fr; opacity: 1; }
+.ns-sidebar--collapsed:is(:hover, :focus-within) .ns-sidebar__text .ns-reveal-label__inner { padding-left: var(--ns-space-8); }
+.ns-sidebar--collapsed:is(:hover, :focus-within) :is(.ns-sidebar__meta, .ns-sidebar__title) { opacity: 1; }
+
+/* Secondary actions ease in on hover or focus; always there on touch. */
+.ns-hover-actions {
+  display: inline-flex;
+  gap: var(--ns-space-6);
+  align-items: center;
+  transition: opacity var(--ns-motion-duration-micro) var(--ns-motion-easing-hover), transform var(--ns-motion-duration-layout) var(--ns-motion-easing-glide);
+}
+@media (hover: hover) and (pointer: fine) {
+  .ns-hover-actions { opacity: 0; transform: translateX(4px); }
+  :is(.ns-card, .ns-panel, .ns-table__row, .ns-list__item, .ns-hover-scope, .ns-study-row):is(:hover, :focus-within) .ns-hover-actions,
+  .ns-hover-actions:focus-within { opacity: 1; transform: none; }
+}
+
+/* --------------------------------------------------------------- flows */
+
+.ns-flow { display: flex; flex-direction: column; gap: var(--ns-space-24); }
+.ns-flow__head { display: flex; flex-direction: column; gap: var(--ns-space-12); }
+.ns-flow__steps { display: flex; flex-wrap: wrap; gap: var(--ns-space-4); margin: 0; padding: 0; list-style: none; }
+.ns-flow__step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ns-space-8);
+  height: var(--ns-size-control-md);
+  padding: 0 var(--ns-space-12) 0 var(--ns-space-6);
+  border: 0;
+  border-radius: var(--ns-radius-full);
+  background: transparent;
+  color: var(--ns-color-text-3);
+  font: inherit;
+  font-weight: var(--ns-font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover), color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover);
+}
+.ns-flow__step:hover:not(:disabled) { background: var(--ns-color-surface-2); color: var(--ns-color-text-1); }
+.ns-flow__step:disabled { cursor: default; }
+.ns-flow__step:focus-visible { outline: 2px solid var(--ns-color-focus); outline-offset: 2px; }
+.ns-flow__item[data-state='complete'] .ns-flow__step { color: var(--ns-color-text-2); }
+.ns-flow__item[data-state='current'] .ns-flow__step { color: var(--ns-color-text-1); background: var(--ns-color-surface-2); }
+.ns-flow__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border-radius: var(--ns-radius-full);
+  background: var(--ns-color-surface-3);
+  color: var(--ns-color-text-2);
+  font-family: var(--ns-font-family-mono);
+  font-size: var(--ns-font-size-11);
+  font-variant-numeric: var(--ns-font-numeric-figures);
+  transition: background-color var(--ns-motion-duration-320) var(--ns-motion-easing-glide), color var(--ns-motion-duration-320) var(--ns-motion-easing-glide),
+    transform var(--ns-motion-duration-layout) var(--ns-motion-spring-release);
+}
+.ns-flow__mark svg { width: 12px; height: 12px; }
+.ns-flow__item[data-state='complete'] .ns-flow__mark { background: var(--ns-color-signal-wash); color: var(--ns-color-signal); }
+.ns-flow__item[data-state='current'] .ns-flow__mark { background: var(--ns-button-primary-bg); color: var(--ns-button-primary-fg); transform: scale(1.06); }
+.ns-flow__rail { position: relative; height: 2px; border-radius: 1px; background: var(--ns-color-surface-3); overflow: hidden; }
+.ns-flow__fill { position: absolute; inset: 0; transform-origin: 0 50%; background: var(--ns-color-signal); border-radius: inherit; transition: transform var(--ns-motion-duration-layout) var(--ns-motion-spring-layout); }
+.ns-flow__stage { position: relative; min-width: 0; }
+.ns-flow__panel { display: flex; flex-direction: column; gap: var(--ns-space-16); animation: ns-step-in var(--ns-motion-duration-layout) var(--ns-motion-easing-glide); }
+.ns-flow[data-direction='back'] .ns-flow__panel { animation-name: ns-step-in-back; }
+.ns-flow--vt .ns-flow__panel { animation: none; }
+.ns-flow__panel-head { display: flex; flex-direction: column; gap: var(--ns-space-4); }
+.ns-flow__eyebrow { color: var(--ns-color-text-3); font-family: var(--ns-font-family-mono); font-size: var(--ns-font-size-11); font-variant-numeric: var(--ns-font-numeric-figures); }
+.ns-flow__title { margin: 0; font-size: var(--ns-font-size-18); line-height: var(--ns-font-line-height-18); font-weight: var(--ns-font-weight-semibold); outline: none; }
+.ns-flow__description { margin: 0; color: var(--ns-color-text-2); }
+.ns-flow--compact .ns-flow__head { gap: 0; }
+@keyframes ns-step-in { from { opacity: 0; transform: translateX(20px); } }
+@keyframes ns-step-in-back { from { opacity: 0; transform: translateX(-20px); } }
+
+.ns-next-action { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--ns-space-8); }
+.ns-next-action__hint { margin-right: auto; color: var(--ns-color-text-3); font-size: var(--ns-font-size-12); }
+.ns-next-action__back svg { width: 14px; height: 14px; }
+.ns-next-action__back .ns-button__label,
+.ns-next-action__go .ns-button__label { display: inline-flex; align-items: center; gap: var(--ns-space-6); }
+.ns-next-action__arrow { display: inline-flex; transition: transform var(--ns-motion-duration-layout) var(--ns-motion-easing-glide); }
+.ns-next-action__arrow svg { width: 14px; height: 14px; }
+.ns-next-action__go:is(:hover, :focus-visible) .ns-next-action__arrow { transform: translateX(3px); }
+
+/* View transitions for steps and tabs: the old view slips away, the new one glides in. */
+::view-transition-old(ns-step) { animation: ns-vt-out var(--ns-motion-duration-micro) var(--ns-motion-easing-exit) both; }
+::view-transition-new(ns-step) { animation: ns-vt-in var(--ns-motion-duration-layout) var(--ns-motion-easing-glide) both; }
+::view-transition-group(ns-step) { animation-duration: var(--ns-motion-duration-layout); animation-timing-function: var(--ns-motion-spring-layout); }
+html[data-ns-flow-dir='back']::view-transition-new(ns-step) { animation-name: ns-vt-in-back; }
+html[data-ns-flow-dir='back']::view-transition-old(ns-step) { animation-name: ns-vt-out-back; }
+@keyframes ns-vt-in { from { opacity: 0; transform: translateX(16px); filter: blur(2px); } }
+@keyframes ns-vt-in-back { from { opacity: 0; transform: translateX(-16px); filter: blur(2px); } }
+@keyframes ns-vt-out { to { opacity: 0; transform: translateX(-8px); } }
+@keyframes ns-vt-out-back { to { opacity: 0; transform: translateX(8px); } }
+
+/* StudyShell: a sliding pill under the tabs, and the guided flow. */
+.ns-study-shell__tablist .ns-tabs__indicator { border-radius: var(--ns-radius-6); background: var(--ns-color-surface-3); }
+.ns-study-shell__tablist .ns-tabs__indicator::after { display: none; }
+.ns-study-shell__tablist[data-indicator] .ns-study-shell__tab.ns-tabs__trigger[aria-selected='true'] { background: transparent; box-shadow: none; }
+.ns-study-shell__flow { flex: 1; padding: var(--ns-space-20) var(--ns-space-32) var(--ns-space-32); }
+.ns-study-shell__next { margin-top: var(--ns-space-8); padding-top: var(--ns-space-16); }
+
+/* ------------------------------------------------------------- reveal */
+
+.ns-reveal,
+.ns-reveal--stagger > * {
+  transition: opacity var(--ns-motion-duration-reveal) var(--ns-motion-easing-glide),
+    transform var(--ns-motion-duration-reveal) var(--ns-motion-easing-glide),
+    filter var(--ns-motion-duration-reveal) var(--ns-motion-easing-glide);
+  transition-delay: var(--ns-reveal-delay, 0ms);
+}
+.ns-reveal[data-reveal='pending']:not(.ns-reveal--stagger) { opacity: 0; }
+.ns-reveal--rise[data-reveal='pending']:not(.ns-reveal--stagger) { transform: translateY(16px); }
+.ns-reveal--scale[data-reveal='pending']:not(.ns-reveal--stagger) { transform: scale(0.97); filter: blur(4px); }
+.ns-reveal--stagger[data-reveal='pending'] > * { opacity: 0; transform: translateY(10px); }
+.ns-reveal--stagger > * { transition-delay: calc(var(--ns-reveal-delay, 0ms) + var(--ns-i, 0) * var(--ns-motion-duration-stagger)); }
+.ns-reveal--stagger > :nth-child(2) { --ns-i: 1; }
+.ns-reveal--stagger > :nth-child(3) { --ns-i: 2; }
+.ns-reveal--stagger > :nth-child(4) { --ns-i: 3; }
+.ns-reveal--stagger > :nth-child(5) { --ns-i: 4; }
+.ns-reveal--stagger > :nth-child(6) { --ns-i: 5; }
+.ns-reveal--stagger > :nth-child(7) { --ns-i: 6; }
+.ns-reveal--stagger > :nth-child(8) { --ns-i: 7; }
+.ns-reveal--stagger > :nth-child(n + 9) { --ns-i: 8; }
+
+/* ---------------------------------------------------------- fallbacks */
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .ns-liquid,
+  .ns-material--glass { background: var(--ns-material-liquid-highlight), var(--ns-material-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .ns-liquid,
+  .ns-material--glass,
+  html[data-ns-liquid='refract'] :is(.ns-liquid, .ns-material--glass) {
+    background: var(--ns-material-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media (forced-colors: active) {
+  .ns-liquid,
+  html[data-ns-liquid='refract'] :is(.ns-liquid, .ns-material--glass) {
+    background: Canvas;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 1px solid CanvasText;
+    box-shadow: none;
+  }
+  .ns-card,
+  .ns-panel,
+  .ns-surface,
+  .ns-button--secondary { border-color: CanvasText; }
+  .ns-flow__item[data-state='current'] .ns-flow__mark { background: Highlight; color: HighlightText; }
+  .ns-flow__fill { background: Highlight; }
+  .ns-hover-actions { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ns-reveal[data-reveal],
+  .ns-reveal--stagger[data-reveal] > * { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .ns-flow__panel { animation: none !important; }
+  .ns-flow__mark,
+  .ns-next-action__arrow,
+  .ns-hover-actions,
+  .ns-card--interactive { transform: none !important; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}

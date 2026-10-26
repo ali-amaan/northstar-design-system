@@ -8,7 +8,7 @@ export default [
     path: "../../packages/tokens/dist/index.js",
     import: "*",
     modifyEsbuildConfig: esm,
-    limit: "2.5 kB",
+    limit: "2.8 kB",
   },
   {
     name: "tokens: tokens.css",
@@ -92,7 +92,7 @@ export default [
     import: "*",
     modifyEsbuildConfig: esm,
     ignore: ["react", "react-dom"],
-    limit: "15 kB",
+    limit: "17.5 kB",
   },
   {
     name: "react: northstar",
@@ -104,9 +104,9 @@ export default [
   },
   {
     name: "react: styles.css",
-    message: "includes the interaction layer (glass material, springs, pointer light)",
+    message: "includes the interaction layer and the liquid layer (liquid glass, icon-led controls, flows, reveal)",
     path: "../../packages/react/dist/styles.css",
-    limit: "10.5 kB",
+    limit: "12.5 kB",
     disablePlugins: ["@size-limit/esbuild"],
   },
 ];
