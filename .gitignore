@@ -4,3 +4,5 @@ storybook-static/
 coverage/
 *.tgz
 .DS_Store
+.next/
+next-env.d.ts

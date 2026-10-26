@@ -75,17 +75,6 @@ Storybook runs in `apps/docs` with both themes and all three densities in the to
 3. Deploy Storybook to GitHub Pages.
 4. Publish 0.1.0 once you say yes.
 
-## Phase 8 — Studio migration (in `northstar-engine/frontend`)
-
-The four steps from spec §4.3, one pull request each:
-
-1. Tokens and fonts.
-2. Basic UI.
-3. The study workspace as four tabs.
-4. Landing and sign-in. The copy stays as it is.
-
-Each one: `npx tsc --noEmit` passes, the studio's own self-checks pass, and the report renders exactly as before (`npx tsx scripts/render-report.tsx scripts/report-template.spec.json`, with the HTML compared before and after).
-
 ## Order and rough size
 
 | Phase | Depends on | Size |
@@ -98,6 +87,5 @@ Each one: `npx tsc --noEmit` passes, the studio's own self-checks pass, and the 
 | 5 Charts and maps | 1, 2 | medium |
 | 6 Northstar components | 4, 5 | medium |
 | 7 Gates and release | 4–6 | small |
-| 8 Studio migration | 7 | medium |
 
 Phases 3 and 5 can run alongside phase 4.

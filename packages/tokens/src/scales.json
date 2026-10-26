@@ -1,0 +1,132 @@
+{
+  "$description": "Semantic layer, theme-independent scales.",
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "ui": { "$value": "Inter, ui-sans-serif, system-ui, sans-serif" },
+      "mono": { "$value": "'IBM Plex Mono', ui-monospace, monospace" }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": { "$value": 400 },
+      "medium": { "$value": 500 },
+      "semibold": { "$value": 600 }
+    },
+    "size": {
+      "$type": "dimension",
+      "11": { "$value": "11px" },
+      "12": { "$value": "12px" },
+      "13": { "$value": "13px" },
+      "15": { "$value": "15px" },
+      "18": { "$value": "18px" },
+      "24": { "$value": "24px" },
+      "32": { "$value": "32px" },
+      "48": { "$value": "48px" },
+      "base": { "$value": "{font.size.13}" }
+    },
+    "line-height": {
+      "$type": "dimension",
+      "11": { "$value": "16px" },
+      "12": { "$value": "18px" },
+      "13": { "$value": "20px" },
+      "15": { "$value": "22px" },
+      "18": { "$value": "26px" },
+      "24": { "$value": "32px" },
+      "32": { "$value": "40px" },
+      "48": { "$value": "52px" }
+    },
+    "numeric": { "figures": { "$type": "other", "$value": "tabular-nums" } }
+  },
+  "space": {
+    "$type": "dimension",
+    "2": { "$value": "2px" },
+    "4": { "$value": "4px" },
+    "6": { "$value": "6px" },
+    "8": { "$value": "8px" },
+    "12": { "$value": "12px" },
+    "16": { "$value": "16px" },
+    "20": { "$value": "20px" },
+    "24": { "$value": "24px" },
+    "32": { "$value": "32px" },
+    "40": { "$value": "40px" },
+    "48": { "$value": "48px" },
+    "64": { "$value": "64px" }
+  },
+  "size": {
+    "$type": "dimension",
+    "control": {
+      "sm": { "$value": "28px" },
+      "md": { "$value": "32px" },
+      "lg": { "$value": "36px" },
+      "xl": { "$value": "44px" }
+    },
+    "row": {
+      "sm": { "$value": "32px" },
+      "md": { "$value": "36px" },
+      "lg": { "$value": "40px" }
+    },
+    "icon": {
+      "sm": { "$value": "16px" },
+      "md": { "$value": "20px" },
+      "lg": { "$value": "24px" }
+    },
+    "target": {
+      "coarse": {
+        "$value": "44px",
+        "$description": "Minimum target for coarse pointers at every density."
+      }
+    }
+  },
+  "density": {
+    "$type": "dimension",
+    "compact": {
+      "control-height": { "$value": "{size.control.sm}" },
+      "row-height": { "$value": "{size.row.sm}" },
+      "row-padding": { "$value": "{space.4}" }
+    },
+    "default": {
+      "control-height": { "$value": "{size.control.md}" },
+      "row-height": { "$value": "{size.row.md}" },
+      "row-padding": { "$value": "{space.6}" }
+    },
+    "comfortable": {
+      "control-height": { "$value": "{size.control.lg}" },
+      "row-height": { "$value": "{size.row.lg}" },
+      "row-padding": { "$value": "{space.8}" }
+    }
+  },
+  "radius": {
+    "$type": "dimension",
+    "4": { "$value": "4px" },
+    "6": { "$value": "6px" },
+    "8": { "$value": "8px" },
+    "12": { "$value": "12px" },
+    "full": { "$value": "9999px" }
+  },
+  "z": {
+    "$type": "number",
+    "banner": { "$value": 30 },
+    "dropdown": { "$value": 40 },
+    "popover": { "$value": 50 },
+    "sheet": { "$value": 60 },
+    "dialog": { "$value": 70 },
+    "toast": { "$value": 80 },
+    "tooltip": { "$value": 90 }
+  },
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "120": { "$value": "120ms" },
+      "200": { "$value": "200ms" },
+      "320": { "$value": "320ms" },
+      "600": { "$value": "600ms" }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "settle": { "$value": [0.2, 0, 0, 1], "$description": "Comes to rest; state changes." },
+      "enter": { "$value": [0, 0, 0.2, 1], "$description": "Decelerates in." },
+      "travel": { "$value": [0.4, 0, 0.2, 1], "$description": "Moves across the screen." },
+      "exit": { "$value": [0.4, 0, 1, 1], "$description": "Accelerates out." }
+    }
+  }
+}

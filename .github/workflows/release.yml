@@ -1,0 +1,49 @@
+name: release
+# Merging to main opens or updates the "Version packages" pull request; merging
+# that one publishes, with provenance. The first publish uses the NPM_TOKEN
+# Actions secret, because npm can only register a trusted publisher on a package
+# that already exists. After 0.1.0 is out, register release.yml as each
+# package's trusted publisher on npmjs.com and delete the secret: publishing then
+# uses OIDC and no token exists anywhere.
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: release
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.repository == 'ali-amaan/northstar-design-system'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      # Trusted Publishing needs npm >= 11.5.1; Node 22 ships npm 10.
+      - run: npm install -g npm@11.21.1
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm check:packages
+      - uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          version-script: pnpm changeset version
+          publish-script: pnpm changeset publish
+          commit-message: "chore: version packages"
+          pr-title: "Version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_PROVENANCE: "true"
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

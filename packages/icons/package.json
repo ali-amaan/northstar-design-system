@@ -1,0 +1,41 @@
+{
+  "name": "@northstar-js/icons",
+  "version": "0.1.0",
+  "description": "The Northstar instrument icon set: React components, standalone SVG files and a sprite.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": { "access": "public" },
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./manifest.json": "./dist/manifest.json",
+    "./sprite.svg": "./dist/sprite.svg",
+    "./svg/*": "./dist/svg/*"
+  },
+  "scripts": {
+    "generate": "node scripts/build.mjs --generate-only",
+    "build": "node scripts/build.mjs",
+    "lint:icons": "icon-lint src/svg src/manifest.json",
+    "typecheck": "node scripts/build.mjs --generate-only && tsc -p tsconfig.json --noEmit",
+    "test": "node scripts/build.mjs --generate-only && vitest run"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@northstar-js/tooling-icon-lint": "workspace:*",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/react": "16.3.0",
+    "@types/node": "22.19.1",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "jsdom": "26.1.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
+  }
+}

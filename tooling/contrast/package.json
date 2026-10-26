@@ -1,0 +1,13 @@
+{
+  "name": "@northstar-js/tooling-contrast",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CI gate: WCAG contrast of every text and icon role against every ground, both themes.",
+  "scripts": {
+    "check": "node check.mjs"
+  },
+  "dependencies": {
+    "@northstar-js/tokens": "workspace:*"
+  }
+}

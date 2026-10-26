@@ -1,0 +1,488 @@
+{
+  "source": "canvas/project/Icons.dc.html (Northstar set 03, Night)",
+  "icons": [
+    {
+      "name": "study",
+      "title": "A study — one reading of a population",
+      "tags": [
+        "dial",
+        "status",
+        "study"
+      ],
+      "group": "Dial family — study status"
+    },
+    {
+      "name": "draft",
+      "title": "Draft — not yet calibrated",
+      "tags": [
+        "dial",
+        "status",
+        "draft"
+      ],
+      "group": "Dial family — study status"
+    },
+    {
+      "name": "running",
+      "title": "Running — needle sweeping (animated)",
+      "tags": [
+        "dial",
+        "status",
+        "running"
+      ],
+      "group": "Dial family — study status"
+    },
+    {
+      "name": "complete",
+      "title": "Complete — settled on north",
+      "tags": [
+        "dial",
+        "status",
+        "complete"
+      ],
+      "group": "Dial family — study status"
+    },
+    {
+      "name": "off-axis",
+      "title": "Needs fix — off by a measured arc",
+      "tags": [
+        "dial",
+        "status",
+        "off",
+        "axis"
+      ],
+      "group": "Dial family — study status"
+    },
+    {
+      "name": "locked",
+      "title": "Locked — sealed after the run",
+      "tags": [
+        "dial",
+        "status",
+        "locked"
+      ],
+      "group": "Dial family — study status"
+    },
+    {
+      "name": "brief",
+      "title": "The decision, above the horizon",
+      "tags": [
+        "places",
+        "brief"
+      ],
+      "group": "Places — sidebar, tabs, command palette"
+    },
+    {
+      "name": "population",
+      "title": "People, raked to their margins",
+      "tags": [
+        "places",
+        "population"
+      ],
+      "group": "Places — sidebar, tabs, command palette"
+    },
+    {
+      "name": "research",
+      "title": "Items on a graduated spine",
+      "tags": [
+        "places",
+        "research"
+      ],
+      "group": "Places — sidebar, tabs, command palette"
+    },
+    {
+      "name": "responses",
+      "title": "Figures with their bands",
+      "tags": [
+        "places",
+        "responses"
+      ],
+      "group": "Places — sidebar, tabs, command palette"
+    },
+    {
+      "name": "workspace",
+      "title": "Workspace",
+      "tags": [
+        "places",
+        "workspace"
+      ],
+      "group": "Places — sidebar, tabs, command palette"
+    },
+    {
+      "name": "search",
+      "title": "A loupe with a reticle",
+      "tags": [
+        "places",
+        "search"
+      ],
+      "group": "Places — sidebar, tabs, command palette"
+    },
+    {
+      "name": "palette",
+      "title": "Command palette, ⌘K",
+      "tags": [
+        "places",
+        "palette"
+      ],
+      "group": "Places — sidebar, tabs, command palette"
+    },
+    {
+      "name": "north",
+      "title": "The Northstar mark",
+      "tags": [
+        "places",
+        "north"
+      ],
+      "group": "Places — sidebar, tabs, command palette"
+    },
+    {
+      "name": "agent",
+      "title": "One respondent (agent)",
+      "tags": [
+        "population",
+        "agent"
+      ],
+      "group": "Population — stars are people"
+    },
+    {
+      "name": "panel",
+      "title": "The panel — quota-exact roster",
+      "tags": [
+        "population",
+        "panel"
+      ],
+      "group": "Population — stars are people"
+    },
+    {
+      "name": "field",
+      "title": "Population field — the whole frame",
+      "tags": [
+        "population",
+        "field"
+      ],
+      "group": "Population — stars are people"
+    },
+    {
+      "name": "margins",
+      "title": "Bars meeting published targets (IPF)",
+      "tags": [
+        "population",
+        "margins"
+      ],
+      "group": "Population — stars are people"
+    },
+    {
+      "name": "seed",
+      "title": "Seed — a fixed constellation",
+      "tags": [
+        "population",
+        "seed"
+      ],
+      "group": "Population — stars are people"
+    },
+    {
+      "name": "fact-card",
+      "title": "Fact card drawn from national statistics",
+      "tags": [
+        "population",
+        "fact",
+        "card"
+      ],
+      "group": "Population — stars are people"
+    },
+    {
+      "name": "persona",
+      "title": "Persona narrative",
+      "tags": [
+        "population",
+        "persona"
+      ],
+      "group": "Population — stars are people"
+    },
+    {
+      "name": "drift",
+      "title": "Drift QA — stays inside the rails",
+      "tags": [
+        "population",
+        "drift"
+      ],
+      "group": "Population — stars are people"
+    },
+    {
+      "name": "objective",
+      "title": "An objective — a reticle on the target",
+      "tags": [
+        "method",
+        "claims",
+        "objective"
+      ],
+      "group": "Method and claims — squares are measurements"
+    },
+    {
+      "name": "anchors",
+      "title": "The scale an answer lands on",
+      "tags": [
+        "method",
+        "claims",
+        "anchors"
+      ],
+      "group": "Method and claims — squares are measurements"
+    },
+    {
+      "name": "level",
+      "title": "Claim · level ± band",
+      "tags": [
+        "method",
+        "claims",
+        "level"
+      ],
+      "group": "Method and claims — squares are measurements"
+    },
+    {
+      "name": "direction",
+      "title": "Claim · direction only",
+      "tags": [
+        "method",
+        "claims",
+        "direction"
+      ],
+      "group": "Method and claims — squares are measurements"
+    },
+    {
+      "name": "ranking",
+      "title": "Claim · ranking only",
+      "tags": [
+        "method",
+        "claims",
+        "ranking"
+      ],
+      "group": "Method and claims — squares are measurements"
+    },
+    {
+      "name": "validate",
+      "title": "Anchor gate — free dry run",
+      "tags": [
+        "method",
+        "claims",
+        "validate"
+      ],
+      "group": "Method and claims — squares are measurements"
+    },
+    {
+      "name": "estimate",
+      "title": "Cost estimate before a run",
+      "tags": [
+        "method",
+        "claims",
+        "estimate"
+      ],
+      "group": "Method and claims — squares are measurements"
+    },
+    {
+      "name": "quote",
+      "title": "A free-text answer",
+      "tags": [
+        "method",
+        "claims",
+        "quote"
+      ],
+      "group": "Method and claims — squares are measurements"
+    },
+    {
+      "name": "likert",
+      "title": "Format · Likert 5",
+      "tags": [
+        "research",
+        "formats",
+        "saving",
+        "likert"
+      ],
+      "group": "Research formats and saving"
+    },
+    {
+      "name": "single",
+      "title": "Format · single choice",
+      "tags": [
+        "research",
+        "formats",
+        "saving",
+        "single"
+      ],
+      "group": "Research formats and saving"
+    },
+    {
+      "name": "multi",
+      "title": "Format · multiple choice",
+      "tags": [
+        "research",
+        "formats",
+        "saving",
+        "multi"
+      ],
+      "group": "Research formats and saving"
+    },
+    {
+      "name": "free-text",
+      "title": "Format · free text",
+      "tags": [
+        "research",
+        "formats",
+        "saving",
+        "free",
+        "text"
+      ],
+      "group": "Research formats and saving"
+    },
+    {
+      "name": "rank",
+      "title": "Format · ranking",
+      "tags": [
+        "research",
+        "formats",
+        "saving",
+        "rank"
+      ],
+      "group": "Research formats and saving"
+    },
+    {
+      "name": "matrix",
+      "title": "Format · matrix",
+      "tags": [
+        "research",
+        "formats",
+        "saving",
+        "matrix"
+      ],
+      "group": "Research formats and saving"
+    },
+    {
+      "name": "recording",
+      "title": "Saving — the register advancing",
+      "tags": [
+        "research",
+        "formats",
+        "saving",
+        "recording"
+      ],
+      "group": "Research formats and saving"
+    },
+    {
+      "name": "recorded",
+      "title": "Saved",
+      "tags": [
+        "research",
+        "formats",
+        "saving",
+        "recorded"
+      ],
+      "group": "Research formats and saving"
+    },
+    {
+      "name": "run",
+      "title": "Run study, ⌘↵",
+      "tags": [
+        "actions",
+        "run"
+      ],
+      "group": "Actions"
+    },
+    {
+      "name": "add",
+      "title": "New study, add item",
+      "tags": [
+        "actions",
+        "add"
+      ],
+      "group": "Actions"
+    },
+    {
+      "name": "export",
+      "title": "Export PDF",
+      "tags": [
+        "actions",
+        "export"
+      ],
+      "group": "Actions"
+    },
+    {
+      "name": "report",
+      "title": "Report spec",
+      "tags": [
+        "actions",
+        "report"
+      ],
+      "group": "Actions"
+    },
+    {
+      "name": "duplicate",
+      "title": "Duplicate as draft",
+      "tags": [
+        "actions",
+        "duplicate"
+      ],
+      "group": "Actions"
+    },
+    {
+      "name": "history",
+      "title": "Run history",
+      "tags": [
+        "actions",
+        "history"
+      ],
+      "group": "Actions"
+    },
+    {
+      "name": "template",
+      "title": "Study template",
+      "tags": [
+        "actions",
+        "template"
+      ],
+      "group": "Actions"
+    },
+    {
+      "name": "owner",
+      "title": "Owner, member",
+      "tags": [
+        "actions",
+        "owner"
+      ],
+      "group": "Actions"
+    },
+    {
+      "name": "filter",
+      "title": "Filter",
+      "tags": [
+        "utility",
+        "filter"
+      ],
+      "group": "Utility"
+    },
+    {
+      "name": "link",
+      "title": "Copy link",
+      "tags": [
+        "utility",
+        "link"
+      ],
+      "group": "Utility"
+    },
+    {
+      "name": "settings",
+      "title": "Settings",
+      "tags": [
+        "utility",
+        "settings"
+      ],
+      "group": "Utility"
+    },
+    {
+      "name": "more",
+      "title": "More actions",
+      "tags": [
+        "utility",
+        "more"
+      ],
+      "group": "Utility"
+    }
+  ]
+}

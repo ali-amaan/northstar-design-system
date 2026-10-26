@@ -1,0 +1,53 @@
+{
+  "$description": "Semantic layer, Night theme (the default). A key named 'default' is dropped from the token name: color.signal.default is --ns-color-signal.",
+  "color": {
+    "$type": "color",
+    "ground": { "$value": "{night.0}" },
+    "surface": {
+      "1": { "$value": "{night.1}" },
+      "2": { "$value": "{night.2}" },
+      "3": { "$value": "{night.3}" }
+    },
+    "line": {
+      "1": { "$value": "{night.4}" },
+      "2": { "$value": "{night.5}" }
+    },
+    "text": {
+      "1": { "$value": "{night.8}" },
+      "2": { "$value": "{night.7}" },
+      "3": { "$value": "{night.6}" }
+    },
+    "signal": {
+      "default": { "$value": "{glacier.300}", "$description": "Marks and signal text." },
+      "fill": { "$value": "{glacier.300}", "$description": "Primary button fill." },
+      "wash": { "$value": "{glacier.alpha-12}" },
+      "edge": { "$value": "{glacier.300}" }
+    },
+    "focus": {
+      "default": { "$value": "{glacier.300}", "$description": "Focus ring." },
+      "halo": { "$value": "transparent" }
+    },
+    "data": {
+      "star": { "$value": "{night.8}" },
+      "node": { "$value": "{glacier.300}" },
+      "band": { "$value": "{glacier.alpha-35}" },
+      "horizon": { "$value": "{glacier.300}" },
+      "meridian": { "$value": "{night.5}" },
+      "graticule": { "$value": "{night.4}" },
+      "likert": {
+        "1": { "$value": "{night.5}" },
+        "2": { "$value": "{night.6}" },
+        "3": { "$value": "{night.7}" },
+        "4": { "$value": "{glacier.300}" },
+        "5": { "$value": "{glacier.100}" }
+      }
+    }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "$description": "Night uses borders only.",
+    "1": { "$value": "none" },
+    "2": { "$value": "none" },
+    "3": { "$value": "none" }
+  }
+}

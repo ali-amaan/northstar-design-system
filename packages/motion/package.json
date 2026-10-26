@@ -1,0 +1,42 @@
+{
+  "name": "@northstar-js/motion",
+  "version": "0.1.0",
+  "description": "Northstar Lottie scenes with colour slots, in Night and Day, and a lottie-web React player that follows reduced motion.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": { "access": "public" },
+  "files": ["dist", "scenes"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./scenes/index.json": "./scenes/index.json",
+    "./scenes/*": "./scenes/*"
+  },
+  "scripts": {
+    "generate": "node scripts/build-index.mjs",
+    "build": "node scripts/build-index.mjs && tsc -p tsconfig.build.json",
+    "typecheck": "node scripts/build-index.mjs && tsc -p tsconfig.json --noEmit",
+    "test": "node scripts/build-index.mjs && vitest run",
+    "verify": "pnpm --filter @northstar-js/tooling-lottie-verify verify"
+  },
+  "dependencies": {
+    "lottie-web": "5.13.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/react": "16.3.0",
+    "@types/node": "22.19.1",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "jsdom": "26.1.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
+  }
+}

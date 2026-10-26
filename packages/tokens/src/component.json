@@ -1,0 +1,10 @@
+{
+  "$description": "Component layer: overrides where a component needs its own value. References resolve per theme.",
+  "button": {
+    "primary": {
+      "$type": "color",
+      "bg": { "$value": "{color.signal.fill}" },
+      "fg": { "$value": "{gray.8}", "$description": "Text on the glacier fill, in both themes." }
+    }
+  }
+}

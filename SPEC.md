@@ -141,7 +141,7 @@ No red or green roles. Status is told apart by shape and label.
 
 `@northstar-js/contracts` defines `Study`, `StudyState`, `FigureValue`, `ClaimClass`, `MarketStatus` and `CostEstimate`; every package imports its types from there.
 
-## 4. Testing, release and the studio migration
+## 4. Testing and release
 
 ### 4.1 Testing
 
@@ -168,19 +168,6 @@ All of them run in CI on every pull request; a failure blocks the merge.
 - Semver: anything that changes a token name, a prop or an export is a breaking change. Deprecated items warn in development for one minor release before removal.
 - Storybook deploys to GitHub Pages from `main`.
 - Branch protection on `main`: the required checks pass and one review. Commits go through the GitHub API, not `git push`.
-
-### 4.3 Studio migration
-
-The studio in `northstar-engine/frontend` moves to the packages in four steps. Each step ships on its own and leaves the studio working.
-
-1. **Tokens and fonts.** Replace `src/app/studio/tokens.css` (the old cream tokens) with `@northstar-js/tokens` and `@northstar-js/fonts`. The PDF report keeps its own `tokens.css` copy, so it does not change.
-2. **Basic UI.** Swap the studio's buttons, inputs, menus, dialogs and tables for `@northstar-js/react`.
-3. **Study workspace.** Rebuild the study page as the four tabs (Brief → Population → Research → Responses) with `react/northstar`, `charts` and `maps`. This replaces the five-step stepper, `results-view.tsx`'s screen layout and `audience/controls.tsx`.
-4. **Landing and sign-in.** Rebuild them with the new components. The copy in `about.ts`, `method.ts` and `use-cases.ts` stays as it is until you rewrite it.
-
-Frozen throughout: `frontend/scripts/render-report.tsx` and the PDF output. `results-view.tsx` stays available to the renderer until the PDF is redesigned separately.
-
-Done means: the studio builds with `npx tsc --noEmit`, the old tokens file is gone from the studio, and the report renders exactly as before.
 
 ## 5. Open items
 

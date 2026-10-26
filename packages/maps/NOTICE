@@ -1,0 +1,21 @@
+@northstar-js/maps
+Code: MIT (see LICENSE).
+
+The map geometry and names are derived from third-party data, which keeps its own licence:
+
+- Natural Earth 1:50m Cultural Vectors, admin-0 countries — public domain.
+  https://www.naturalearthdata.com/about/terms-of-use/
+  Boundaries are Natural Earth de facto lines, drawn for orientation. They are not a political statement.
+
+- world-atlas 2.0.2 (TopoJSON of Natural Earth, data/countries-50m.json) — ISC License,
+  Copyright 2013-2019 Michael Bostock. Full text: data/world-atlas-LICENSE.
+
+- i18n-iso-countries 7.14.0 (ISO 3166-1 alpha-2/alpha-3/numeric table, data/codes.json) — MIT License,
+  Copyright (c) 2016 widdix GmbH. Full text: data/i18n-LICENSE.
+
+- Unicode CLDR 47.0 English country names, read through Node.js Intl.DisplayNames (ICU 77.1) at build time —
+  Unicode License v3. https://www.unicode.org/license.txt
+
+Modifications: the TopoJSON is decoded, unwrapped across the antimeridian, simplified and projected
+(Equal Earth for the world, Lambert azimuthal equal-area per country). dist/maps/PROVENANCE.md lists every
+renamed, slug-keyed, inset and omitted feature.

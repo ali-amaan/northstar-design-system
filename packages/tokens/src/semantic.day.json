@@ -1,0 +1,52 @@
+{
+  "$description": "Semantic layer, Day theme.",
+  "color": {
+    "$type": "color",
+    "ground": { "$value": "{gray.0}" },
+    "surface": {
+      "1": { "$value": "{gray.1}" },
+      "2": { "$value": "{gray.2}" },
+      "3": { "$value": "{gray.3}" }
+    },
+    "line": {
+      "1": { "$value": "{gray.4}" },
+      "2": { "$value": "{gray.5}" }
+    },
+    "text": {
+      "1": { "$value": "{gray.8}" },
+      "2": { "$value": "{gray.7}" },
+      "3": { "$value": "{gray.6}" }
+    },
+    "signal": {
+      "default": { "$value": "{glacier.700}", "$description": "Marks and signal text." },
+      "fill": { "$value": "{glacier.300}", "$description": "Primary button fill." },
+      "wash": { "$value": "{glacier.100}" },
+      "edge": { "$value": "{glacier.200}" }
+    },
+    "focus": {
+      "default": { "$value": "{glacier.700}", "$description": "Focus ring." },
+      "halo": { "$value": "{glacier.alpha-35}" }
+    },
+    "data": {
+      "star": { "$value": "{gray.8}" },
+      "node": { "$value": "{glacier.700}" },
+      "band": { "$value": "{glacier.alpha-35}" },
+      "horizon": { "$value": "{glacier.700}" },
+      "meridian": { "$value": "{gray.5}" },
+      "graticule": { "$value": "{gray.4}" },
+      "likert": {
+        "1": { "$value": "{gray.4}" },
+        "2": { "$value": "{gray.5}" },
+        "3": { "$value": "{glacier.200}" },
+        "4": { "$value": "{glacier.300}" },
+        "5": { "$value": "{glacier.700}" }
+      }
+    }
+  },
+  "elevation": {
+    "$type": "shadow",
+    "1": { "$value": "0 1px 2px rgba(6, 8, 12, 0.06)" },
+    "2": { "$value": "0 4px 12px rgba(6, 8, 12, 0.08)" },
+    "3": { "$value": "0 12px 32px rgba(6, 8, 12, 0.12)" }
+  }
+}

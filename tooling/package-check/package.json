@@ -1,0 +1,18 @@
+{
+  "name": "@northstar-js/tooling-package-check",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CI gate: publint and Are the Types Wrong on every public package's packed tarball, then size-limit budgets.",
+  "scripts": {
+    "check": "node check.mjs && pnpm run size",
+    "size": "size-limit"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@size-limit/esbuild": "14.3.0",
+    "@size-limit/file": "14.3.0",
+    "publint": "0.3.25",
+    "size-limit": "14.3.0"
+  }
+}

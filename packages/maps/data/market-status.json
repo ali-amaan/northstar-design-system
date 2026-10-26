@@ -1,0 +1,9 @@
+{
+  "source": "Placeholder until the engine exports this file from backend/app/services/citizen/population.py (PopulationSpec.roster_ready per registered code). Must match MARKET_STATUS in @northstar-js/contracts.",
+  "markets": [
+    { "code": "FI", "status": "roster-ready" },
+    { "code": "JP", "status": "roster-ready" },
+    { "code": "AX", "status": "covered", "coveredBy": "FI" },
+    { "code": "US", "status": "registered" }
+  ]
+}

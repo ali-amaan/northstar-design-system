@@ -1,0 +1,17 @@
+{
+  "name": "@northstar-js/tooling-lottie-verify",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CI gate: every Northstar Lottie scene renders in headless Skottie (CanvasKit), has its colour slots, stays under 600 kB and, when it loops, meets itself at the seam.",
+  "bin": { "lottie-verify": "./src/verify.js" },
+  "scripts": {
+    "verify": "node src/verify.js ../../packages/motion/scenes",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.1",
+    "canvaskit-wasm": "0.41.1",
+    "typescript": "5.9.3"
+  }
+}

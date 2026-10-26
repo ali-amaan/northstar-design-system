@@ -1,0 +1,38 @@
+{
+  "$description": "Primitive layer: raw values. Never used by components; only semantic and component tokens reference them.",
+  "gray": {
+    "$type": "color",
+    "$description": "Day neutrals, light to dark.",
+    "0": { "$value": "#FFFFFF" },
+    "1": { "$value": "#F8F9FA" },
+    "2": { "$value": "#F1F3F5" },
+    "3": { "$value": "#E9ECEF" },
+    "4": { "$value": "#E6E8EB" },
+    "5": { "$value": "#D4D8DD" },
+    "6": { "$value": "#656A75" },
+    "7": { "$value": "#464C56" },
+    "8": { "$value": "#06080C" }
+  },
+  "night": {
+    "$type": "color",
+    "$description": "Night neutrals, dark to light.",
+    "0": { "$value": "#08090C" },
+    "1": { "$value": "#0D0F13" },
+    "2": { "$value": "#14161B" },
+    "3": { "$value": "#1B1E24" },
+    "4": { "$value": "#1E2128" },
+    "5": { "$value": "#2B2F38" },
+    "6": { "$value": "#848A94" },
+    "7": { "$value": "#A9AEB8" },
+    "8": { "$value": "#E8EAEE" }
+  },
+  "glacier": {
+    "$type": "color",
+    "100": { "$value": "#EDF3FB" },
+    "200": { "$value": "#B9CEEA" },
+    "300": { "$value": "#93B4E0" },
+    "700": { "$value": "#2F5D9A" },
+    "alpha-12": { "$value": "rgba(147, 180, 224, 0.12)" },
+    "alpha-35": { "$value": "rgba(147, 180, 224, 0.35)" }
+  }
+}

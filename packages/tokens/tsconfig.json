@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "allowJs": false,
+    "resolveJsonModule": true
+  },
+  "include": ["test/**/*.ts", "dist/index.d.ts"]
+}

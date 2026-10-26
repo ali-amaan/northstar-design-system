@@ -1,0 +1,80 @@
+{
+  "generator": "build-lottie-world.js",
+  "theme": "Night",
+  "requirement": "These scenes carry no text. An artboard that embeds one must print, next to it, every caption listed in that scene's mustPrint. Until it does, the scene is not shippable.",
+  "key": "Roster-ready / Registered · not calibrated / Not available — from population.py",
+  "marks": [
+    {
+      "mark": "filled north star (Glacier)",
+      "status": "Roster-ready",
+      "markets": [
+        "FI",
+        "JP"
+      ]
+    },
+    {
+      "mark": "hollow ring (ink)",
+      "status": "Registered · not calibrated",
+      "markets": [
+        "US"
+      ]
+    },
+    {
+      "mark": "no mark",
+      "status": "Not available",
+      "markets": "every other country and territory"
+    }
+  ],
+  "provenance": "Natural Earth 1:50m admin-0 (public domain) via world-atlas 2.0.2 (ISC); ISO 3166-1 codes via i18n-iso-countries 7.14.0 (MIT)",
+  "disclaimer": "Boundaries are Natural Earth de facto lines, drawn for orientation. They are not a political statement.",
+  "stars": "Agent-stars show the shape of the place, not where people live or the panel size. Illustrative.",
+  "north": "The large north star above a map or on the pole is the frame's north; the small filled north star on a country is the roster-ready mark.",
+  "scenes": [
+    {
+      "file": "ns-world.json",
+      "title": "ns-world",
+      "caption": "The world in agent-stars, Equal Earth. Small countries the lattice misses carry one dot-mode agent; micro territories carry one locator dot each, except where a dot would sit within 2.2 px of another agent (9 features: n-cyprus, VC, VG, MS, GG, MO, SX, BL, MF).",
+      "mustPrint": [
+        "key",
+        "provenance",
+        "disclaimer",
+        "stars"
+      ]
+    },
+    {
+      "file": "ns-world-focus.json",
+      "title": "ns-world-focus",
+      "caption": "Into Finland (roster-ready). The Finland map is its own Lambert azimuthal equal-area framing and includes Åland. The map shows the frame, not composition: margins are drawn only on the Population card.",
+      "mustPrint": [
+        "key",
+        "provenance",
+        "disclaimer",
+        "stars",
+        "north"
+      ]
+    },
+    {
+      "file": "ns-world-focus-jp.json",
+      "title": "ns-world-focus-jp",
+      "caption": "Into Japan (roster-ready). Own LAEA framing; the Ryukyu Islands (Amami to Yaeyama) and Ogasawara (Hahajima) are drawn in insets at the map's scale, displaced from their true position; the Ōsumi Islands are at true position. All 34 Natural Earth parts are drawn.",
+      "mustPrint": [
+        "key",
+        "provenance",
+        "disclaimer",
+        "stars",
+        "north"
+      ]
+    },
+    {
+      "file": "ns-earth.json",
+      "title": "ns-earth",
+      "caption": "Land-only agent-stars on an orthographic globe, one turn per loop; depth by size and opacity. No coastlines or borders are drawn on the globe, and no market status.",
+      "mustPrint": [
+        "provenance",
+        "disclaimer",
+        "stars",
+        "north"
+      ]
+    }
+  ]
+}

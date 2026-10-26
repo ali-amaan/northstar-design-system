@@ -1,0 +1,34 @@
+{
+  "name": "@northstar-js/tokens",
+  "version": "0.1.0",
+  "description": "Northstar design tokens: Night and Day themes as CSS variables, a Tailwind v4 theme, JSON and typed TS.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./tailwind.css": "./dist/tailwind.css",
+    "./tokens.json": "./dist/tokens.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "next-smoke",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "SPEC 4.1 smoke test: a Next.js 16 App Router build and hydration with every @northstar-js package.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@northstar-js/charts": "workspace:*",
+    "@northstar-js/contracts": "workspace:*",
+    "@northstar-js/fonts": "workspace:*",
+    "@northstar-js/icons": "workspace:*",
+    "@northstar-js/maps": "workspace:*",
+    "@northstar-js/motion": "workspace:*",
+    "@northstar-js/react": "workspace:*",
+    "@northstar-js/tokens": "workspace:*",
+    "next": "16.4.3",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.1",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "typescript": "5.9.3"
+  }
+}

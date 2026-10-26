@@ -1,0 +1,26 @@
+{
+  "name": "@northstar-js/contracts",
+  "version": "0.1.0",
+  "description": "React-free shared types and placeholder fixtures for Northstar packages.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": { "access": "public" },
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./fixtures": { "types": "./dist/fixtures.d.ts", "import": "./dist/fixtures.js" }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --typecheck"
+  },
+  "devDependencies": {
+    "expect-type": "1.2.2",
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
+  }
+}

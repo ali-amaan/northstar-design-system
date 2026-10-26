@@ -26,3 +26,54 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm lint
       - run: pnpm test
+      - name: contrast
+        run: pnpm --filter @northstar-js/tooling-contrast check
+      - name: icon-lint
+        run: pnpm --filter @northstar-js/tooling-icon-lint check
+      - name: lottie-verify
+        run: pnpm --filter @northstar-js/tooling-lottie-verify verify
+      - name: packages (publint, attw, size-limit)
+        run: pnpm check:packages
+      - name: next-smoke
+        run: pnpm --filter next-smoke build
+
+  storybook:
+    # Visual + accessibility tests over every story (SPEC 4.1). Skips cleanly
+    # while apps/docs has no build or test-storybook script.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: detect scripts
+        id: scripts
+        run: |
+          has() { node -e 'const fs=require("fs");const p="apps/docs/package.json";process.exit(fs.existsSync(p)&&JSON.parse(fs.readFileSync(p,"utf8")).scripts?.[process.argv[1]]?0:1)' "$1"; }
+          if has build; then echo "build=true" >> "$GITHUB_OUTPUT"; fi
+          if has test-storybook; then echo "test=true" >> "$GITHUB_OUTPUT"; fi
+      - name: build packages
+        if: steps.scripts.outputs.build == 'true'
+        run: pnpm --filter "./packages/*" build
+      - name: build Storybook
+        if: steps.scripts.outputs.build == 'true'
+        run: pnpm --filter docs build
+      - name: skip notice
+        if: steps.scripts.outputs.build != 'true' || steps.scripts.outputs.test != 'true'
+        run: echo "::notice::apps/docs has no build or test-storybook script yet; visual and a11y tests skipped."
+      - name: install Playwright browser
+        if: steps.scripts.outputs.build == 'true' && steps.scripts.outputs.test == 'true'
+        run: pnpm --filter docs exec playwright install --with-deps chromium
+      - name: test-storybook (visual + axe)
+        if: steps.scripts.outputs.build == 'true' && steps.scripts.outputs.test == 'true'
+        working-directory: apps/docs
+        run: |
+          python3 -m http.server 6006 --directory storybook-static >/dev/null 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:6006 >/dev/null && break; sleep 1; done
+          pnpm test-storybook --url http://127.0.0.1:6006
