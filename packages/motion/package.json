@@ -5,12 +5,20 @@
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
-  "publishConfig": { "access": "public" },
-  "files": ["dist", "scenes"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "scenes"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./scenes/index.json": "./scenes/index.json",
     "./scenes/*": "./scenes/*"
   },
@@ -38,5 +46,14 @@
     "react-dom": "19.1.0",
     "typescript": "5.9.3",
     "vitest": "3.2.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ali-amaan/northstar-design-system.git",
+    "directory": "packages/motion"
+  },
+  "homepage": "https://ali-amaan.github.io/northstar-design-system/",
+  "bugs": {
+    "url": "https://github.com/ali-amaan/northstar-design-system/issues"
   }
 }

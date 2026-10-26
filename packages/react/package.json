@@ -61,5 +61,14 @@
     "typescript": "5.9.3",
     "vitest": "3.2.7",
     "vitest-axe": "0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ali-amaan/northstar-design-system.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://ali-amaan.github.io/northstar-design-system/",
+  "bugs": {
+    "url": "https://github.com/ali-amaan/northstar-design-system/issues"
   }
 }

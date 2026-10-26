@@ -5,13 +5,23 @@
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
-  "publishConfig": { "access": "public" },
-  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
-    "./fixtures": { "types": "./dist/fixtures.d.ts", "import": "./dist/fixtures.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./fixtures": {
+      "types": "./dist/fixtures.d.ts",
+      "import": "./dist/fixtures.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
@@ -22,5 +32,14 @@
     "expect-type": "1.2.2",
     "typescript": "5.9.3",
     "vitest": "3.2.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ali-amaan/northstar-design-system.git",
+    "directory": "packages/contracts"
+  },
+  "homepage": "https://ali-amaan.github.io/northstar-design-system/",
+  "bugs": {
+    "url": "https://github.com/ali-amaan/northstar-design-system/issues"
   }
 }

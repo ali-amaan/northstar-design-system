@@ -26,5 +26,14 @@
   "devDependencies": {
     "@fontsource/ibm-plex-mono": "5.3.0",
     "@fontsource/inter": "5.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ali-amaan/northstar-design-system.git",
+    "directory": "packages/fonts"
+  },
+  "homepage": "https://ali-amaan.github.io/northstar-design-system/",
+  "bugs": {
+    "url": "https://github.com/ali-amaan/northstar-design-system/issues"
   }
 }
