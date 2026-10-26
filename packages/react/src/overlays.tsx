@@ -1,6 +1,7 @@
 'use client';
 import { cloneElement, createContext, isValidElement, useContext, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import { Portal, useNorthstar } from './provider.js';
+import { Portal, useNorthstar, type Material } from './provider.js';
+import { usePresence } from './internal/interaction.js';
 import { useDismiss, useFocusTrap, rovingKeyDown } from './internal/layers.js';
 import { cx, mergeRefs, useControllable } from './internal/util.js';
 import { Close as CloseGlyph } from './internal/icons.js';
@@ -108,6 +109,14 @@ export interface DialogContentProps extends React.HTMLAttributes<HTMLDivElement>
   /** Close when the overlay is pressed. Default true. */
   dismissOnOutside?: boolean;
   size?: 'sm' | 'md' | 'lg';
+  /** `glass` or `solid`. Defaults to the provider's material. */
+  material?: Material;
+}
+
+/** Material class for a layer: the prop wins, then the provider. */
+function useMaterial(material: Material | undefined): string {
+  const ns = useNorthstar();
+  return `ns-material--${material ?? ns.material}`;
 }
 
 interface ModalSurfaceProps extends DialogContentProps {
@@ -116,7 +125,10 @@ interface ModalSurfaceProps extends DialogContentProps {
   side?: 'right' | 'left' | 'bottom';
 }
 
-function ModalSurface({ ctx, kind, side = 'right', dismissOnOutside = true, size = 'md', className, children, ...rest }: ModalSurfaceProps) {
+function ModalSurface({ ctx, kind, side = 'right', dismissOnOutside = true, size = 'md', material, className, children, ...rest }: ModalSurfaceProps) {
+  const materialClass = useMaterial(material);
+  const mounted = usePresence(ctx.open, ctx.contentRef);
+  const state = ctx.open ? 'open' : 'closed';
   useDismiss(ctx.open, [ctx.contentRef], () => ctx.setOpen(false), { outside: dismissOnOutside });
   useFocusTrap(ctx.open, ctx.contentRef);
   useEffect(() => {
@@ -127,10 +139,10 @@ function ModalSurface({ ctx, kind, side = 'right', dismissOnOutside = true, size
       document.body.style.overflow = prev;
     };
   }, [ctx.open]);
-  if (!ctx.open) return null;
+  if (!mounted) return null;
   return (
     <Portal>
-      <div className={cx('ns-overlay', `ns-overlay--${kind}`)} aria-hidden="true" />
+      <div className={cx('ns-overlay', `ns-overlay--${kind}`)} aria-hidden="true" data-state={state} />
       <div
         role="dialog"
         aria-modal="true"
@@ -140,7 +152,9 @@ function ModalSurface({ ctx, kind, side = 'right', dismissOnOutside = true, size
         id={ctx.contentId}
         {...rest}
         ref={ctx.contentRef}
-        className={cx(kind === 'dialog' ? 'ns-dialog' : 'ns-sheet', kind === 'dialog' ? `ns-dialog--${size}` : `ns-sheet--${side}`, className)}
+        data-state={state}
+        inert={!ctx.open || undefined}
+        className={cx(kind === 'dialog' ? 'ns-dialog' : 'ns-sheet', kind === 'dialog' ? `ns-dialog--${size}` : `ns-sheet--${side}`, materialClass, className)}
       >
         {children}
       </div>
@@ -340,9 +354,13 @@ export interface PopoverContentProps extends React.HTMLAttributes<HTMLDivElement
   align?: Align;
   /** Accessible name when the popover has no Popover.Title. */
   label?: string;
+  /** `glass` or `solid`. Defaults to the provider's material. */
+  material?: Material;
 }
-function PopoverContent({ side = 'bottom', align = 'start', label, className, style, children, ...rest }: PopoverContentProps) {
+function PopoverContent({ side = 'bottom', align = 'start', label, material, className, style, children, ...rest }: PopoverContentProps) {
   const ctx = useLayer(PopoverContext, 'Popover.Content');
+  const materialClass = useMaterial(material);
+  const mounted = usePresence(ctx.open, ctx.contentRef);
   const close = () => {
     ctx.setOpen(false);
     ctx.triggerRef.current?.focus();
@@ -354,7 +372,7 @@ function PopoverContent({ side = 'bottom', align = 'start', label, className, st
     const el = ctx.contentRef.current;
     (el?.querySelector<HTMLElement>('[data-autofocus]') ?? el)?.focus();
   }, [ctx.open]);
-  if (!ctx.open) return null;
+  if (!mounted) return null;
   return (
     <Portal>
       <div
@@ -366,7 +384,9 @@ function PopoverContent({ side = 'bottom', align = 'start', label, className, st
         {...rest}
         ref={ctx.contentRef}
         data-side={side}
-        className={cx('ns-popover ns-pop', className)}
+        data-state={ctx.open ? 'open' : 'closed'}
+        inert={!ctx.open || undefined}
+        className={cx('ns-popover ns-pop', materialClass, className)}
         style={{ ...style, top: pos?.top ?? 0, left: pos?.left ?? 0, visibility: pos ? undefined : 'hidden' }}
         onKeyDown={(e) => {
           rest.onKeyDown?.(e);
@@ -439,10 +459,14 @@ function MenuTrigger(props: TriggerProps) {
 export interface MenuContentProps extends React.HTMLAttributes<HTMLDivElement> {
   side?: Side;
   align?: Align;
+  /** `glass` or `solid`. Defaults to the provider's material. */
+  material?: Material;
 }
 
-function MenuContent({ side = 'bottom', align = 'start', className, style, children, ...rest }: MenuContentProps) {
+function MenuContent({ side = 'bottom', align = 'start', material, className, style, children, ...rest }: MenuContentProps) {
   const ctx = useLayer(MenuContext, 'Menu.Content');
+  const materialClass = useMaterial(material);
+  const mounted = usePresence(ctx.open, ctx.contentRef);
   const close = () => {
     ctx.setOpen(false);
     ctx.triggerRef.current?.focus();
@@ -457,7 +481,7 @@ function MenuContent({ side = 'bottom', align = 'start', className, style, child
     openFocus = 'first';
     (which === 'last' ? items[items.length - 1] : items[0])?.focus();
   }, [ctx.open]);
-  if (!ctx.open) return null;
+  if (!mounted) return null;
   return (
     <Portal>
       <div
@@ -468,7 +492,10 @@ function MenuContent({ side = 'bottom', align = 'start', className, style, child
         tabIndex={-1}
         {...rest}
         ref={ctx.contentRef}
-        className={cx('ns-menu ns-pop', className)}
+        data-side={side}
+        data-state={ctx.open ? 'open' : 'closed'}
+        inert={!ctx.open || undefined}
+        className={cx('ns-menu ns-pop', materialClass, className)}
         style={{ ...style, top: pos?.top ?? 0, left: pos?.left ?? 0, visibility: pos ? undefined : 'hidden' }}
         onKeyDown={(e) => {
           rest.onKeyDown?.(e);
@@ -566,13 +593,17 @@ export interface TooltipProps {
   align?: Align;
   /** Hover delay in ms. Focus shows immediately. */
   delay?: number;
+  /** `glass` or `solid`. Defaults to the provider's material. */
+  material?: Material;
 }
 
 /** Supplementary text on hover and focus; Escape hides it. Never the only label of a control. */
-export function Tooltip({ content, children, side = 'top', align = 'center', delay = 400 }: TooltipProps) {
+export function Tooltip({ content, children, side = 'top', align = 'center', delay = 400, material }: TooltipProps) {
   const [open, setOpen] = useState(false);
   const anchor = useRef<HTMLElement>(null);
   const floating = useRef<HTMLDivElement>(null);
+  const materialClass = useMaterial(material);
+  const mounted = usePresence(open, floating);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const id = `ns-tooltip-${useId().replace(/:/g, '')}`;
   const pos = usePosition(open, anchor, floating, side, align);
@@ -612,14 +643,15 @@ export function Tooltip({ content, children, side = 'top', align = 'center', del
           hide();
         },
       })}
-      {open && (
+      {mounted && (
         <Portal>
           <div
-            id={id}
+            id={open ? id : undefined}
             role="tooltip"
             ref={floating}
-            className="ns-tooltip"
+            className={cx('ns-tooltip', materialClass)}
             data-side={side}
+            data-state={open ? 'open' : 'closed'}
             style={{ top: pos?.top ?? 0, left: pos?.left ?? 0, visibility: pos ? undefined : 'hidden' }}
           >
             {content}

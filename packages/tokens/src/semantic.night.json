@@ -49,5 +49,20 @@
     "1": { "$value": "none" },
     "2": { "$value": "none" },
     "3": { "$value": "none" }
+  },
+  "material": {
+    "$description": "Glass: translucent layered fill, rim highlight, specular sheen and a glacier glow. Components fall back to material.solid when transparency is reduced or backdrop-filter is unsupported.",
+    "glass": {
+      "$type": "color",
+      "fill": { "$value": "rgba(20, 22, 27, 0.62)" },
+      "tint": { "$value": "rgba(147, 180, 224, 0.06)", "$description": "Glacier tint layered over the fill." },
+      "edge": { "$value": "rgba(232, 234, 238, 0.12)", "$description": "Hairline border of a glass layer." },
+      "rim": { "$value": "rgba(255, 255, 255, 0.16)", "$description": "Specular rim on the top edge." },
+      "specular": { "$type": "other", "$value": "linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 42%)" }
+    },
+    "solid": { "$type": "color", "$value": "{night.2}", "$description": "Opaque fallback for glass." },
+    "glow": { "$type": "color", "$value": "{glacier.alpha-35}", "$description": "Glacier glow around focused and pressed controls." },
+    "spotlight": { "$type": "color", "$value": "rgba(147, 180, 224, 0.16)", "$description": "Pointer-tracked spotlight wash." },
+    "shadow": { "$type": "shadow", "$value": "0 24px 48px -12px rgba(0, 0, 0, 0.6)" }
   }
 }

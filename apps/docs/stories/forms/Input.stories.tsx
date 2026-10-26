@@ -15,3 +15,17 @@ export const Sizes: Story = {
     </Stack>
   ),
 };
+
+/** Focus brings a glacier glow; it is the same for pointer and keyboard. */
+export const FocusGlow: Story = {
+  render: () => (
+    <Stack gap={12} style={{ maxWidth: 320 }}>
+      <Field label="Study name">
+        <Input defaultValue="Weekday lunch" autoFocus />
+      </Field>
+      <Field label="Seed" description="Fixes the roster">
+        <Input placeholder="[SEED]" />
+      </Field>
+    </Stack>
+  ),
+};

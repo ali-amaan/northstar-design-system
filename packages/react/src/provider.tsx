@@ -8,6 +8,8 @@ const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayout
 export type ThemeSetting = 'night' | 'day' | 'system';
 export type ResolvedTheme = 'night' | 'day';
 export type Density = 'compact' | 'default' | 'comfortable';
+/** Surface material. `glass` is translucent with a backdrop blur; it falls back to solid on its own. */
+export type Material = 'solid' | 'glass';
 
 /** Every user-visible string the basic components render. English is the default. */
 export interface Messages {
@@ -55,6 +57,8 @@ export interface NorthstarContextValue {
   resolvedTheme: ResolvedTheme;
   density: Density;
   messages: Messages;
+  /** Default material for overlays, toasts and surfaces that do not set their own. */
+  material: Material;
   setTheme: (theme: ThemeSetting) => void;
 }
 
@@ -63,6 +67,7 @@ const fallback: NorthstarContextValue = {
   resolvedTheme: 'night',
   density: 'default',
   messages: en,
+  material: 'solid',
   setTheme: () => {},
 };
 
@@ -77,6 +82,8 @@ export interface NorthstarProviderProps extends Omit<React.HTMLAttributes<HTMLDi
   theme?: ThemeSetting;
   density?: Density;
   messages?: Partial<Messages>;
+  /** Default material for overlays, toasts and surfaces. Default `solid`. */
+  material?: Material;
   /** Also write data-theme/data-density on <html> (for full-page apps). */
   applyToDocument?: boolean;
   onThemeChange?: (theme: ThemeSetting) => void;
@@ -97,6 +104,7 @@ export function NorthstarProvider({
   theme: themeProp = 'system',
   density = 'default',
   messages,
+  material = 'solid',
   applyToDocument = false,
   onThemeChange,
   className,
@@ -133,12 +141,13 @@ export function NorthstarProvider({
       resolvedTheme,
       density,
       messages: { ...en, ...messages },
+      material,
       setTheme: (t) => {
         setThemeState(t);
         onThemeChange?.(t);
       },
     }),
-    [theme, resolvedTheme, density, messages, onThemeChange],
+    [theme, resolvedTheme, density, messages, material, onThemeChange],
   );
 
   return (

@@ -37,6 +37,19 @@ const COLOR_ROLES = [
   "color.data.likert.5",
 ];
 
+/** Material roles for the glass interaction layer. */
+const MATERIAL_ROLES = [
+  "material.glass.fill",
+  "material.glass.tint",
+  "material.glass.edge",
+  "material.glass.rim",
+  "material.glass.specular",
+  "material.solid",
+  "material.glow",
+  "material.spotlight",
+  "material.shadow",
+];
+
 /** SPEC §3.2, verbatim. */
 const SPEC: Record<string, [string, string]> = {
   "color.ground": ["#08090C", "#FFFFFF"],
@@ -63,6 +76,21 @@ describe("themes", () => {
     for (const theme of themes) {
       const defined = Object.keys(tokens.themes[theme]);
       for (const role of COLOR_ROLES) expect(defined, `${theme} ${role}`).toContain(role);
+    }
+  });
+
+  it("both themes define every material role", () => {
+    for (const theme of themes) {
+      const defined = Object.keys(tokens.themes[theme]);
+      for (const role of MATERIAL_ROLES) expect(defined, `${theme} ${role}`).toContain(role);
+    }
+  });
+
+  it("glass is translucent and its fallback is opaque", () => {
+    for (const theme of themes) {
+      const t = tokens.themes[theme];
+      expect(t["material.glass.fill"], theme).toMatch(/^rgba\(.+, 0\.\d+\)$/);
+      expect(t["material.solid"], theme).toMatch(/^#[0-9A-F]{6}$/i);
     }
   });
 
@@ -126,7 +154,26 @@ describe("layers", () => {
     expect(JSON.stringify(primitive)).not.toMatch(/"{[^}]+}"/);
   });
 
-  it("easings are cubic-beziers", () => {
+  it("easings and springs are cubic-beziers", () => {
+    for (const e of ["settle", "enter", "travel", "exit"]) {
+      expect(built.scales[`motion.easing.${e}` as keyof typeof built.scales]).toMatch(
+        /^cubic-bezier\(/,
+      );
+    }
+    for (const e of ["press", "release", "settle"]) {
+      expect(built.scales[`motion.spring.${e}` as keyof typeof built.scales]).toMatch(
+        /^cubic-bezier\(/,
+      );
+    }
+  });
+
+  it("spring durations are tokens, so reduced motion zeroes them", () => {
+    for (const d of ["press", "release", "settle"]) {
+      expect(built.scales[`motion.duration.${d}` as keyof typeof built.scales]).toMatch(/^\d+ms$/);
+    }
+  });
+
+  it("original easings are unchanged", () => {
     for (const e of ["settle", "enter", "travel", "exit"]) {
       expect(built.scales[`motion.easing.${e}` as keyof typeof built.scales]).toMatch(
         /^cubic-bezier\(/,

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell, Tag } from '@northstar-js/react';
+import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell, Tag, Link } from '@northstar-js/react';
 
 const meta = { title: 'Data display/Table' } satisfies Meta;
 export default meta;
@@ -22,6 +22,30 @@ export const Default: Story = {
             <TableCell>{a}</TableCell>
             <TableCell numeric>{b}</TableCell>
             <TableCell><Tag>{c}</Tag></TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ),
+};
+
+/** Rows lift on hover and when a link inside has keyboard focus. */
+export const Interactive: Story = {
+  render: () => (
+    <Table interactive caption="Studies">
+      <TableHead>
+        <TableRow>
+          <TableHeaderCell>Study</TableHeaderCell>
+          <TableHeaderCell numeric>Agents</TableHeaderCell>
+          <TableHeaderCell>Status</TableHeaderCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {['Weekday lunch', 'Commuting', 'Streaming'].map((name) => (
+          <TableRow key={name}>
+            <TableCell><Link href="#" tone="neutral">{name}</Link></TableCell>
+            <TableCell numeric>[N]</TableCell>
+            <TableCell><Tag>Draft</Tag></TableCell>
           </TableRow>
         ))}
       </TableBody>

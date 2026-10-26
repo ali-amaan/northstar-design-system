@@ -104,8 +104,9 @@ export default [
   },
   {
     name: "react: styles.css",
+    message: "includes the interaction layer (glass material, springs, pointer light)",
     path: "../../packages/react/dist/styles.css",
-    limit: "7 kB",
+    limit: "10.5 kB",
     disablePlugins: ["@size-limit/esbuild"],
   },
 ];

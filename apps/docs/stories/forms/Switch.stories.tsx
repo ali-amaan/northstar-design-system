@@ -14,3 +14,13 @@ export const Default: Story = {
     </Stack>
   ),
 };
+
+/** The thumb stretches on press and springs across on release. */
+export const Spring: Story = {
+  render: () => (
+    <Stack gap={12}>
+      <Switch defaultChecked>Live updates</Switch>
+      <Switch>Show raw answers</Switch>
+    </Stack>
+  ),
+};

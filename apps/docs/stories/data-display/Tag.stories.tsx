@@ -14,3 +14,12 @@ export const Default: Story = {
     </Stack>
   ),
 };
+
+export const Removable: Story = {
+  render: () => (
+    <Stack direction="row" gap={6}>
+      <Tag onRemove={() => {}}>Age 25–34</Tag>
+      <Tag tone="signal" onRemove={() => {}}>Uusimaa</Tag>
+    </Stack>
+  ),
+};

@@ -14,3 +14,12 @@ export const Default: Story = {
     </Stack>
   ),
 };
+
+/** The underline draws in from the left on hover and keyboard focus. */
+export const Underline: Story = {
+  render: () => (
+    <p style={{ maxWidth: 520, color: 'var(--ns-color-text-2)' }}>
+      Shares are measured against published figures; read the <Link href="#">method note</Link> or the <Link href="#" tone="neutral">reliability bands</Link> before quoting a level.
+    </p>
+  ),
+};

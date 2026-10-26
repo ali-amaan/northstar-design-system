@@ -1,5 +1,8 @@
 export { NorthstarProvider, useNorthstar, Portal, en } from './provider.js';
-export type { NorthstarProviderProps, NorthstarContextValue, Messages, ThemeSetting, ResolvedTheme, Density } from './provider.js';
+export type { NorthstarProviderProps, NorthstarContextValue, Messages, ThemeSetting, ResolvedTheme, Density, Material } from './provider.js';
+
+export { Surface, Card, Panel } from './surface.js';
+export type { SurfaceProps, CardProps, CardVariant, PanelProps } from './surface.js';
 export type { Size, Tone } from './internal/util.js';
 
 export { Button, IconButton, Link, ButtonGroup } from './actions.js';
@@ -18,7 +21,7 @@ export { Toast, Toaster, toast, useToasts, Banner } from './feedback.js';
 export type { ToastOptions, ToastRecord, ToastProps, ToasterProps, BannerProps } from './feedback.js';
 
 export { Tabs, Breadcrumbs, Pagination, Sidebar, SidebarSection, SidebarItem } from './navigation.js';
-export type { TabsRootProps, TabsTriggerProps, TabsContentProps, BreadcrumbItem, BreadcrumbsProps, PaginationProps, SidebarProps, SidebarSectionProps, SidebarItemProps } from './navigation.js';
+export type { TabsIndicator, TabsRootProps, TabsTriggerProps, TabsContentProps, BreadcrumbItem, BreadcrumbsProps, PaginationProps, SidebarProps, SidebarSectionProps, SidebarItemProps } from './navigation.js';
 
 export { AppShell, TopBar, Stack, Grid } from './layout.js';
 export type { AppShellProps, TopBarProps, StackProps, GridProps } from './layout.js';

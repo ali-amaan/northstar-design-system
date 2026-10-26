@@ -9,12 +9,14 @@ export interface TableProps extends React.TableHTMLAttributes<HTMLTableElement> 
   /** Sticky header row. */
   stickyHeader?: boolean;
   caption?: React.ReactNode;
+  /** Body rows lift on hover and on keyboard focus within, for tables whose rows open something. */
+  interactive?: boolean;
 }
 
-export function Table({ density, stickyHeader = false, caption, className, children, ...rest }: TableProps) {
+export function Table({ density, stickyHeader = false, caption, interactive = false, className, children, ...rest }: TableProps) {
   return (
     <div className="ns-table-wrap">
-      <table {...rest} className={cx('ns-table', stickyHeader && 'ns-table--sticky', className)} data-density={density}>
+      <table {...rest} className={cx('ns-table', stickyHeader && 'ns-table--sticky', interactive && 'ns-table--interactive', className)} data-density={density}>
         {caption && <caption className="ns-table__caption">{caption}</caption>}
         {children}
       </table>

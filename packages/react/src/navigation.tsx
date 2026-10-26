@@ -1,5 +1,6 @@
 'use client';
-import { createContext, useContext, useId } from 'react';
+import { createContext, useContext, useEffect, useId, useLayoutEffect, useRef } from 'react';
+import type { Material } from './provider.js';
 import { useNorthstar } from './provider.js';
 import { rovingKeyDown } from './internal/layers.js';
 import { cx, useControllable } from './internal/util.js';
@@ -12,7 +13,12 @@ interface TabsContextValue {
   setValue: (v: string) => void;
   baseId: string;
   orientation: 'horizontal' | 'vertical';
+  indicator: TabsIndicator;
 }
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+/** `line` (default): a glacier underline that slides between tabs. `glass` / `solid`: a sliding pill behind the label. */
+export type TabsIndicator = 'line' | Material;
 const TabsContext = createContext<TabsContextValue | null>(null);
 function useTabs(name: string) {
   const v = useContext(TabsContext);
@@ -25,27 +31,69 @@ export interface TabsRootProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   orientation?: 'horizontal' | 'vertical';
+  /** How the selected tab is marked. Default `line`. */
+  indicator?: TabsIndicator;
 }
 
-function TabsRoot({ value, defaultValue, onValueChange, orientation = 'horizontal', className, ...rest }: TabsRootProps) {
+function TabsRoot({ value, defaultValue, onValueChange, orientation = 'horizontal', indicator = 'line', className, ...rest }: TabsRootProps) {
   const [v, setV] = useControllable(value, defaultValue ?? '', onValueChange);
   const baseId = `ns-tabs-${useId().replace(/:/g, '')}`;
   return (
-    <TabsContext.Provider value={{ value: v, setValue: setV, baseId, orientation }}>
-      <div {...rest} className={cx('ns-tabs', `ns-tabs--${orientation}`, className)} />
+    <TabsContext.Provider value={{ value: v, setValue: setV, baseId, orientation, indicator }}>
+      <div {...rest} className={cx('ns-tabs', `ns-tabs--${orientation}`, indicator !== 'line' && 'ns-tabs--pill', indicator === 'glass' && 'ns-tabs--glass', className)} />
     </TabsContext.Provider>
   );
 }
 
-function TabsList({ className, onKeyDown, ...rest }: React.HTMLAttributes<HTMLDivElement> & { label?: string }) {
+/**
+ * Measures the selected tab and moves the indicator with a transform written
+ * straight to the element: no re-render, and a spring transition in CSS. Until
+ * it has measured (server HTML, no layout) each selected tab draws its own mark.
+ */
+function useIndicator(list: React.RefObject<HTMLDivElement | null>, mark: React.RefObject<HTMLSpanElement | null>, value: string) {
+  useIsoLayoutEffect(() => {
+    const el = list.current;
+    const ind = mark.current;
+    if (!el || !ind) return;
+    let frame = 0;
+    const place = () => {
+      const tab = el.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]');
+      if (!tab || tab.offsetWidth === 0) {
+        el.removeAttribute('data-indicator');
+        return;
+      }
+      ind.style.width = `${tab.offsetWidth}px`;
+      ind.style.height = `${tab.offsetHeight}px`;
+      ind.style.transform = `translate(${tab.offsetLeft}px, ${tab.offsetTop}px)`;
+      // The first placement jumps into position; later ones slide.
+      if (!el.hasAttribute('data-indicator')) {
+        el.setAttribute('data-indicator', 'placed');
+        frame = requestAnimationFrame(() => el.setAttribute('data-indicator', 'ready'));
+      }
+    };
+    place();
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(place);
+    ro?.observe(el);
+    return () => {
+      ro?.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [value]);
+}
+
+function TabsList({ className, onKeyDown, children, ...rest }: React.HTMLAttributes<HTMLDivElement> & { label?: string }) {
   const ctx = useTabs('Tabs.List');
   const { label, ...props } = rest;
+  const list = useRef<HTMLDivElement>(null);
+  const mark = useRef<HTMLSpanElement>(null);
+  useIndicator(list, mark, ctx.value);
   return (
     <div
       role="tablist"
       aria-label={label}
       aria-orientation={ctx.orientation}
       {...props}
+      ref={list}
       className={cx('ns-tabs__list', className)}
       onKeyDown={(e) => {
         onKeyDown?.(e);
@@ -53,7 +101,10 @@ function TabsList({ className, onKeyDown, ...rest }: React.HTMLAttributes<HTMLDi
         const v = t?.getAttribute('data-value');
         if (v) ctx.setValue(v);
       }}
-    />
+    >
+      <span ref={mark} className="ns-tabs__indicator" aria-hidden="true" />
+      {children}
+    </div>
   );
 }
 

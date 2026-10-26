@@ -13,9 +13,14 @@
 //                             (node, star, horizon) is checked.
 //   - color.data.likert.*     ordinal fills read against each other with labels, not against the ground.
 //   - color.focus.halo        drawn together with color.focus, which is checked.
+//   - material.glass.tint / edge / rim / specular, material.glow / spotlight
+//                             decorative layers of the glass material; the fill they sit on is
+//                             checked as a ground below.
 //
 //
-// Translucent grounds (color.signal.wash) are composited over color.ground first.
+// Translucent grounds (color.signal.wash, material.glass.fill) are composited over color.ground
+// first. Glass is additionally checked over the busiest surface it may float above
+// (color.surface.3), and its opaque fallback material.solid is checked as a ground.
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 
@@ -30,7 +35,11 @@ const GROUNDS = [
   "color.surface.2",
   "color.surface.3",
   "color.signal.wash",
+  "material.glass.fill",
+  "material.solid",
 ];
+/** Translucent grounds also composited over these surfaces. */
+const BACKDROPS = { "material.glass.fill": ["color.surface.3", "color.signal.wash"] };
 const TEXT = ["color.text.1", "color.text.2", "color.text.3", "color.signal.default"];
 const ICON = [
   "color.signal.default",
@@ -93,15 +102,23 @@ for (const [theme, roles] of Object.entries(tokens.themes)) {
     for (const t of TEXT) if (!RESTRICT[t]?.includes(g)) rows.push([t, g, 4.5, "text"]);
     for (const i of ICON) rows.push([i, g, 3, "icon"]);
   }
+  // Glass over other backdrops: [fg, translucent ground, backdrop, min].
+  for (const [g, backs] of Object.entries(BACKDROPS))
+    for (const back of backs) {
+      for (const t of TEXT) rows.push([t, g, 4.5, "text", back]);
+      for (const i of ICON) rows.push([i, g, 3, "icon", back]);
+    }
   for (const [f, b, min] of PAIRS) rows.push([f, b, min, "pair"]);
 
-  for (const [fg, bg, min, kind] of rows) {
+  for (const [fg, bg, min, kind, back] of rows) {
     checks++;
-    const r = ratio(solid(fg), solid(bg));
+    const ground = back ? over(parse(roles[bg]), solid(back)) : solid(bg);
+    const r = ratio(solid(fg), ground);
     if (r < min) {
       failures++;
+      const where = back ? `${bg} over ${back}` : bg;
       console.error(
-        `FAIL ${theme.padEnd(5)} ${kind.padEnd(4)} ${fg} on ${bg}: ${r.toFixed(2)} < ${min}`,
+        `FAIL ${theme.padEnd(5)} ${kind.padEnd(4)} ${fg} on ${where}: ${r.toFixed(2)} < ${min}`,
       );
     }
   }

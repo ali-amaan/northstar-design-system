@@ -17,6 +17,8 @@ const day = resolveTheme(layers, "day");
 const decls = (list, indent = "  ") =>
   list.map((t) => `${indent}${t.name}: ${t.value};`).join("\n");
 const durations = night.scales.filter((t) => t.type === "duration");
+// Glass fills that become the opaque solid when the user asks for less transparency.
+const glass = night.semantic.filter((t) => t.path === "material.glass.fill" || t.path === "material.glass.tint");
 
 // ---- tokens.css
 const css = `/* @northstar-js/tokens — generated from src/*.json. Do not edit. */
@@ -48,6 +50,13 @@ ${decls(day.component, "    ")}
 ${durations.map((t) => `    ${t.name}: 0ms;`).join("\n")}
   }
 }
+
+@media (prefers-reduced-transparency: reduce) {
+  :root,
+  [data-theme] {
+${glass.map((t) => `    ${t.name}: var(--ns-material-solid);`).join("\n")}
+  }
+}
 `;
 write("tokens.css", css);
 
@@ -74,6 +83,8 @@ for (const t of night.scales) {
   if (p[0] === "space") tw.push(`  --spacing-${p[1]}: ${v(t)};`);
   if (p[0] === "radius") tw.push(`  --radius-${p[1]}: ${v(t)};`);
   if (p[0] === "motion" && p[1] === "easing") tw.push(`  --ease-${p[2]}: ${v(t)};`);
+  if (p[0] === "motion" && p[1] === "spring") tw.push(`  --ease-spring-${p[2]}: ${v(t)};`);
+  if (p[0] === "material" && p[1] === "blur") tw.push(`  --blur-glass-${p[2]}: ${v(t)};`);
 }
 write(
   "tailwind.css",

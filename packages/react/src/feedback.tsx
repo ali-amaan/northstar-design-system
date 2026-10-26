@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useSyncExternalStore } from 'react';
-import { Portal, useNorthstar } from './provider.js';
+import { Portal, useNorthstar, type Material } from './provider.js';
 import { cx, type Tone } from './internal/util.js';
 import { Close } from './internal/icons.js';
 
@@ -14,6 +14,8 @@ export interface ToastOptions {
   duration?: number;
   action?: { label: string; onClick: () => void };
   id?: string;
+  /** `glass` or `solid`. Defaults to the provider's material. */
+  material?: Material;
 }
 
 export interface ToastRecord extends ToastOptions {
@@ -58,13 +60,15 @@ export interface ToastProps extends Omit<React.HTMLAttributes<HTMLDivElement>, '
   tone?: Tone;
   action?: { label: string; onClick: () => void };
   onDismiss?: () => void;
+  /** `glass` or `solid`. Defaults to the provider's material. */
+  material?: Material;
 }
 
 /** One toast surface. Usually rendered by <Toaster />. */
-export function Toast({ title, description, tone = 'neutral', action, onDismiss, className, ...rest }: ToastProps) {
-  const { messages } = useNorthstar();
+export function Toast({ title, description, tone = 'neutral', action, onDismiss, material, className, ...rest }: ToastProps) {
+  const { messages, material: fallback } = useNorthstar();
   return (
-    <div {...rest} className={cx('ns-toast', tone === 'signal' && 'ns-tone-signal', className)}>
+    <div {...rest} className={cx('ns-toast', `ns-material--${material ?? fallback}`, tone === 'signal' && 'ns-tone-signal', className)}>
       <div className="ns-toast__text">
         <div className="ns-toast__title">{title}</div>
         {description && <div className="ns-toast__description">{description}</div>}
