@@ -2,7 +2,7 @@
 import { useId, useRef, type ReactNode } from 'react';
 import type { QuestionType, ResearchItem, ResponseFormat } from '@northstar-js/contracts';
 import { Icon } from '@northstar-js/icons';
-import { Button } from '../actions.js';
+import { Button, IconButton } from '../actions.js';
 import { Select } from '../forms.js';
 import { EmptyResearch } from '../illustrations/index.js';
 import { cx, useControllable } from '../internal/util.js';
@@ -94,8 +94,8 @@ export function ResearchBuilder({
           <span>{m.items}</span>
           <span className="ns-study-mono">{list.length}</span>
           {!readOnly && (
-            <Button size="sm" className="ns-study-panel__end" onClick={add}>
-              <Icon name="add" size={14} /> {m.addItem}
+            <Button size="sm" className="ns-study-panel__end" icon={<Icon name="add" size={14} />} onClick={add}>
+              {m.addItem}
             </Button>
           )}
         </div>
@@ -131,15 +131,9 @@ export function ResearchBuilder({
                   </button>
                   {!readOnly && (
                     <span className="ns-research__tools">
-                      <button type="button" className="ns-study-icon-button" aria-label={m.moveUp(id(i))} disabled={i === 0} onClick={() => move(i, -1)}>
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 7.5 6 4.5 9 7.5" /></svg>
-                      </button>
-                      <button type="button" className="ns-study-icon-button" aria-label={m.moveDown(id(i))} disabled={i === list.length - 1} onClick={() => move(i, 1)}>
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" /></svg>
-                      </button>
-                      <button type="button" className="ns-study-icon-button" aria-label={m.removeItem(id(i))} onClick={() => remove(i)}>
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6" /></svg>
-                      </button>
+                      <IconButton size="sm" variant="ghost" expand className="ns-research__tool" label={m.moveUp(id(i))} disabled={i === 0} onClick={() => move(i, -1)} icon={<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 7.5 6 4.5 9 7.5" /></svg>} />
+                      <IconButton size="sm" variant="ghost" expand className="ns-research__tool" label={m.moveDown(id(i))} disabled={i === list.length - 1} onClick={() => move(i, 1)} icon={<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" /></svg>} />
+                      <IconButton size="sm" variant="ghost" expand className="ns-research__tool" label={m.removeItem(id(i))} onClick={() => remove(i)} icon={<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6" /></svg>} />
                     </span>
                   )}
                 </li>

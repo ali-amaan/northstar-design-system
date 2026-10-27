@@ -12,8 +12,17 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { cx, mergeRefs } from './internal/util.js';
 
 /** Mirrors `material.liquid.*` in @northstar-js/tokens (checked by a test). */
-export const LIQUID = { scale: { sm: 14, md: 28, lg: 44 }, bevel: 0.16, aberration: 2, frost: 0.6 } as const;
+export const LIQUID = {
+  scale: { sm: 14, md: 28, lg: 44 },
+  bevel: 0.16,
+  aberration: 2,
+  frost: 0.6,
+  /** Mirrors `radius.glass.*`: tight corners for precision, never fully round. */
+  radius: { panel: 10, bar: 10, control: 7, inner: 6 },
+} as const;
 export type LiquidSize = keyof typeof LIQUID.scale;
+/** A `radius.glass.*` step, `pill` (now the bar radius, not fully round) or `full` (a true circle or capsule). */
+export type LiquidRadius = number | keyof typeof LIQUID.radius | 'pill' | 'full';
 
 /**
  * The displacement map as an SVG data URI. Red carries x, green carries y;
@@ -134,8 +143,12 @@ export interface LiquidGlassProps extends React.HTMLAttributes<HTMLElement> {
    * displacement) renders a filter measured to this element.
    */
   scale?: LiquidSize | number;
-  /** Corner radius in px; `pill` is fully round. Default 16. */
-  radius?: number | 'pill';
+  /**
+   * Corner radius: px, or a `radius.glass.*` step (`panel`, `bar`, `control`,
+   * `inner`). `pill` is the bar radius (glass is no longer fully round);
+   * `full` is a true capsule. Default `panel` (10px).
+   */
+  radius?: LiquidRadius;
   /** Lift with a soft drop shadow. Default true. */
   floating?: boolean;
   /** Glacier tint strength. `none` keeps only the neutral body. */
@@ -149,7 +162,7 @@ export interface LiquidGlassProps extends React.HTMLAttributes<HTMLElement> {
  * a specular highlight sits on the top-left, a rim of light runs round the
  * edge with an inner glow under it, and the body carries a faint glacier tint.
  */
-export function LiquidGlass({ scale = 'md', radius = 16, floating = true, tint = 'subtle', as: Tag = 'div', className, style, ref, children, ...rest }: LiquidGlassProps) {
+export function LiquidGlass({ scale = 'md', radius = 'panel', floating = true, tint = 'subtle', as: Tag = 'div', className, style, ref, children, ...rest }: LiquidGlassProps) {
   const custom = typeof scale === 'number';
   const fid = `ns-lg-${useId().replace(/:/g, '')}`;
   const node = useRef<HTMLElement | null>(null);
@@ -165,8 +178,11 @@ export function LiquidGlass({ scale = 'md', radius = 16, floating = true, tint =
     ro.observe(el);
     return () => ro.disconnect();
   }, [custom]);
-  const r = radius === 'pill' ? 9999 : radius;
-  const vars: Record<string, string> = { '--ns-liquid-radius': `${r}px` };
+  const step = radius === 'pill' ? 'bar' : radius;
+  const r = typeof step === 'number' ? step : step === 'full' ? 9999 : LIQUID.radius[step];
+  const vars: Record<string, string> = {
+    '--ns-liquid-radius': typeof step === 'number' ? `${step}px` : step === 'full' ? '9999px' : `var(--ns-radius-glass-${step})`,
+  };
   if (custom && box) vars['--ns-liquid-filter'] = `url(#${fid})`;
   return (
     <Tag

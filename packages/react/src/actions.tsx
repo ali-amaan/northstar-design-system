@@ -3,13 +3,32 @@ import { useNorthstar, type Material } from './provider.js';
 import { usePointerTracking } from './internal/interaction.js';
 import { cx, mergeRefs, type Size, type Tone } from './internal/util.js';
 import { rovingKeyDown } from './internal/layers.js';
+import { ExpandIcon, ExpandLabel, expandHost, type Expand } from './internal/expand.js';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+/**
+ * `silver` is the brushed-metal finish. Secondary and primary buttons take it
+ * on their own inside liquid glass (`.ns-liquid`, `material="glass"` surfaces,
+ * or any `[data-material="glass"]` ancestor); `tone="silver"` asks for it
+ * anywhere, and `material="solid"` opts a button out on glass.
+ */
+export type ButtonTone = Tone | 'silver';
+
+/** Where silver turns on by itself. */
+const GLASS_HOST = '.ns-liquid, .ns-material--glass, [data-material="glass"]';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: Size;
-  tone?: Tone;
+  tone?: ButtonTone;
+  /** Leading icon (decorative; the label names the button). */
+  icon?: React.ReactNode;
+  /**
+   * Icon-first: with `icon`, `true` shows only the icon and eases the full
+   * label open on hover and keyboard focus (never truncated; always open on
+   * touch). `always` keeps it open. Default false.
+   */
+  expand?: Expand;
   loading?: boolean;
   /** Accessible text announced while loading. */
   loadingLabel?: string;
@@ -46,6 +65,8 @@ export function Button({
   variant = 'secondary',
   size = 'md',
   tone = 'neutral',
+  icon,
+  expand = false,
   loading = false,
   loadingLabel = 'Loading',
   success = false,
@@ -60,9 +81,16 @@ export function Button({
   ...rest
 }: ButtonProps) {
   const ns = useNorthstar();
-  const glass = (material ?? 'solid') === 'glass';
-  const track = usePointerTracking<HTMLButtonElement>(magnetic || glass, { magnetic: magnetic ? 4 : 0 });
+  const glass = material === 'glass';
+  const silver = tone === 'silver';
+  // Silver's sheen follows the pointer, so buttons that will be silver track it.
+  const track = usePointerTracking<HTMLButtonElement>(
+    magnetic || glass || silver || ((el) => variant !== 'ghost' && material !== 'solid' && !!el.parentElement?.closest(GLASS_HOST)),
+    { magnetic: magnetic ? 4 : 0 },
+  );
   const done = success && !loading;
+  const host = icon !== undefined && icon !== null && icon !== false ? expandHost(expand) : {};
+  const expanding = !!host.className;
   return (
     <button
       {...rest}
@@ -73,9 +101,14 @@ export function Button({
         `ns-button--${variant}`,
         `ns-size-${size}`,
         tone === 'signal' && 'ns-tone-signal',
+        silver && 'ns-button--silver',
         glass && 'ns-button--glass',
+        expanding && 'ns-button--expand',
+        host.className,
         className,
       )}
+      data-expand={host['data-expand']}
+      data-material={material}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       data-loading={loading || undefined}
@@ -84,14 +117,19 @@ export function Button({
     >
       {loading && <NorthStarSpinner />}
       {done && <SuccessCheck />}
-      <span className="ns-button__label">{children}</span>
+      {icon !== undefined && icon !== null && icon !== false && !loading && !done && <ExpandIcon className="ns-button__icon">{icon}</ExpandIcon>}
+      {expanding ? (
+        <ExpandLabel className="ns-button__label">{children}</ExpandLabel>
+      ) : (
+        <span className="ns-button__label">{children}</span>
+      )}
       {loading && <span className="ns-visually-hidden">{loadingLabel === 'Loading' ? ns.messages.loading : loadingLabel}</span>}
       {done && <span className="ns-visually-hidden">{successLabel}</span>}
     </button>
   );
 }
 
-export interface IconButtonProps extends Omit<ButtonProps, 'children'> {
+export interface IconButtonProps extends Omit<ButtonProps, 'children' | 'icon'> {
   /** Required accessible name. */
   label: string;
   icon: React.ReactNode;
@@ -100,17 +138,20 @@ export interface IconButtonProps extends Omit<ButtonProps, 'children'> {
    * open to reveal the full label (never truncated). `always` keeps the label
    * shown. Default false: icon only, with the label as a native tooltip.
    */
-  expand?: boolean | 'always';
+  expand?: Expand;
 }
 
 export function IconButton({ label, icon, expand = false, className, title, ...rest }: IconButtonProps) {
   if (expand) {
     return (
-      <Button {...rest} title={title} className={cx('ns-icon-button', 'ns-icon-button--expand', expand === 'always' && 'ns-icon-button--open', className)}>
-        <span className="ns-icon-button__icon" aria-hidden="true">
-          {icon}
-        </span>
-        <RevealLabel>{label}</RevealLabel>
+      <Button
+        {...rest}
+        title={title}
+        icon={icon}
+        expand={expand}
+        className={cx('ns-icon-button', 'ns-icon-button--expand', expand === 'always' && 'ns-icon-button--open', className)}
+      >
+        {label}
       </Button>
     );
   }
@@ -124,13 +165,15 @@ export function IconButton({ label, icon, expand = false, className, title, ...r
 /**
  * A label that is collapsed to zero width and eases open (grid 0fr → 1fr) when
  * an ancestor control is hovered or focused, so the whole text shows and
- * nothing is cut with an ellipsis. It stays in the accessibility tree.
+ * nothing is cut with an ellipsis. It stays in the accessibility tree. The
+ * public face of the shared ExpandLabel primitive; give the control the
+ * `ns-expand-host` class (or use a component's `expand` prop).
  */
 export function RevealLabel({ className, children, ...rest }: React.HTMLAttributes<HTMLSpanElement>) {
   return (
-    <span {...rest} className={cx('ns-reveal-label', className)}>
-      <span className="ns-reveal-label__inner">{children}</span>
-    </span>
+    <ExpandLabel {...rest} className={className}>
+      {children}
+    </ExpandLabel>
   );
 }
 
@@ -161,7 +204,7 @@ export function Toolbar({ label, orientation = 'horizontal', glass = false, clas
 
 export interface ToolbarItemProps extends Omit<IconButtonProps, 'expand'> {
   /** Default true: the label reveals on hover and focus. */
-  expand?: boolean | 'always';
+  expand?: Expand;
 }
 
 export function ToolbarItem({ expand = true, variant = 'ghost', className, ...rest }: ToolbarItemProps) {

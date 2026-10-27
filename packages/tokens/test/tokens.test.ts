@@ -55,6 +55,17 @@ const MATERIAL_ROLES = [
   "material.liquid.rim-low",
   "material.liquid.inner",
   "material.liquid.shadow",
+  "material.silver.hi",
+  "material.silver.lo",
+  "material.silver.signal-hi",
+  "material.silver.signal-lo",
+  "material.silver.ink",
+  "material.silver.grain",
+  "material.silver.sheen",
+  "material.silver.highlight",
+  "material.silver.shade",
+  "material.silver.edge",
+  "material.silver.shadow",
 ];
 
 /** SPEC §3.2, verbatim. */
@@ -195,5 +206,20 @@ describe("liquid glass and motion scales", () => {
     expect(Number(s["material.liquid.scale.sm"])).toBeLessThan(Number(s["material.liquid.scale.md"]));
     expect(Number(s["material.liquid.scale.md"])).toBeLessThan(Number(s["material.liquid.scale.lg"]));
     for (const k of ["motion.duration.micro", "motion.duration.layout", "motion.duration.reveal", "motion.duration.stagger", "motion.easing.glide", "motion.spring.layout"]) expect(s[k], k).toBeDefined();
+  });
+});
+
+describe("glass radii", () => {
+  it("keeps liquid glass corners tight: panels and bars about 10px, controls 6-7px, nothing fully round", () => {
+    const s = tokens.scales as Record<string, string>;
+    const px = (k: string) => parseFloat(s[k] ?? "NaN");
+    for (const k of ["radius.glass.panel", "radius.glass.bar"]) {
+      expect(px(k), k).toBeGreaterThanOrEqual(8);
+      expect(px(k), k).toBeLessThanOrEqual(10);
+    }
+    expect(px("radius.glass.control")).toBeGreaterThanOrEqual(6);
+    expect(px("radius.glass.control")).toBeLessThanOrEqual(7);
+    expect(px("radius.glass.inner")).toBe(px("radius.glass.bar") - 4);
+    expect(cssVar["radius.glass.panel" as keyof typeof cssVar]).toBe("--ns-radius-glass-panel");
   });
 });

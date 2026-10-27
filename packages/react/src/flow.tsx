@@ -199,6 +199,12 @@ export interface NextActionProps extends Omit<ButtonProps, 'variant'> {
   finishLabel?: React.ReactNode | undefined;
   /** Secondary content between Back and the next action (a hint, a cost). */
   hint?: React.ReactNode | undefined;
+  /**
+   * Back is icon-first: the arrow shows and "Back" eases open on hover and
+   * focus (always on touch). `always` keeps the word; false shows it plainly.
+   * The next action itself always shows its full label. Default true.
+   */
+  backExpand?: boolean | 'always';
 }
 
 /**
@@ -206,7 +212,7 @@ export interface NextActionProps extends Omit<ButtonProps, 'variant'> {
  * it leads to); on the last step it calls `onComplete`. Outside a flow it is a
  * primary button with a trailing arrow that slides on hover.
  */
-export function NextAction({ showBack = true, finishLabel, hint, children, onClick, className, disabled, ...rest }: NextActionProps) {
+export function NextAction({ showBack = true, backExpand = true, finishLabel, hint, children, onClick, className, disabled, ...rest }: NextActionProps) {
   const ctx = useFlow();
   const { messages } = useNorthstar();
   const last = ctx ? ctx.index >= ctx.count - 1 : false;
@@ -215,8 +221,7 @@ export function NextAction({ showBack = true, finishLabel, hint, children, onCli
   return (
     <div className="ns-next-action">
       {ctx && showBack && ctx.index > 0 && (
-        <Button variant="ghost" onClick={ctx.back} className="ns-next-action__back">
-          <ChevronLeft />
+        <Button variant="ghost" onClick={ctx.back} icon={<ChevronLeft />} expand={backExpand || 'always'} className="ns-next-action__back">
           {messages.flowBack}
         </Button>
       )}

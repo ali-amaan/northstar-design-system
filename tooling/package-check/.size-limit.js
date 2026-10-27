@@ -8,12 +8,12 @@ export default [
     path: "../../packages/tokens/dist/index.js",
     import: "*",
     modifyEsbuildConfig: esm,
-    limit: "2.8 kB",
+    limit: "3.1 kB", // radius.glass.* and material.silver.* (both themes)
   },
   {
     name: "tokens: tokens.css",
     path: "../../packages/tokens/dist/tokens.css",
-    limit: "2 kB",
+    limit: "2.2 kB",
     disablePlugins: ["@size-limit/esbuild"],
   },
   {
@@ -104,9 +104,24 @@ export default [
   },
   {
     name: "react: styles.css",
-    message: "includes the interaction layer and the liquid layer (liquid glass, icon-led controls, flows, reveal)",
+    message: "includes the interaction layer, the liquid layer (liquid glass, icon-led controls, flows, reveal) and the precision layer (icon-first expand everywhere, brushed silver, glass radii)",
     path: "../../packages/react/dist/styles.css",
-    limit: "12.5 kB",
+    limit: "14 kB",
+    disablePlugins: ["@size-limit/esbuild"],
+  },
+  {
+    name: "react: effects",
+    message: "the opt-in effects layer (@northstar-js/react/effects), no dependencies",
+    path: "../../packages/react/dist/effects/index.js",
+    import: "*",
+    modifyEsbuildConfig: esm,
+    ignore: ["react", "react-dom"],
+    limit: "9 kB",
+  },
+  {
+    name: "react: effects.css",
+    path: "../../packages/react/dist/effects.css",
+    limit: "7 kB",
     disablePlugins: ["@size-limit/esbuild"],
   },
 ];

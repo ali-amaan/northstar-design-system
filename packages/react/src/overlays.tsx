@@ -5,6 +5,7 @@ import { usePresence } from './internal/interaction.js';
 import { useDismiss, useFocusTrap, rovingKeyDown } from './internal/layers.js';
 import { cx, mergeRefs, useControllable } from './internal/util.js';
 import { Close as CloseGlyph } from './internal/icons.js';
+import { ExpandIcon, ExpandLabel, expandHost, type Expand } from './internal/expand.js';
 
 const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
@@ -430,8 +431,34 @@ function MenuRoot(props: OpenProps) {
 // Which item gets focus when the menu opens.
 let openFocus: 'first' | 'last' = 'first';
 
-function MenuTrigger(props: TriggerProps) {
+export type MenuTriggerProps = TriggerProps & {
+  /** Leading icon (decorative). Ignored with `asChild`. */
+  icon?: React.ReactNode;
+  /**
+   * Icon-first trigger: with `icon`, `true` shows the icon and eases the label
+   * open on hover, keyboard focus and while the menu is open (always on
+   * touch). `always` keeps it open. Default false.
+   */
+  expand?: Expand;
+};
+
+function MenuTrigger({ icon, expand = false, ...triggerProps }: MenuTriggerProps) {
   const ctx = useLayer(MenuContext, 'Menu.Trigger');
+  let props: TriggerProps = triggerProps;
+  if (!triggerProps.asChild && icon !== undefined && icon !== null && icon !== false) {
+    const host = expandHost(expand);
+    props = {
+      ...triggerProps,
+      className: cx(triggerProps.className, host.className && 'ns-button--expand', host.className),
+      ...(host['data-expand'] ? ({ 'data-expand': host['data-expand'] } as Record<string, string>) : {}),
+      children: (
+        <>
+          <ExpandIcon className="ns-button__icon">{icon}</ExpandIcon>
+          {host.className ? <ExpandLabel className="ns-button__label">{triggerProps.children}</ExpandLabel> : <span className="ns-button__label">{triggerProps.children}</span>}
+        </>
+      ),
+    };
+  }
   return renderTrigger(
     props,
     {

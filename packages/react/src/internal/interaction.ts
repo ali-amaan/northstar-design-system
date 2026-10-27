@@ -30,14 +30,19 @@ export interface PointerOptions {
  * ignored; the pointer effects are a hover affordance and keyboard focus gets
  * an equivalent centred highlight from CSS.
  */
-export function usePointerTracking<T extends HTMLElement>(enabled: boolean, options: PointerOptions = {}): React.RefCallback<T> {
+export function usePointerTracking<T extends HTMLElement>(enabled: boolean | ((el: T) => boolean), options: PointerOptions = {}): React.RefCallback<T> {
   const magnetic = options.magnetic ?? 0;
   const cleanup = useRef<(() => void) | null>(null);
+  // A predicate is decided once, when the element mounts (e.g. "am I on glass?").
+  const test = useRef(enabled);
+  test.current = enabled;
+  const key = typeof enabled === 'function' ? 'test' : enabled;
   return useCallback(
     (el: T | null) => {
       cleanup.current?.();
       cleanup.current = null;
-      if (!el || !enabled) return;
+      const on = typeof test.current === 'function' ? !!el && test.current(el) : test.current;
+      if (!el || !on) return;
       let frame = 0;
       let last: PointerEvent | null = null;
       const flush = () => {
@@ -77,7 +82,7 @@ export function usePointerTracking<T extends HTMLElement>(enabled: boolean, opti
         if (frame) caf(frame);
       };
     },
-    [enabled, magnetic],
+    [key, magnetic],
   );
 }
 

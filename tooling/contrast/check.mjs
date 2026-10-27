@@ -16,6 +16,11 @@
 //   - material.glass.tint / edge / rim / specular, material.glow / spotlight
 //                             decorative layers of the glass material; the fill they sit on is
 //                             checked as a ground below.
+//   - material.silver.grain / sheen / highlight / shade / edge / shadow
+//                             the brushed-metal finish over the silver body. The body's two opaque
+//                             ends (hi, lo, and the glacier-tinted signal-hi, signal-lo) are checked
+//                             against the silver ink as fixed pairs, with the grain's darkest line
+//                             composited over lo, so the label holds wherever the gradient lands.
 //
 //
 // Translucent grounds (color.signal.wash, material.glass.fill) are composited over color.ground
@@ -51,7 +56,16 @@ const ICON = [
 /** role -> grounds it must NOT be placed on (and therefore is not checked against). */
 const RESTRICT = {};
 /** Fixed pairs: [foreground, background, minimum]. */
-const PAIRS = [["button.primary.fg", "button.primary.bg", 4.5]];
+const PAIRS = [
+  ["button.primary.fg", "button.primary.bg", 4.5],
+  // Brushed silver buttons on liquid glass (secondary and the glacier-tinted primary).
+  ["material.silver.ink", "material.silver.hi", 4.5],
+  ["material.silver.ink", "material.silver.lo", 4.5],
+  ["material.silver.ink", "material.silver.signal-hi", 4.5],
+  ["material.silver.ink", "material.silver.signal-lo", 4.5],
+];
+/** The darkest grain line of the brushed finish, composited over the darker body end. */
+const GRAIN = { r: 6, g: 8, b: 12, a: 0.06 };
 
 function parse(value) {
   const s = String(value).trim();
@@ -112,7 +126,8 @@ for (const [theme, roles] of Object.entries(tokens.themes)) {
 
   for (const [fg, bg, min, kind, back] of rows) {
     checks++;
-    const ground = back ? over(parse(roles[bg]), solid(back)) : solid(bg);
+    let ground = back ? over(parse(roles[bg]), solid(back)) : solid(bg);
+    if (bg.startsWith("material.silver.") && bg.endsWith("lo")) ground = over(GRAIN, ground);
     const r = ratio(solid(fg), ground);
     if (r < min) {
       failures++;

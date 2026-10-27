@@ -812,6 +812,7 @@
 .ns-surface.ns-material--solid { background: var(--ns-color-surface-1); }
 .ns-radius-6 { border-radius: var(--ns-radius-6); }
 .ns-radius-8 { border-radius: var(--ns-radius-8); }
+.ns-radius-10 { border-radius: var(--ns-radius-glass-panel); }
 .ns-radius-12 { border-radius: var(--ns-radius-12); }
 .ns-surface.ns-material--solid.ns-depth-1 { box-shadow: var(--ns-elevation-1); }
 .ns-surface.ns-material--solid.ns-depth-2 { box-shadow: var(--ns-elevation-2); }
@@ -1454,7 +1455,7 @@
   backdrop-filter: blur(var(--ns-material-liquid-fallback-blur)) saturate(var(--ns-material-saturate));
   box-shadow: var(--ns-liquid-ring);
 }
-.ns-liquid { position: relative; isolation: isolate; border-radius: var(--ns-liquid-radius, 16px); color: var(--ns-color-text-1); }
+.ns-liquid { position: relative; isolation: isolate; border-radius: var(--ns-liquid-radius, var(--ns-radius-glass-panel)); color: var(--ns-color-text-1); }
 .ns-liquid--tint-none { background: var(--ns-material-liquid-highlight), var(--ns-material-glass-fill); }
 .ns-liquid--tint-signal { background: var(--ns-material-liquid-highlight), linear-gradient(var(--ns-color-signal-wash), var(--ns-color-signal-wash)), var(--ns-material-glass-fill); }
 .ns-liquid--floating,
@@ -1490,22 +1491,13 @@ html[data-ns-liquid='refract'] :is(.ns-liquid--lg, .ns-depth-3.ns-material--glas
     opacity var(--ns-motion-duration-320) var(--ns-motion-easing-hover);
 }
 .ns-reveal-label__inner { min-width: 0; overflow: hidden; }
-.ns-icon-button--expand {
-  width: auto;
-  min-width: var(--ns-h, var(--ns-size-control-md));
-  padding: 0 calc((var(--ns-h, var(--ns-size-control-md)) - var(--ns-size-icon-sm)) / 2);
-}
-.ns-icon-button--expand .ns-button__label { display: inline-flex; align-items: center; }
-.ns-icon-button__icon { display: inline-flex; flex: none; }
-.ns-icon-button--expand .ns-reveal-label { grid-template-columns: 0fr; opacity: 0; }
-.ns-icon-button--expand .ns-reveal-label__inner { white-space: nowrap; transition: padding var(--ns-motion-duration-layout) var(--ns-motion-spring-layout); }
-.ns-icon-button--expand:is(:hover, :focus-visible, .ns-icon-button--open) .ns-reveal-label { grid-template-columns: 1fr; opacity: 1; }
-.ns-icon-button--expand:is(:hover, :focus-visible, .ns-icon-button--open) .ns-reveal-label__inner { padding-left: var(--ns-space-6); padding-right: var(--ns-space-2); }
+/* Icon-first expand (IconButton expand and every other host) lives in the
+   precision layer at the end of this file. */
 
-.ns-toolbar { display: inline-flex; align-items: center; gap: var(--ns-space-2); padding: var(--ns-space-4); border-radius: var(--ns-radius-12); }
+.ns-toolbar { display: inline-flex; align-items: center; gap: var(--ns-space-2); padding: var(--ns-space-4); border-radius: var(--ns-radius-glass-bar); }
 .ns-toolbar--vertical { flex-direction: column; align-items: stretch; }
-.ns-toolbar.ns-liquid { --ns-liquid-radius: 14px; }
-.ns-toolbar .ns-toolbar__item { border-radius: var(--ns-radius-8); }
+.ns-toolbar.ns-liquid { --ns-liquid-radius: var(--ns-radius-glass-bar); }
+.ns-toolbar .ns-toolbar__item { border-radius: var(--ns-radius-glass-inner); }
 
 /* Sidebar: labels show in full; they wrap rather than end in an ellipsis. */
 .ns-sidebar__text { flex: 1; overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; }
@@ -1684,4 +1676,191 @@ html[data-ns-flow-dir='back']::view-transition-old(ns-step) { animation-name: ns
   ::view-transition-group(*),
   ::view-transition-old(*),
   ::view-transition-new(*) { animation: none !important; }
+}
+
+/* ==================================================== precision layer
+   Icon-first expand everywhere, brushed silver buttons on liquid glass, and
+   tighter glass corners (radius.glass.*). Loaded last. */
+
+/* ------------------------------------------------------ icon-first expand
+   A host (`ns-expand-host`) shows its icon; its ExpandLabel is collapsed to
+   0fr and eases to 1fr, so layout measures the whole label (no ellipsis, no
+   width guessing, no jank). Hover, keyboard focus, selection, an open menu
+   and data-expand="always" open it; touch screens always show it. */
+
+.ns-expand-icon { display: inline-flex; flex: none; align-items: center; justify-content: center; }
+.ns-button__icon { display: inline-flex; flex: none; }
+.ns-expand-host { --ns-expand-gap: var(--ns-space-6); }
+.ns-expand-host .ns-expand {
+  grid-template-columns: 0fr;
+  opacity: 0;
+  transition: grid-template-columns var(--ns-motion-duration-layout) var(--ns-motion-easing-glide),
+    opacity var(--ns-motion-duration-320) var(--ns-motion-easing-hover);
+}
+.ns-expand-host .ns-expand__inner {
+  white-space: nowrap;
+  padding-inline: 0;
+  transition: padding var(--ns-motion-duration-layout) var(--ns-motion-easing-glide);
+}
+.ns-expand-host:is(:hover, :focus-visible, :has(:focus-visible), [data-expand='always'], [aria-selected='true'], [aria-expanded='true']) .ns-expand { grid-template-columns: 1fr; opacity: 1; }
+.ns-expand-host:is(:hover, :focus-visible, :has(:focus-visible), [data-expand='always'], [aria-selected='true'], [aria-expanded='true']) .ns-expand__inner { padding-inline: var(--ns-expand-gap) var(--ns-expand-tail, 0px); }
+.ns-expand-host:is(:hover, :focus-visible, :has(:focus-visible), [data-expand='always'], [aria-selected='true'], [aria-expanded='true']) .ns-expand--end .ns-expand__inner { padding-inline: var(--ns-expand-tail, 0px) var(--ns-expand-gap); }
+@media (hover: none) {
+  .ns-expand-host .ns-expand { grid-template-columns: 1fr; opacity: 1; }
+  .ns-expand-host .ns-expand__inner { padding-inline: var(--ns-expand-gap) var(--ns-expand-tail, 0px); }
+  .ns-expand-host .ns-expand--end .ns-expand__inner { padding-inline: var(--ns-expand-tail, 0px) var(--ns-expand-gap); }
+}
+
+/* Buttons, icon buttons, menu triggers, pagination steps: square while closed. */
+.ns-button.ns-expand-host {
+  --ns-expand-tail: var(--ns-space-2);
+  gap: 0;
+  min-width: var(--ns-h, var(--ns-size-control-md));
+  padding-inline: calc((var(--ns-h, var(--ns-size-control-md)) - var(--ns-size-icon-sm)) / 2);
+}
+.ns-icon-button.ns-expand-host { width: auto; }
+.ns-button.ns-expand-host .ns-expand-icon { min-width: var(--ns-size-icon-sm); }
+.ns-button.ns-expand-host .ns-expand-icon svg { width: var(--ns-size-icon-sm); height: var(--ns-size-icon-sm); }
+.ns-run-cost__button--expand { width: auto; align-self: flex-start; }
+
+/* Tabs: icon tabs open to their labels; the selected one stays open. */
+.ns-tabs__trigger--icon { display: inline-flex; align-items: center; gap: var(--ns-space-6); }
+.ns-tabs__trigger--icon.ns-expand-host { gap: 0; }
+.ns-tabs__icon { color: var(--ns-color-text-3); transition: color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover); }
+.ns-tabs__trigger:is(:hover, [aria-selected='true']) .ns-tabs__icon { color: currentColor; }
+
+/* Breadcrumbs: collapsed crumbs show an icon or an ellipsis and open in full. */
+.ns-breadcrumbs--collapse li > :is(a, span):not(.ns-breadcrumbs__sep) { display: inline-flex; align-items: center; }
+.ns-breadcrumbs__more {
+  display: inline-block;
+  overflow: hidden;
+  max-width: 1.25em;
+  transition: max-width var(--ns-motion-duration-layout) var(--ns-motion-easing-glide), opacity var(--ns-motion-duration-micro) var(--ns-motion-easing-hover);
+}
+.ns-breadcrumbs li.ns-expand-host { --ns-expand-gap: 0px; }
+.ns-breadcrumbs li.ns-expand-host:has(.ns-breadcrumbs__icon svg) { --ns-expand-gap: var(--ns-space-4); }
+.ns-breadcrumbs--collapse:has(:focus-visible) .ns-expand { grid-template-columns: 1fr; opacity: 1; }
+.ns-breadcrumbs--collapse:has(:focus-visible) .ns-breadcrumbs__more,
+.ns-expand-host:is(:hover, :has(:focus-visible)) .ns-breadcrumbs__more { max-width: 0; opacity: 0; }
+.ns-breadcrumbs--collapse:has(:focus-visible) .ns-expand__inner { padding-inline: var(--ns-expand-gap) 0; }
+@media (hover: none) { .ns-breadcrumbs__more { max-width: 0; opacity: 0; } }
+
+/* Tags, badges and the study status chip. */
+.ns-tag.ns-expand-host,
+.ns-badge.ns-expand-host,
+.ns-study-status.ns-expand-host { gap: 0; --ns-expand-gap: var(--ns-space-4); }
+.ns-study-status.ns-expand-host { --ns-expand-gap: var(--ns-space-6); }
+.ns-badge.ns-expand-host { padding-inline: var(--ns-space-4); }
+.ns-tag.ns-expand-host .ns-tag__remove { margin-left: var(--ns-space-4); }
+.ns-tag__icon svg,
+.ns-badge__icon svg { width: 12px; height: 12px; }
+.ns-badge__icon { margin-right: var(--ns-space-2); }
+.ns-badge.ns-expand-host .ns-badge__icon { margin-right: 0; }
+
+/* Back in a flow: the arrow leads, the word follows on hover and focus. */
+.ns-next-action__back.ns-expand-host .ns-expand-icon svg { width: 14px; height: 14px; }
+
+/* Ghost buttons on glass hover with light, not an opaque fill. */
+:where(.ns-liquid, .ns-material--glass, [data-material='glass']) .ns-button--ghost:not(.ns-button--glass):hover:not(:disabled) { background: var(--ns-material-spotlight); }
+
+/* ---------------------------------------------------------- glass radii */
+
+.ns-card.ns-material--glass,
+.ns-panel.ns-material--glass,
+.ns-dialog.ns-material--glass,
+:where(.ns-surface.ns-material--glass) { border-radius: var(--ns-radius-glass-panel); }
+.ns-sheet--bottom.ns-material--glass { border-radius: var(--ns-radius-glass-panel) var(--ns-radius-glass-panel) 0 0; }
+.ns-tabs--glass .ns-tabs__list { border-radius: var(--ns-radius-glass-bar); }
+.ns-tabs--glass .ns-tabs__trigger,
+.ns-tabs--glass .ns-tabs__indicator,
+.ns-button--glass { border-radius: var(--ns-radius-glass-control); }
+
+/* ------------------------------------------------- brushed silver buttons
+   On liquid glass, secondary and primary buttons are brushed metal: a fine
+   two-period grain over a vertical body gradient, a conic sheen that turns
+   on hover, a pointer-led glint (--ns-mx/--ns-my), a crisp inner top edge
+   and a small bevel shadow. Pressing tilts the light (the body gradient flips)
+   so the face reads as pushed in. Primary is glacier-tinted silver. The ink
+   on both ends of every body gradient is gated at 4.5:1 (tooling/contrast). */
+
+@property --ns-silver-angle { syntax: '<angle>'; inherits: false; initial-value: 210deg; }
+@property --ns-silver-dir { syntax: '<angle>'; inherits: false; initial-value: 180deg; }
+@property --ns-silver-spot { syntax: '<percentage>'; inherits: false; initial-value: 30%; }
+
+.ns-button--primary,
+.ns-button.ns-tone-signal {
+  --ns-silver-hi: var(--ns-material-silver-signal-hi);
+  --ns-silver-lo: var(--ns-material-silver-signal-lo);
+}
+.ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])) {
+  --ns-silver-angle: 210deg;
+  --ns-silver-dir: 180deg;
+  --ns-silver-spot: 30%;
+  --ns-silver-ring: inset 0 1px 0 var(--ns-material-silver-highlight), inset 0 -1px 0 var(--ns-material-silver-shade), 0 0 0 1px var(--ns-material-silver-edge);
+  color: var(--ns-material-silver-ink);
+  border-color: transparent;
+  border-radius: var(--ns-radius-glass-control);
+  background:
+    radial-gradient(80px 48px at var(--ns-mx, 30%) var(--ns-my, 0%), color-mix(in srgb, var(--ns-material-silver-sheen) var(--ns-silver-spot), transparent), transparent 72%),
+    conic-gradient(from var(--ns-silver-angle) at 50% 50%, transparent 0deg 18deg, color-mix(in srgb, var(--ns-material-silver-sheen) 60%, transparent) 48deg, transparent 86deg 186deg, color-mix(in srgb, var(--ns-material-silver-sheen) 45%, transparent) 222deg, transparent 262deg),
+    var(--ns-material-silver-grain),
+    linear-gradient(var(--ns-silver-dir), var(--ns-silver-hi, var(--ns-material-silver-hi)), var(--ns-silver-lo, var(--ns-material-silver-lo)));
+  box-shadow: var(--ns-silver-ring), var(--ns-material-silver-shadow);
+  text-shadow: 0 1px 0 color-mix(in srgb, var(--ns-material-silver-highlight) 55%, transparent);
+  transition: color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    box-shadow var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    padding var(--ns-motion-duration-layout) var(--ns-motion-spring-layout),
+    --ns-silver-angle var(--ns-motion-duration-layout) var(--ns-motion-easing-glide),
+    --ns-silver-dir var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    --ns-silver-spot var(--ns-motion-duration-320) var(--ns-motion-easing-hover),
+    transform var(--ns-motion-duration-release) var(--ns-motion-spring-release);
+}
+.ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])):is(:hover, [data-pointer]):not(:disabled) {
+  --ns-silver-angle: 236deg;
+  --ns-silver-spot: 100%;
+  box-shadow: var(--ns-silver-ring), var(--ns-material-silver-shadow), 0 6px 18px -10px var(--ns-material-glow);
+}
+.ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])):active:not(:disabled) {
+  --ns-silver-angle: 196deg;
+  --ns-silver-dir: 0deg;
+  --ns-silver-spot: 60%;
+  box-shadow: inset 0 1px 2px var(--ns-material-silver-shade), inset 0 -1px 0 var(--ns-material-silver-highlight), 0 0 0 1px var(--ns-material-silver-edge);
+}
+.ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])):focus-visible {
+  box-shadow: var(--ns-silver-ring), var(--ns-material-silver-shadow), 0 0 0 4px var(--ns-color-focus-halo), 0 0 18px 2px var(--ns-material-glow);
+}
+.ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])):disabled {
+  color: var(--ns-material-silver-ink);
+  opacity: 0.5;
+  box-shadow: var(--ns-silver-ring);
+}
+
+/* --------------------------------------------- precision layer fallbacks */
+
+@media (prefers-reduced-transparency: reduce) {
+  .ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])) {
+    background: linear-gradient(180deg, var(--ns-silver-hi, var(--ns-material-silver-hi)), var(--ns-silver-lo, var(--ns-material-silver-lo)));
+  }
+}
+@media (prefers-contrast: more) {
+  .ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])) {
+    background: var(--ns-silver-hi, var(--ns-material-silver-hi));
+    box-shadow: 0 0 0 1px var(--ns-material-silver-ink);
+    text-shadow: none;
+  }
+}
+@media (forced-colors: active) {
+  .ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])) {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+    box-shadow: none;
+    text-shadow: none;
+  }
+  .ns-expand-host .ns-expand { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ns-expand-host .ns-expand,
+  .ns-expand-host .ns-expand__inner,
+  .ns-breadcrumbs__more { transition: none !important; }
 }

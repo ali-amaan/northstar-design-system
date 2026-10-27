@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button, LiquidGlass, NorthstarProvider, Stack, Surface, Toolbar, ToolbarItem, type ResolvedTheme } from '@northstar-js/react';
-import { AddIcon, DuplicateIcon, ExportIcon, SearchIcon } from '@northstar-js/icons';
+import { Button, Card, IconButton, LiquidGlass, NorthstarProvider, Stack, Surface, Toolbar, ToolbarItem, type ResolvedTheme } from '@northstar-js/react';
+import { AddIcon, DuplicateIcon, ExportIcon, RunIcon, SearchIcon, SettingsIcon } from '@northstar-js/icons';
 import { Backdrop } from '../interactions/backdrop';
 
 const meta = {
@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Liquid glass: an SVG displacement filter used as a backdrop-filter bends the backdrop at the rim (Chromium), with a specular highlight, rim light, inner glow and a faint glacier tint. Safari and Firefox get blur plus the specular layers; reduced transparency and forced colours get the opaque solid. `material="glass"` on Surface, Card, Panel, Button, Tabs and the overlays uses the same material.',
+          'Liquid glass: an SVG displacement filter used as a backdrop-filter bends the backdrop at the rim (Chromium), with a specular highlight, rim light, inner glow and a faint glacier tint. Safari and Firefox get blur plus the specular layers; reduced transparency and forced colours get the opaque solid. `material="glass"` on Surface, Card, Panel, Button, Tabs and the overlays uses the same material. Corners are tight for precision (`radius.glass.*`: 10px panels and bars, 7px controls; never fully round), and buttons on glass are brushed silver.',
       },
     },
   },
@@ -30,14 +30,14 @@ function Scene({ theme }: { theme: ResolvedTheme }) {
                 <p style={{ margin: '6px 0 0', color: 'var(--ns-color-text-2)' }}>Shared filter</p>
               </LiquidGlass>
             ))}
-            <LiquidGlass scale={60} radius={28} style={{ width: 220, padding: 20 }}>
+            <LiquidGlass scale={60} radius="panel" style={{ width: 220, padding: 20 }}>
               <strong>Measured, scale 60</strong>
               <p style={{ margin: '6px 0 0', color: 'var(--ns-color-text-2)' }}>Its own filter, sized to the box</p>
             </LiquidGlass>
           </Stack>
           <Stack direction="row" gap={16} wrap align="center">
-            <LiquidGlass radius="pill" scale="sm" style={{ padding: '6px 6px 6px 16px', display: 'inline-flex', alignItems: 'center', gap: 12 }}>
-              <span>Pill, thin and iOS-like</span>
+            <LiquidGlass radius="bar" scale="sm" style={{ padding: '4px 4px 4px 14px', display: 'inline-flex', alignItems: 'center', gap: 12 }}>
+              <span>Bar, 10px corners</span>
               <Button variant="primary" size="sm">Run</Button>
             </LiquidGlass>
             <Toolbar label={`Glass toolbar, ${theme}`} glass>
@@ -66,8 +66,74 @@ export const NightAndDay: Story = {
   ),
 };
 
+function Silver({ theme }: { theme: ResolvedTheme }) {
+  return (
+    <NorthstarProvider theme={theme} style={{ padding: 24, background: 'var(--ns-color-ground)' }}>
+      <Backdrop minHeight={300}>
+        <Stack gap={20}>
+          <LiquidGlass style={{ padding: 20, maxWidth: 560 }} data-shot="silver-bar">
+            <Stack gap={12}>
+              <strong>Buttons on glass are brushed silver</strong>
+              <Stack direction="row" gap={8} align="center" wrap>
+                <Button variant="primary" icon={<RunIcon size={14} />}>
+                  Run study
+                </Button>
+                <Button icon={<DuplicateIcon size={14} />}>Duplicate</Button>
+                <Button>Secondary</Button>
+                <Button variant="ghost">Ghost stays ghost</Button>
+                <Button disabled>Disabled</Button>
+              </Stack>
+              <Stack direction="row" gap={8} align="center" wrap>
+                <IconButton expand label="Export as a report" icon={<ExportIcon size={16} />} />
+                <IconButton expand="always" label="Settings" icon={<SettingsIcon size={16} />} />
+                <Button size="sm">Small</Button>
+                <Button size="lg" variant="primary">
+                  Large primary
+                </Button>
+                <Button material="solid">Opted out (solid)</Button>
+              </Stack>
+            </Stack>
+          </LiquidGlass>
+          <Stack direction="row" gap={16} align="start" wrap>
+            <Card variant="glass" title="Glass card" description="10px corners; the actions are silver" footer={<Button variant="primary">Open</Button>} style={{ width: 260 }}>
+              Header actions and footers on glass take the finish too.
+            </Card>
+            <Stack gap={8}>
+              <span style={{ color: 'var(--ns-color-text-2)' }}>Off glass, on request:</span>
+              <Stack direction="row" gap={8}>
+                <Button tone="silver">tone=&quot;silver&quot;</Button>
+                <Button tone="silver" variant="primary">
+                  Silver primary
+                </Button>
+              </Stack>
+            </Stack>
+          </Stack>
+        </Stack>
+      </Backdrop>
+    </NorthstarProvider>
+  );
+}
+
+/**
+ * Brushed silver: inside liquid glass, secondary and primary buttons take a
+ * brushed-metal finish (fine grain, a conic sheen that turns on hover, a
+ * glint that follows the pointer, a crisp top edge and a bevel shadow; the
+ * light tilts when pressed). Primary is glacier-tinted silver. Ink holds 4.5:1
+ * on both ends of the gradient (tooling/contrast).
+ */
+export const SilverOnGlass: Story = {
+  name: 'Silver buttons on glass',
+  parameters: { layout: 'fullscreen' },
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(560px, 1fr))' }}>
+      <Silver theme="night" />
+      <Silver theme="day" />
+    </div>
+  ),
+};
+
 export const Playground: Story = {
-  args: { scale: 'md', radius: 20, tint: 'subtle', floating: true, children: 'Liquid glass' },
+  args: { scale: 'md', radius: 'panel', tint: 'subtle', floating: true, children: 'Liquid glass' },
   render: (args) => (
     <Backdrop>
       <LiquidGlass {...args} style={{ width: 280, padding: 24 }} />

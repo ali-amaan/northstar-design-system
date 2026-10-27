@@ -1,6 +1,7 @@
 'use client';
 import type { ReactNode } from 'react';
 import type { Study, StudyTab } from '@northstar-js/contracts';
+import { Icon, type IconName } from '@northstar-js/icons';
 import { Tabs } from '../navigation.js';
 import { FlowStep, FlowSteps, NextAction } from '../flow.js';
 import { cx, useControllable } from '../internal/util.js';
@@ -8,6 +9,9 @@ import { StudyStatus } from './StudyStatus.js';
 import { studyMessages, type WithMessages } from './messages.js';
 
 export const STUDY_TABS: readonly StudyTab[] = ['brief', 'population', 'research', 'responses'];
+
+/** The icon each study section leads with. */
+export const STUDY_TAB_ICON: Record<StudyTab, IconName> = { brief: 'brief', population: 'population', research: 'research', responses: 'responses' };
 
 export interface StudyShellProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'>, WithMessages {
   study: Study;
@@ -42,11 +46,17 @@ export interface StudyShellProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   onFinish?: () => void;
   /** Guided mode: label of the last step's action. */
   finishLabel?: ReactNode;
+  /**
+   * Tab icons. `true` (default) leads each tab with its section icon; `expand`
+   * is icon-first: the icon shows and the label eases open on hover, focus and
+   * for the open tab (always on touch); false drops the icons.
+   */
+  iconTabs?: boolean | 'expand';
 }
 
 /** The study workspace: title bar, the four tabs Brief → Population → Research → Responses, content and an optional rail. */
 export function StudyShell({
-  study, tab, defaultTab, onTabChange, panels, tabMeta, tabActions, actions, saveState, crumb, aside, guided = false, blockedTabs, stepHints, onFinish, finishLabel, messages, className, children, ...rest
+  study, tab, defaultTab, onTabChange, panels, tabMeta, tabActions, actions, saveState, crumb, aside, guided = false, blockedTabs, stepHints, onFinish, finishLabel, iconTabs = true, messages, className, children, ...rest
 }: StudyShellProps) {
   const m = studyMessages(messages);
   const [current, setCurrent] = useControllable<StudyTab>(tab, defaultTab ?? study.tab ?? 'brief', onTabChange);
@@ -79,7 +89,7 @@ export function StudyShell({
             className="ns-study-shell__flow"
           >
             {STUDY_TABS.map((t) => (
-              <FlowStep key={t} value={t} title={m.tabs[t]} textTitle={m.tabs[t]} blocked={blockedTabs?.includes(t)} description={tabMeta?.[t]}>
+              <FlowStep key={t} value={t} title={m.tabs[t]} textTitle={m.tabs[t]} icon={iconTabs ? <Icon name={STUDY_TAB_ICON[t]} size={14} /> : undefined} blocked={blockedTabs?.includes(t)} description={tabMeta?.[t]}>
                 {panels?.[t] ?? children}
                 <div className="ns-study-shell__next">
                   <NextAction hint={stepHints?.[t]} finishLabel={finishLabel} />
@@ -92,7 +102,13 @@ export function StudyShell({
           <div className="ns-study-shell__tabbar">
             <Tabs.List label={m.studySections} className="ns-study-shell__tablist">
               {STUDY_TABS.map((t) => (
-                <Tabs.Trigger key={t} value={t} className="ns-study-shell__tab">
+                <Tabs.Trigger
+                  key={t}
+                  value={t}
+                  className="ns-study-shell__tab"
+                  icon={iconTabs ? <Icon name={STUDY_TAB_ICON[t]} size={14} /> : undefined}
+                  expand={iconTabs === 'expand'}
+                >
                   {m.tabs[t]}
                   {tabMeta?.[t] !== undefined && <span className="ns-study-shell__tab-meta">{tabMeta[t]}</span>}
                 </Tabs.Trigger>

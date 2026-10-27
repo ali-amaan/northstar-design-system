@@ -28,7 +28,12 @@
       "types": "./dist/illustrations/index.d.ts",
       "import": "./dist/illustrations/index.js"
     },
+    "./effects": {
+      "types": "./dist/effects/index.d.ts",
+      "import": "./dist/effects/index.js"
+    },
     "./styles.css": "./dist/styles.css",
+    "./effects.css": "./dist/effects.css",
     "./package.json": "./package.json"
   },
   "scripts": {

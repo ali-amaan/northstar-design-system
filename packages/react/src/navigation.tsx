@@ -6,6 +6,7 @@ import { rovingKeyDown } from './internal/layers.js';
 import { withViewTransition } from './motion.js';
 import { cx, useControllable } from './internal/util.js';
 import { ChevronLeft, ChevronRight } from './internal/icons.js';
+import { ExpandIcon, ExpandLabel, expandHost, type Expand } from './internal/expand.js';
 
 /* ------------------------------------------------------------------- Tabs */
 
@@ -83,6 +84,8 @@ function useIndicator(list: React.RefObject<HTMLDivElement | null>, mark: React.
     place();
     const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(place);
     ro?.observe(el);
+    // Icon-first tabs change width as their labels ease open; follow them.
+    el.querySelectorAll('[role="tab"]').forEach((t) => ro?.observe(t));
     return () => {
       ro?.disconnect();
       cancelAnimationFrame(frame);
@@ -119,11 +122,21 @@ function TabsList({ className, onKeyDown, children, ...rest }: React.HTMLAttribu
 
 export interface TabsTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   value: string;
+  /** Leading icon (decorative). */
+  icon?: React.ReactNode;
+  /**
+   * Icon tabs: with `icon`, `true` shows the icon and eases the label open on
+   * hover, keyboard focus and while selected (always on touch). `always`
+   * keeps it open. Default false.
+   */
+  expand?: Expand;
 }
 
-function TabsTrigger({ value, className, onClick, ...rest }: TabsTriggerProps) {
+function TabsTrigger({ value, icon, expand = false, className, onClick, children, ...rest }: TabsTriggerProps) {
   const ctx = useTabs('Tabs.Trigger');
   const selected = ctx.value === value;
+  const hasIcon = icon !== undefined && icon !== null && icon !== false;
+  const host = hasIcon ? expandHost(expand) : {};
   return (
     <button
       type="button"
@@ -133,13 +146,17 @@ function TabsTrigger({ value, className, onClick, ...rest }: TabsTriggerProps) {
       aria-controls={`${ctx.baseId}-panel-${value}`}
       tabIndex={selected ? 0 : -1}
       data-value={value}
+      data-expand={host['data-expand']}
       {...rest}
-      className={cx('ns-tabs__trigger', className)}
+      className={cx('ns-tabs__trigger', hasIcon && 'ns-tabs__trigger--icon', host.className, className)}
       onClick={(e) => {
         onClick?.(e);
         ctx.setValue(value);
       }}
-    />
+    >
+      {hasIcon && <ExpandIcon className="ns-tabs__icon">{icon}</ExpandIcon>}
+      {host.className ? <ExpandLabel className="ns-tabs__label">{children}</ExpandLabel> : children}
+    </button>
   );
 }
 
@@ -174,25 +191,44 @@ export const Tabs = { Root: TabsRoot, List: TabsList, Trigger: TabsTrigger, Cont
 export interface BreadcrumbItem {
   label: React.ReactNode;
   href?: string;
+  /** Shown in place of the label while the crumb is collapsed. */
+  icon?: React.ReactNode;
 }
 
 export interface BreadcrumbsProps extends React.HTMLAttributes<HTMLElement> {
   items: BreadcrumbItem[];
+  /**
+   * Collapse the crumbs between the first and the current one to their icon
+   * (or an ellipsis); each eases open to its full label on hover and keyboard
+   * focus, and every crumb opens while focus is in the trail. The full labels
+   * stay in the accessibility tree. Default false.
+   */
+  collapse?: boolean;
 }
 
-export function Breadcrumbs({ items, className, ...rest }: BreadcrumbsProps) {
+export function Breadcrumbs({ items, collapse = false, className, ...rest }: BreadcrumbsProps) {
   const { messages } = useNorthstar();
   return (
-    <nav aria-label={messages.breadcrumbs} {...rest} className={cx('ns-breadcrumbs', className)}>
+    <nav aria-label={messages.breadcrumbs} {...rest} className={cx('ns-breadcrumbs', collapse && 'ns-breadcrumbs--collapse', className)}>
       <ol>
         {items.map((item, i) => {
           const last = i === items.length - 1;
+          const folded = collapse && i > 0 && !last;
+          const body = folded ? (
+            <>
+              <ExpandIcon className="ns-breadcrumbs__icon">{item.icon ?? <span className="ns-breadcrumbs__more">…</span>}</ExpandIcon>
+              <ExpandLabel>{item.label}</ExpandLabel>
+            </>
+          ) : (
+            item.label
+          );
+          const host = folded ? expandHost(true) : {};
           return (
-            <li key={i}>
+            <li key={i} className={host.className} data-expand={host['data-expand']}>
               {last || !item.href ? (
-                <span aria-current={last ? 'page' : undefined}>{item.label}</span>
+                <span aria-current={last ? 'page' : undefined}>{body}</span>
               ) : (
-                <a href={item.href}>{item.label}</a>
+                <a href={item.href}>{body}</a>
               )}
               {!last && (
                 <span className="ns-breadcrumbs__sep" aria-hidden="true">
@@ -216,6 +252,12 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
   onPageChange?: (page: number) => void;
   /** Pages shown either side of the current one. */
   siblings?: number;
+  /**
+   * Previous and next are icon-first: the arrow shows and "Previous page" /
+   * "Next page" ease open on hover and focus. `always` keeps the words, false
+   * keeps arrows only (named by aria-label). Default true.
+   */
+  expand?: Expand;
 }
 
 function range(page: number, count: number, siblings: number): Array<number | 'gap'> {
@@ -230,15 +272,15 @@ function range(page: number, count: number, siblings: number): Array<number | 'g
   return out;
 }
 
-export function Pagination({ pageCount, page, defaultPage, onPageChange, siblings = 1, className, ...rest }: PaginationProps) {
+export function Pagination({ pageCount, page, defaultPage, onPageChange, siblings = 1, expand = true, className, ...rest }: PaginationProps) {
   const { messages } = useNorthstar();
   const [p, setP] = useControllable(page, defaultPage ?? 1, onPageChange);
   const go = (n: number) => setP(Math.min(pageCount, Math.max(1, n)));
   return (
     <nav aria-label={messages.pagination} {...rest} className={cx('ns-pagination', className)}>
-      <button type="button" className="ns-button ns-button--ghost ns-size-sm ns-icon-button" aria-label={messages.previousPage} disabled={p <= 1} onClick={() => go(p - 1)}>
+      <PageStep expand={expand} label={messages.previousPage} disabled={p <= 1} onClick={() => go(p - 1)}>
         <ChevronLeft />
-      </button>
+      </PageStep>
       <ul>
         {range(p, pageCount, siblings).map((n, i) =>
           n === 'gap' ? (
@@ -260,10 +302,35 @@ export function Pagination({ pageCount, page, defaultPage, onPageChange, sibling
           ),
         )}
       </ul>
-      <button type="button" className="ns-button ns-button--ghost ns-size-sm ns-icon-button" aria-label={messages.nextPage} disabled={p >= pageCount} onClick={() => go(p + 1)}>
+      <PageStep expand={expand} end label={messages.nextPage} disabled={p >= pageCount} onClick={() => go(p + 1)}>
         <ChevronRight />
-      </button>
+      </PageStep>
     </nav>
+  );
+}
+
+function PageStep({ expand, end = false, label, disabled, onClick, children }: { expand: Expand; end?: boolean; label: string; disabled: boolean; onClick: () => void; children: React.ReactNode }) {
+  if (!expand) {
+    return (
+      <button type="button" className="ns-button ns-button--ghost ns-size-sm ns-icon-button" aria-label={label} disabled={disabled} onClick={onClick}>
+        {children}
+      </button>
+    );
+  }
+  const host = expandHost(expand);
+  const icon = <ExpandIcon>{children}</ExpandIcon>;
+  const text = <ExpandLabel side={end ? 'end' : 'start'}>{label}</ExpandLabel>;
+  return (
+    <button
+      type="button"
+      className={cx('ns-button ns-button--ghost ns-size-sm ns-icon-button ns-icon-button--expand ns-button--expand ns-pagination__step', host.className)}
+      data-expand={host['data-expand']}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {end ? text : icon}
+      {end ? icon : text}
+    </button>
   );
 }
 
@@ -322,9 +389,7 @@ export function SidebarItem({ icon, active = false, meta, className, children, .
             {icon}
           </span>
         )}
-        <span className="ns-sidebar__text ns-reveal-label">
-          <span className="ns-reveal-label__inner">{children}</span>
-        </span>
+        <ExpandLabel className="ns-sidebar__text">{children}</ExpandLabel>
         {meta !== undefined && <span className="ns-sidebar__meta">{meta}</span>}
       </a>
     </li>

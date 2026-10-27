@@ -60,7 +60,7 @@ describe('LiquidGlass', () => {
     );
     const preset = screen.getByTestId('preset');
     expect(preset.className).toContain('ns-liquid--lg');
-    expect(preset.style.getPropertyValue('--ns-liquid-radius')).toBe('9999px');
+    expect(preset.style.getPropertyValue('--ns-liquid-radius')).toBe('var(--ns-radius-glass-bar)');
     expect(screen.getByTestId('custom').className).not.toContain('ns-liquid--md');
     await expectNoAxeViolations();
   });

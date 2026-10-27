@@ -1,6 +1,7 @@
 // Server-component safe: no state, no context.
 import { cx, type Tone } from './internal/util.js';
 import { Close } from './internal/icons.js';
+import { ExpandIcon, ExpandLabel, expandHost, type Expand } from './internal/expand.js';
 
 /* ------------------------------------------------------------------ Table */
 
@@ -100,12 +101,31 @@ export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Shows a remove button with this accessible label. */
   onRemove?: () => void;
   removeLabel?: string;
+  /** Leading icon (decorative). */
+  icon?: React.ReactNode;
+  /** With `icon`: the icon shows and the text eases open on hover and focus within (always on touch). `always` keeps it open. */
+  expand?: Expand;
 }
 
-export function Tag({ tone = 'neutral', onRemove, removeLabel, className, children, ...rest }: TagProps) {
+function iconLed(icon: React.ReactNode, expand: Expand | undefined, children: React.ReactNode, cls: string) {
+  const has = icon !== undefined && icon !== null && icon !== false;
+  const host = has ? expandHost(expand) : {};
+  const body = has ? (
+    <>
+      <ExpandIcon className={`${cls}__icon`}>{icon}</ExpandIcon>
+      {host.className ? <ExpandLabel>{children}</ExpandLabel> : children}
+    </>
+  ) : (
+    children
+  );
+  return { host, body };
+}
+
+export function Tag({ tone = 'neutral', onRemove, removeLabel, icon, expand, className, children, ...rest }: TagProps) {
+  const { host, body } = iconLed(icon, expand, children, 'ns-tag');
   return (
-    <span {...rest} className={cx('ns-tag', tone === 'signal' && 'ns-tone-signal', className)}>
-      {children}
+    <span {...rest} data-expand={host['data-expand']} className={cx('ns-tag', tone === 'signal' && 'ns-tone-signal', host.className, className)}>
+      {body}
       {onRemove && (
         <button type="button" className="ns-tag__remove" aria-label={removeLabel ?? `Remove ${typeof children === 'string' ? children : ''}`.trim()} onClick={onRemove}>
           <Close />
@@ -118,11 +138,20 @@ export function Tag({ tone = 'neutral', onRemove, removeLabel, className, childr
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   tone?: Tone;
   variant?: 'solid' | 'outline';
+  /** Leading icon (decorative). */
+  icon?: React.ReactNode;
+  /** With `icon`: the icon shows and the word eases open on hover (always on touch). `always` keeps it open. */
+  expand?: Expand;
 }
 
 /** A short count or status word. */
-export function Badge({ tone = 'neutral', variant = 'outline', className, ...rest }: BadgeProps) {
-  return <span {...rest} className={cx('ns-badge', `ns-badge--${variant}`, tone === 'signal' && 'ns-tone-signal', className)} />;
+export function Badge({ tone = 'neutral', variant = 'outline', icon, expand, className, children, ...rest }: BadgeProps) {
+  const { host, body } = iconLed(icon, expand, children, 'ns-badge');
+  return (
+    <span {...rest} data-expand={host['data-expand']} className={cx('ns-badge', `ns-badge--${variant}`, tone === 'signal' && 'ns-tone-signal', host.className, className)}>
+      {body}
+    </span>
+  );
 }
 
 /* ----------------------------------------------------------------- Avatar */

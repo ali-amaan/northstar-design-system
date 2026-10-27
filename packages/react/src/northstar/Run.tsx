@@ -1,6 +1,7 @@
 'use client';
 import type { ReactNode } from 'react';
 import type { CostEstimate } from '@northstar-js/contracts';
+import { Icon } from '@northstar-js/icons';
 import { Button } from '../actions.js';
 import { Dialog } from '../overlays.js';
 import { cx } from '../internal/util.js';
@@ -27,10 +28,12 @@ export interface RunCostProps extends React.HTMLAttributes<HTMLDivElement>, With
   note?: ReactNode;
   loading?: boolean;
   locale?: string;
+  /** Icon-first run button (for a narrow rail): the run icon shows and the label eases open on hover and focus. Default false. */
+  expand?: boolean | 'always';
 }
 
 /** Estimated cost and the run button. Without an estimate the cost reads "Cost unavailable" and nothing can run. */
-export function RunCost({ estimate, onRun, disabled = false, note, loading, locale = 'en', messages, className, ...rest }: RunCostProps) {
+export function RunCost({ estimate, onRun, disabled = false, note, loading, locale = 'en', expand = false, messages, className, ...rest }: RunCostProps) {
   const m = studyMessages(messages);
   const cost = formatCost(estimate, locale);
   const unavailable = cost === null;
@@ -42,7 +45,15 @@ export function RunCost({ estimate, onRun, disabled = false, note, loading, loca
       </div>
       {estimate?.basis && <span className="ns-study-hint">{estimate.basis}</span>}
       {onRun && (
-        <Button variant="primary" onClick={onRun} disabled={unavailable || disabled} loading={loading ?? false} className="ns-run-cost__button">
+        <Button
+          variant="primary"
+          onClick={onRun}
+          disabled={unavailable || disabled}
+          loading={loading ?? false}
+          icon={<Icon name="run" size={14} />}
+          expand={expand}
+          className={cx('ns-run-cost__button', expand && 'ns-run-cost__button--expand')}
+        >
           {m.runStudy}
         </Button>
       )}
@@ -98,6 +109,7 @@ export function RunConfirm({
         <Dialog.Footer>
           <Dialog.Close className="ns-button ns-button--secondary ns-size-md">{m.cancel}</Dialog.Close>
           <Dialog.Close className="ns-button ns-button--primary ns-size-md" disabled={cost === null} onClick={() => onConfirm()}>
+            <Icon name="run" size={14} className="ns-button__icon" />
             {m.confirmRun}
           </Dialog.Close>
         </Dialog.Footer>

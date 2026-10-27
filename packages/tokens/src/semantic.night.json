@@ -65,6 +65,20 @@
     "spotlight": { "$type": "color", "$value": "rgba(147, 180, 224, 0.16)", "$description": "Pointer-tracked spotlight wash." },
     "shadow": { "$type": "shadow", "$value": "0 24px 48px -12px rgba(0, 0, 0, 0.6)" },
     "hairline": { "$type": "color", "$value": "rgba(232, 234, 238, 0.06)", "$description": "The only border a borderless surface keeps, where separation needs it." },
+    "silver": {
+      "$description": "Brushed silver: the button finish on liquid glass. hi/lo are the opaque ends of the body gradient (ink is checked against both); signal-hi/lo are the glacier-tinted primary.",
+      "hi": { "$type": "color", "$value": "#D3D8DF" },
+      "lo": { "$type": "color", "$value": "#8A919C" },
+      "signal-hi": { "$type": "color", "$value": "#C9D9EF" },
+      "signal-lo": { "$type": "color", "$value": "#7F9DC7" },
+      "ink": { "$type": "color", "$value": "{gray.8}", "$description": "Text and icons on silver." },
+      "grain": { "$type": "other", "$value": "repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0 1px, rgba(255, 255, 255, 0) 1px 3px), repeating-linear-gradient(180deg, rgba(6, 8, 12, 0.06) 0 1px, rgba(6, 8, 12, 0) 1px 5px)", "$description": "Fine brushed lines (two coprime periods so the grain does not band)." },
+      "sheen": { "$type": "color", "$value": "rgba(255, 255, 255, 0.42)", "$description": "Moving light on the metal." },
+      "highlight": { "$type": "color", "$value": "rgba(255, 255, 255, 0.75)", "$description": "Crisp inner top edge." },
+      "shade": { "$type": "color", "$value": "rgba(6, 8, 12, 0.28)", "$description": "Inner lower edge of the bevel." },
+      "edge": { "$type": "color", "$value": "rgba(6, 8, 12, 0.55)", "$description": "Outer hairline." },
+      "shadow": { "$type": "shadow", "$value": "0 1px 1px rgba(0, 0, 0, 0.45), 0 4px 10px -4px rgba(0, 0, 0, 0.6)" }
+    },
     "liquid": {
       "$description": "Liquid glass layers: glacier tint, specular highlight, rim, inner glow and drop shadow.",
       "tint": { "$type": "color", "$value": "rgba(147, 180, 224, 0.05)" },

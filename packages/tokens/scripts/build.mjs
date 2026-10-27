@@ -81,7 +81,7 @@ for (const t of night.scales) {
   }
   if (p[0] === "font" && p[1] === "weight") tw.push(`  --font-weight-${p[2]}: ${v(t)};`);
   if (p[0] === "space") tw.push(`  --spacing-${p[1]}: ${v(t)};`);
-  if (p[0] === "radius") tw.push(`  --radius-${p[1]}: ${v(t)};`);
+  if (p[0] === "radius") tw.push(`  --radius-${p.slice(1).join("-")}: ${v(t)};`);
   if (p[0] === "motion" && p[1] === "easing") tw.push(`  --ease-${p[2]}: ${v(t)};`);
   if (p[0] === "motion" && p[1] === "spring") tw.push(`  --ease-spring-${p[2]}: ${v(t)};`);
   if (p[0] === "material" && p[1] === "blur") tw.push(`  --blur-glass-${p[2]}: ${v(t)};`);

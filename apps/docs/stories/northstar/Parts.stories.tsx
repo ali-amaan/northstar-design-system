@@ -19,7 +19,11 @@ export const Status: Story = {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>{STATES.map((s) => <StudyStatus key={s} state={s} />)}</div>
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>{STATES.map((s) => <StudyStatus key={s} state={s} variant="inline" />)}</div>
-      <p className="ns-study-hint">Under reduced motion the running dial stands still and keeps the word.</p>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>{STATES.map((s) => <StudyStatus key={s} state={s} expand />)}</div>
+      <p className="ns-study-hint">
+        Under reduced motion the running dial stands still and keeps the word. With <code>expand</code> the chip is icon-first: the dial shows
+        and the word eases open on hover (always on touch), and the word names it for screen readers throughout.
+      </p>
     </div>
   ),
 };
@@ -35,11 +39,32 @@ export const Shell: Story = {
   },
 };
 
+/** `iconTabs="expand"`: icon-first section tabs; the open tab and any hovered or focused tab show their label. */
+export const ShellIconTabs: Story = {
+  name: 'Shell, icon-first tabs',
+  render: function Render() {
+    const [tab, setTab] = useState(studyCassiopeia.tab ?? 'research');
+    return (
+      <StudyShell
+        study={studyCassiopeia}
+        tab={tab}
+        onTabChange={setTab}
+        iconTabs="expand"
+        actions={<ExportMenu onExport={() => {}} expand />}
+        style={{ margin: -24, minHeight: 400 }}
+      >
+        <p>Content for the {tab} tab.</p>
+      </StudyShell>
+    );
+  },
+};
+
 export const Cost: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 24, maxWidth: 280 }}>
       <RunCost estimate={null} onRun={() => {}} />
       <RunCost estimate={studyBorealis.cost} onRun={() => {}} />
+      <RunCost estimate={studyBorealis.cost} onRun={() => {}} expand />
     </div>
   ),
 };
@@ -53,7 +78,14 @@ export const Confirm: Story = {
   ),
 };
 
-export const Export: Story = { render: () => <ExportMenu onExport={() => {}} disabledFormats={['csv']} /> };
+export const Export: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 12 }}>
+      <ExportMenu onExport={() => {}} disabledFormats={['csv']} />
+      <ExportMenu onExport={() => {}} disabledFormats={['csv']} expand />
+    </div>
+  ),
+};
 
 const SPOT_COPY: Record<SpotName, [string, string, string]> = {
   brief: ['Start with the decision', 'Name the one decision this study informs.', 'Write the brief'],

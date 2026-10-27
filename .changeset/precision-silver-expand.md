@@ -1,0 +1,14 @@
+---
+"@northstar-js/tokens": minor
+"@northstar-js/react": minor
+---
+
+Icon-first everywhere, brushed silver on glass, and tighter glass corners.
+
+**Tokens.** New `radius.glass.panel|bar|control|inner` (10, 10, 7 and 6px): liquid glass is precise, never fully round. New per-theme `material.silver.*` for brushed-metal buttons: `hi`, `lo` and the glacier-tinted `signal-hi`, `signal-lo` body ends, `ink`, `grain`, `sheen`, `highlight`, `shade`, `edge` and `shadow`. The contrast gate checks the silver ink against all four body ends (with the darkest grain line composited) at 4.5:1 in Night and Day. The Tailwind theme now names nested radii in full (`--radius-glass-panel`).
+
+**React.** One shared ExpandLabel primitive (grid 0fr → 1fr on the glide curve) drives every icon-first control: the icon shows and the full label eases open on hover, keyboard focus, selection and an open menu, never truncated, and touch screens always show it. `Button` takes `icon` and `expand`; `IconButton`, `ToolbarItem` and `Sidebar` move onto the primitive; `Tabs.Trigger` takes `icon` and `expand` (the selected tab stays open, and the sliding indicator follows labels as they open); `Menu.Trigger` takes `icon` and `expand`; `Pagination` previous and next are icon-first by default (`expand={false}` keeps arrows only); `Breadcrumbs collapse` folds the middle crumbs to an icon or ellipsis that opens in full; `Tag` and `Badge` take `icon` and `expand`; `NextAction`'s Back is icon-first (`backExpand`). Northstar parts: `StudyShell iconTabs` (`true` by default leads each tab with its section icon, `'expand'` is icon-first), `ExportMenu expand`, `RunCost` gets the run icon and `expand`, `RunConfirm` confirms with the run icon, `ResearchBuilder` item actions are icon-first, and `StudyStatus expand` is an icon-first chip.
+
+Buttons on liquid glass are brushed silver: secondary and primary buttons inside `.ns-liquid`, any `material="glass"` surface or a `[data-material="glass"]` ancestor take a fine grain, a conic sheen that turns on hover, a glint that follows the pointer, a crisp inner top edge and a bevel shadow; pressing tilts the light. Primary is glacier-tinted silver. `tone="silver"` asks for it anywhere; `material="solid"` opts a button out. Reduced transparency drops the sheen layers, `prefers-contrast: more` flattens to the light end with an ink outline, and forced colours use system button colours. Ghost buttons on glass hover with light instead of an opaque fill.
+
+Glass corners are tighter: `LiquidGlass` defaults to `radius="panel"` (10px, was 16) and takes `panel | bar | control | inner | full` or px; `radius="pill"` is now the 10px bar radius (use `full` for a true capsule). Glass cards, panels, dialogs and sheets use 10px, toolbars and glass tab lists 10px with 6px items, and glass and silver buttons 7px. `Surface material="glass"` uses the panel radius unless `radius` is set.

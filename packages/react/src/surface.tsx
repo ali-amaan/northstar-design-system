@@ -15,7 +15,8 @@ export interface SurfaceProps extends React.HTMLAttributes<HTMLElement> {
   reactive?: boolean;
   /** 1 hugs the page, 3 floats. Default 2. */
   depth?: 1 | 2 | 3;
-  radius?: 6 | 8 | 12;
+  /** Corner radius. Default 12 for solid; glass defaults to `radius.glass.panel` (10px). */
+  radius?: 6 | 8 | 10 | 12;
   as?: SurfaceTag;
   ref?: React.Ref<HTMLElement>;
 }
@@ -27,13 +28,15 @@ export interface SurfaceProps extends React.HTMLAttributes<HTMLElement> {
  * colours, and where backdrop-filter is unsupported. Borderless by default:
  * separation comes from tone, shadow and the rim light.
  */
-export function Surface({ material = 'glass', reactive = false, depth = 2, radius = 12, as: Tag = 'div', className, ref, ...rest }: SurfaceProps) {
+export function Surface({ material = 'glass', reactive = false, depth = 2, radius, as: Tag = 'div', className, ref, ...rest }: SurfaceProps) {
   const track = usePointerTracking<HTMLElement>(reactive);
+  // Glass takes the tighter radius.glass.panel from CSS unless a radius is asked for.
+  const r = radius ?? (material === 'glass' ? undefined : 12);
   return (
     <Tag
       {...(rest as React.HTMLAttributes<HTMLElement>)}
       ref={mergeRefs(ref, track) as React.Ref<never>}
-      className={cx('ns-surface', `ns-material--${material}`, `ns-depth-${depth}`, `ns-radius-${radius}`, reactive && 'ns-reactive', className)}
+      className={cx('ns-surface', `ns-material--${material}`, `ns-depth-${depth}`, r !== undefined && `ns-radius-${r}`, reactive && 'ns-reactive', className)}
     />
   );
 }

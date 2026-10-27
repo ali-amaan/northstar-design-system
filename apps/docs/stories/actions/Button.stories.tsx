@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button, Stack } from '@northstar-js/react';
+import { Button, LiquidGlass, Stack } from '@northstar-js/react';
+import { DuplicateIcon, ExportIcon, RunIcon } from '@northstar-js/icons';
 import { Backdrop } from '../interactions/backdrop';
 
 const meta = { title: 'Actions/Button' } satisfies Meta;
@@ -54,4 +55,54 @@ export const Interactions: Story = {
       </Backdrop>
     );
   },
+};
+
+/** `icon` leads; with `expand` only the icon shows and the full label eases open on hover and focus (always on touch). */
+export const IconAndExpand: Story = {
+  name: 'Icon and expand',
+  render: () => (
+    <Stack gap={12}>
+      <Stack direction="row" gap={8} align="center">
+        <Button icon={<DuplicateIcon size={16} />}>Duplicate</Button>
+        <Button variant="primary" icon={<RunIcon size={16} />}>
+          Run study
+        </Button>
+      </Stack>
+      <Stack direction="row" gap={8} align="center">
+        <Button icon={<DuplicateIcon size={16} />} expand>
+          Duplicate study
+        </Button>
+        <Button variant="ghost" icon={<ExportIcon size={16} />} expand>
+          Export results as a report
+        </Button>
+        <Button variant="primary" icon={<RunIcon size={16} />} expand="always">
+          Run study
+        </Button>
+      </Stack>
+    </Stack>
+  ),
+};
+
+/** On liquid glass, secondary and primary buttons are brushed silver; `tone="silver"` asks for it anywhere. */
+export const Silver: Story = {
+  render: () => (
+    <Backdrop minHeight={200}>
+      <Stack gap={16}>
+        <LiquidGlass style={{ padding: 16, display: 'inline-flex', gap: 8, alignSelf: 'flex-start' }}>
+          <Button variant="primary" icon={<RunIcon size={14} />}>
+            Run study
+          </Button>
+          <Button>Secondary</Button>
+          <Button variant="ghost">Ghost</Button>
+          <Button material="solid">Solid (opt out)</Button>
+        </LiquidGlass>
+        <Stack direction="row" gap={8}>
+          <Button tone="silver">Silver off glass</Button>
+          <Button tone="silver" variant="primary">
+            Silver primary
+          </Button>
+        </Stack>
+      </Stack>
+    </Backdrop>
+  ),
 };
