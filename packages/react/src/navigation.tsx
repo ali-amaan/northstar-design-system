@@ -37,9 +37,11 @@ export interface TabsRootProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   indicator?: TabsIndicator;
   /** Cross-fade panels with the View Transitions API where supported. Default false. */
   transition?: boolean;
+  /** Sliding-pill tabs (`glass`, `solid`) are pills by default; `rounded` opts out to tight corners. */
+  shape?: 'pill' | 'rounded';
 }
 
-function TabsRoot({ value, defaultValue, onValueChange, orientation = 'horizontal', indicator = 'line', transition = false, className, ...rest }: TabsRootProps) {
+function TabsRoot({ value, defaultValue, onValueChange, orientation = 'horizontal', indicator = 'line', transition = false, shape = 'pill', className, ...rest }: TabsRootProps) {
   const [v, setRaw] = useControllable(value, defaultValue ?? '', onValueChange);
   const root = useRef<HTMLDivElement>(null);
   const setV = (next: string) => {
@@ -50,7 +52,7 @@ function TabsRoot({ value, defaultValue, onValueChange, orientation = 'horizonta
   const baseId = `ns-tabs-${useId().replace(/:/g, '')}`;
   return (
     <TabsContext.Provider value={{ value: v, setValue: setV, baseId, orientation, indicator }}>
-      <div {...rest} ref={root} className={cx('ns-tabs', `ns-tabs--${orientation}`, transition && 'ns-tabs--vt', indicator !== 'line' && 'ns-tabs--pill', indicator === 'glass' && 'ns-tabs--glass', className)} />
+      <div {...rest} ref={root} className={cx('ns-tabs', `ns-tabs--${orientation}`, transition && 'ns-tabs--vt', indicator !== 'line' && 'ns-tabs--pill', indicator === 'glass' && 'ns-tabs--glass', shape === 'rounded' && 'ns-tabs--rounded', className)} />
     </TabsContext.Provider>
   );
 }
@@ -258,6 +260,8 @@ export interface PaginationProps extends Omit<React.HTMLAttributes<HTMLElement>,
    * keeps arrows only (named by aria-label). Default true.
    */
   expand?: Expand;
+  /** Page and step buttons are pills (single pages are circles); `rounded` opts out. */
+  shape?: 'pill' | 'rounded';
 }
 
 function range(page: number, count: number, siblings: number): Array<number | 'gap'> {
@@ -272,12 +276,12 @@ function range(page: number, count: number, siblings: number): Array<number | 'g
   return out;
 }
 
-export function Pagination({ pageCount, page, defaultPage, onPageChange, siblings = 1, expand = true, className, ...rest }: PaginationProps) {
+export function Pagination({ pageCount, page, defaultPage, onPageChange, siblings = 1, expand = true, shape = 'pill', className, ...rest }: PaginationProps) {
   const { messages } = useNorthstar();
   const [p, setP] = useControllable(page, defaultPage ?? 1, onPageChange);
   const go = (n: number) => setP(Math.min(pageCount, Math.max(1, n)));
   return (
-    <nav aria-label={messages.pagination} {...rest} className={cx('ns-pagination', className)}>
+    <nav aria-label={messages.pagination} {...rest} className={cx('ns-pagination', shape === 'rounded' && 'ns-pagination--rounded', className)}>
       <PageStep expand={expand} label={messages.previousPage} disabled={p <= 1} onClick={() => go(p - 1)}>
         <ChevronLeft />
       </PageStep>

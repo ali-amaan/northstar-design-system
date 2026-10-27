@@ -87,6 +87,37 @@
       "rim-low": { "$type": "color", "$value": "rgba(255, 255, 255, 0.06)", "$description": "Lower rim and hairline." },
       "inner": { "$type": "color", "$value": "rgba(255, 255, 255, 0.05)", "$description": "Inner shadow light." },
       "shadow": { "$type": "shadow", "$value": "0 10px 30px -10px rgba(0, 0, 0, 0.55)" }
+    },
+    "texture": {
+      "$description": "Tactile button texture: fine brushed lines (light and dark, two coprime periods), a soft top highlight and a low inner bevel. signal-* is tuned for the Glacier primary. Text on every textured button body is checked with the lines and highlight composited (tooling/contrast).",
+      "$type": "color",
+      "light": { "$value": "rgba(255, 255, 255, 0.03)", "$description": "Light brushed line." },
+      "dark": { "$value": "rgba(0, 0, 0, 0.16)", "$description": "Dark brushed line." },
+      "top": { "$value": "rgba(255, 255, 255, 0.055)", "$description": "Peak of the soft top highlight." },
+      "bevel-hi": { "$value": "rgba(255, 255, 255, 0.075)", "$description": "Inner top edge of the bevel." },
+      "bevel-lo": { "$value": "rgba(0, 0, 0, 0.32)", "$description": "Inner lower edge of the bevel." },
+      "signal-light": { "$value": "rgba(255, 255, 255, 0.1)" },
+      "signal-dark": { "$value": "rgba(6, 8, 12, 0.045)" },
+      "signal-top": { "$value": "rgba(255, 255, 255, 0.22)" },
+      "signal-bevel-hi": { "$value": "rgba(255, 255, 255, 0.5)" },
+      "signal-bevel-lo": { "$value": "rgba(6, 8, 12, 0.2)" }
+    }
+  },
+  "backdrop": {
+    "$description": "Animated star backdrops (@northstar-js/react/backdrops). Decorative: the stars carry no meaning, but the ground is checked as a ground for text, and ink and signal as marks on it.",
+    "ground": { "$type": "color", "$value": "{night.0}", "$description": "Backdrop ground." },
+    "ink": { "$type": "color", "$value": "{night.8}", "$description": "Stars." },
+    "signal": { "$type": "color", "$value": "{glacier.300}", "$description": "The few Glacier stars, links and the north star." },
+    "line": { "$type": "color", "$value": "{night.5}", "$description": "Rings, meridians and graduations." },
+    "faint": { "$type": "color", "$value": "{night.4}", "$description": "Unlit lattice points and spokes." },
+    "glow": {
+      "$type": "number",
+      "$description": "Peak opacities of the soft glows: nebulae, the orrery core and the interference band.",
+      "nebula": { "$value": 0.13 },
+      "haze": { "$value": 0.04 },
+      "core": { "$value": 0.12 },
+      "core-soft": { "$value": 0.03 },
+      "band": { "$value": 0.08 }
     }
   }
 }

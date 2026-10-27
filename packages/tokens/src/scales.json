@@ -102,12 +102,17 @@
     "8": { "$value": "8px" },
     "12": { "$value": "12px" },
     "full": { "$value": "9999px" },
+    "control": {
+      "$description": "Button shapes. Every button is a pill by default (an icon-only button is a circle); shape=\"rounded\" opts out.",
+      "pill": { "$value": "{radius.full}", "$description": "The default button shape: a capsule, or a circle when the button is square." },
+      "rounded": { "$value": "{radius.6}", "$description": "The shape=\"rounded\" opt-out off glass (on glass the opt-out is radius.glass.control)." }
+    },
     "glass": {
-      "$description": "Liquid glass corners, kept tight for precision: never fully round.",
+      "$description": "Liquid glass corners, kept tight for precision: glass panels and bars are never fully round. Buttons on glass are pills unless shape=\"rounded\".",
       "panel": { "$value": "10px", "$description": "Cards, panels, dialogs and sheets on glass." },
       "bar": { "$value": "10px", "$description": "Toolbars, pill bars and glass tab lists." },
-      "control": { "$value": "7px", "$description": "Buttons and controls on or of glass (silver included)." },
-      "inner": { "$value": "6px", "$description": "A control nested in a bar: bar radius less the bar's 4px padding." }
+      "control": { "$value": "7px", "$description": "The shape=\"rounded\" opt-out for buttons on or of glass (silver included); by default they are pills (radius.control.pill)." },
+      "inner": { "$value": "6px", "$description": "A rounded (shape=\"rounded\") control nested in a bar: bar radius less the bar's 4px padding." }
     }
   },
   "z": {

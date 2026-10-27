@@ -13,7 +13,7 @@ export type { Size, Tone } from './internal/util.js';
 export type { Expand } from './internal/expand.js';
 
 export { Button, IconButton, RevealLabel, Toolbar, ToolbarItem, Link, ButtonGroup } from './actions.js';
-export type { ButtonProps, ButtonVariant, ButtonTone, IconButtonProps, ToolbarProps, ToolbarItemProps, LinkProps, ButtonGroupProps } from './actions.js';
+export type { ButtonProps, ButtonVariant, ButtonTone, ButtonShape, IconButtonProps, ToolbarProps, ToolbarItemProps, LinkProps, ButtonGroupProps } from './actions.js';
 
 export { Field, useFieldProps, Input, Textarea, Select, Combobox, Checkbox, RadioGroup, Radio, Switch, Slider, NumberInput, SearchInput } from './forms.js';
 export type {

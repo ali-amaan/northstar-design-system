@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
 import './setup.js';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
@@ -70,6 +72,20 @@ describe('StarLink', () => {
 });
 
 describe('ConstellationButton', () => {
+  it('is a pill by default with the shared tactile texture, and takes shape="rounded"', () => {
+    render(
+      <div>
+        <ConstellationButton>Pill</ConstellationButton>
+        <ConstellationButton shape="rounded">Rounded</ConstellationButton>
+      </div>,
+    );
+    expect(screen.getByRole('button', { name: 'Pill' }).className).not.toContain('ns-fx-cbutton--rounded');
+    expect(screen.getByRole('button', { name: 'Rounded' }).className).toContain('ns-fx-cbutton--rounded');
+    const fx = readFileSync(join(__dirname, '../src/effects.css'), 'utf8');
+    expect(fx).toContain('border-radius: var(--ns-radius-control-pill);');
+    expect(fx).toMatch(/\.ns-fx-cbutton::after \{[^}]*repeating-linear-gradient/);
+  });
+
   it('clicks, emits a seeded burst that clears, and is keyboard operable', async () => {
     vi.useFakeTimers();
     const onClick = vi.fn();

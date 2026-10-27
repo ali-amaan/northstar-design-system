@@ -1,0 +1,141 @@
+/* @northstar-js/react/backdrops.css: the animated star backdrops. Load after
+   tokens.css. Uses only --ns-* custom properties. Every timing is the
+   approved design's, divided by --ns-bd-speed; --ns-bd-d on an element is its
+   phase in seconds. Everything moves by transform or opacity; offscreen,
+   while the page is hidden or when paused it holds, and under reduced motion
+   it is a still frame. */
+
+.ns-backdrop {
+  --ns-bd-speed: 1;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  contain: strict;
+  pointer-events: none;
+  user-select: none;
+  background: var(--ns-backdrop-ground);
+}
+.ns-backdrop--bare { background: transparent; }
+
+/* ------------------------------------------------------------- 2D marks */
+
+.ns-bd-svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: hidden; fill: var(--ns-backdrop-ink); }
+.ns-bd-a { fill: var(--ns-backdrop-signal); }
+.ns-bd-f { fill: var(--ns-backdrop-faint); }
+.ns-bd-line,
+.ns-bd-ring,
+.ns-bd-mer { stroke: var(--ns-backdrop-line); }
+.ns-bd-ring--a,
+.ns-bd-mer--a { stroke: var(--ns-backdrop-signal); }
+.ns-bd-spoke { stroke: color-mix(in srgb, var(--ns-backdrop-line) 50%, var(--ns-backdrop-ground)); stroke-width: 0.4; }
+.ns-bd-beam { stroke: var(--ns-backdrop-signal); stroke-width: 0.8; opacity: 0.7; }
+.ns-bd-link { stroke: var(--ns-backdrop-signal); stroke-width: 0.7; stroke-dasharray: 120; }
+
+/* 1 · Constellation atlas: three depths drift at 1 : 2 : 3, six constellations draw, hold and let go. */
+@keyframes ns-bd-tw { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+@keyframes ns-bd-far { from { transform: translate(0, 0); } to { transform: translate(-30px, -8px); } }
+@keyframes ns-bd-mid { from { transform: translate(0, 0); } to { transform: translate(-60px, -16px); } }
+@keyframes ns-bd-near { from { transform: translate(0, 0); } to { transform: translate(-100px, -26px); } }
+@keyframes ns-bd-neb { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(40px, -20px) scale(1.15); } }
+@keyframes ns-bd-link { 0%, 100% { stroke-dashoffset: 120; } 45%, 70% { stroke-dashoffset: 0; } }
+.ns-bd-tw { animation: ns-bd-tw calc(6s / var(--ns-bd-speed)) ease-in-out calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+.ns-bd-far { animation: ns-bd-far calc(90s / var(--ns-bd-speed)) linear infinite alternate; }
+.ns-bd-mid { animation: ns-bd-mid calc(90s / var(--ns-bd-speed)) linear infinite alternate; }
+.ns-bd-near { animation: ns-bd-near calc(90s / var(--ns-bd-speed)) linear infinite alternate; }
+.ns-bd-neb { transform-box: fill-box; transform-origin: center; animation: ns-bd-neb calc(40s / var(--ns-bd-speed)) ease-in-out calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+.ns-bd-link { animation: ns-bd-link calc(14s / var(--ns-bd-speed)) ease-in-out calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+
+/* 2 · Orrery: eight rings at Fibonacci periods (6 s × 1, 2, 3, 5, 8, 13, 21, 34). */
+@keyframes ns-bd-spin { to { transform: rotate(360deg); } }
+@keyframes ns-bd-glow { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+.ns-bd-orbit { transform-origin: 430px 250px; animation: ns-bd-spin calc(var(--ns-bd-t, 6) * 1s / var(--ns-bd-speed)) linear calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+.ns-bd-core { animation: ns-bd-glow calc(8s / var(--ns-bd-speed)) ease-in-out infinite; }
+
+/* 3 · Golden-angle field: 137.5° apart; a pulse runs outward along the spiral. */
+@keyframes ns-bd-pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.95; } }
+.ns-bd-phyllo { transform-origin: 560px 225px; animation: ns-bd-spin calc(240s / var(--ns-bd-speed)) linear infinite; }
+.ns-bd-pulse { animation: ns-bd-pulse calc(6s / var(--ns-bd-speed)) ease-in-out calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+
+/* 5 · Prime lattice: 1 to 540 on a 36-wide grid; each prime waits its own value in tenths of a second. */
+@keyframes ns-bd-prime { 0%, 100% { opacity: 0.15; } 50% { opacity: 1; } }
+.ns-bd-prime { opacity: 0.6; animation: ns-bd-prime calc(7s / var(--ns-bd-speed)) ease-in-out calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+
+/* 6 · Meridian sweep: 140° across a graduated arc and back, like a sextant finding north. */
+@keyframes ns-bd-sweep { from { transform: rotate(-70deg); } to { transform: rotate(70deg); } }
+.ns-bd-sweep { transform-origin: 360px 620px; animation: ns-bd-sweep calc(18s / var(--ns-bd-speed)) cubic-bezier(0.45, 0, 0.55, 1) infinite alternate; }
+
+/* 7 · Interference field: fourteen rows ride two crossing sine waves; a light band breathes. */
+@keyframes ns-bd-bob { 0%, 100% { transform: translateY(-5px); } 50% { transform: translateY(5px); } }
+@keyframes ns-bd-band { 0%, 100% { transform: translateY(-30px); } 50% { transform: translateY(30px); } }
+.ns-bd-bob { animation: ns-bd-bob calc(7s / var(--ns-bd-speed)) ease-in-out calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+.ns-bd-band { animation: ns-bd-band calc(20s / var(--ns-bd-speed)) ease-in-out infinite; }
+
+/* 8 · Celestial sphere: six meridians turn about the polar axis once in 32 s; north stays on top. */
+@keyframes ns-bd-turn { 0% { transform: scaleX(1); } 50% { transform: scaleX(-1); } 100% { transform: scaleX(1); } }
+.ns-bd-mer { transform-box: view-box; transform-origin: 520px 225px; animation: ns-bd-turn calc(32s / var(--ns-bd-speed)) linear calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+.ns-backdrop--celestial-sphere .ns-bd-tw { animation-duration: calc(5s / var(--ns-bd-speed)); }
+
+/* P5 · Twin vortex and P7 · Drifting blooms: stars throb on their own beat. */
+@keyframes ns-bd-throb { 0%, 100% { opacity: 0.16; transform: scale(0.65); } 45% { opacity: 1; transform: scale(1.15); } }
+@keyframes ns-bd-unspin { to { transform: rotate(-360deg); } }
+@keyframes ns-bd-drift { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(28px, -18px); } }
+.ns-bd-throb { animation: ns-bd-throb calc(6s / var(--ns-bd-speed)) ease-in-out calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+.ns-bd-vortex { transform-origin: 470px 225px; animation: ns-bd-unspin calc(180s / var(--ns-bd-speed)) linear infinite; }
+.ns-bd-drift { animation: ns-bd-drift calc(30s / var(--ns-bd-speed)) ease-in-out calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+
+/* ------------------------------------------------------------- 3D forms
+   The 720 × 450 stage is scaled to cover (--ns-bd-k, from a ResizeObserver).
+   The scene turns about its vertical axis; each star turns back by the same
+   angle and undoes the tilt (--ns-bd-bill), so it always faces the viewer. */
+
+.ns-bd-stage { position: absolute; left: 50%; top: 50%; width: 720px; height: 450px; margin: -225px 0 0 -360px; transform: scale(var(--ns-bd-k, 1)); }
+.ns-bd-view { position: absolute; inset: 0; }
+.ns-bd-tilt { position: absolute; transform-style: preserve-3d; }
+.ns-bd-scene { transform-style: preserve-3d; animation: ns-bd-spin3 calc(var(--ns-bd-period) * 1s / var(--ns-bd-speed)) linear infinite; }
+.ns-bd-b {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform: translate3d(var(--ns-bd-p)) var(--ns-bd-bill);
+  animation: ns-bd-bill calc(var(--ns-bd-period) * 1s / var(--ns-bd-speed)) linear infinite;
+}
+.ns-bd-s {
+  position: absolute;
+  left: calc(var(--ns-bd-s) * -0.5px);
+  top: calc(var(--ns-bd-s) * -0.5px);
+  display: block;
+  width: calc(var(--ns-bd-s) * 1px);
+  height: calc(var(--ns-bd-s) * 1px);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+  background: var(--ns-backdrop-ink);
+}
+.ns-bd-s.ns-bd-a { background: var(--ns-backdrop-signal); }
+.ns-bd-s--fade { animation: ns-bd-fade calc(var(--ns-bd-beat) * 1s / var(--ns-bd-speed)) ease-in-out calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+.ns-bd-s--rise { animation: ns-bd-rise calc(var(--ns-bd-beat) * 1s / var(--ns-bd-speed)) ease-in-out calc(var(--ns-bd-d, 0) * 1s / var(--ns-bd-speed)) infinite; }
+@keyframes ns-bd-spin3 { from { transform: rotateY(0deg); } to { transform: rotateY(var(--ns-bd-turn)); } }
+@keyframes ns-bd-bill {
+  from { transform: translate3d(var(--ns-bd-p)) rotateY(0deg) var(--ns-bd-bill); }
+  to { transform: translate3d(var(--ns-bd-p)) rotateY(calc(var(--ns-bd-turn) * -1)) var(--ns-bd-bill); }
+}
+@keyframes ns-bd-fade { 0%, 100% { opacity: 0.2; } 45% { opacity: 1; } }
+@keyframes ns-bd-rise { 0%, 100% { opacity: 0.18; transform: translateY(6px); } 45% { opacity: 1; transform: translateY(-6px); } }
+
+/* --------------------------------------------------------- holding still */
+
+.ns-backdrop:is([data-paused], [data-idle]) * { animation-play-state: paused !important; }
+.ns-backdrop[data-motion='reduced'] * { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .ns-backdrop * { animation: none !important; }
+}
+@media (forced-colors: active) {
+  .ns-backdrop { background: Canvas; }
+  .ns-backdrop > * { display: none; }
+}
+@media print {
+  .ns-backdrop * { animation: none !important; }
+}

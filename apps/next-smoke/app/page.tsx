@@ -5,6 +5,7 @@ import { AddIcon, iconNames } from "@northstar-js/icons";
 import { WorldMap } from "@northstar-js/maps";
 import * as contracts from "@northstar-js/contracts";
 import * as tokens from "@northstar-js/tokens";
+import { StarBackdrop } from "@northstar-js/react/backdrops";
 import { ClientBits } from "./client-bits";
 
 export default function Page() {
@@ -18,6 +19,10 @@ export default function Page() {
       <AddIcon />
       <Ranking items={["First", "Second", "Third"]} title="Ranking" />
       <WorldMap width={640} title="World" />
+      <section data-testid="backdrop" style={{ position: "relative", height: 240, overflow: "hidden" }}>
+        <StarBackdrop variant="constellation-atlas" density="low" />
+        <StarBackdrop variant="fibonacci-sphere" density="low" ground={false} />
+      </section>
       <ClientBits />
     </main>
   );

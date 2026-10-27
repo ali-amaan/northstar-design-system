@@ -8,12 +8,12 @@ export default [
     path: "../../packages/tokens/dist/index.js",
     import: "*",
     modifyEsbuildConfig: esm,
-    limit: "3.1 kB", // radius.glass.* and material.silver.* (both themes)
+    limit: "3.4 kB", // radius.glass.*, radius.control.*, material.silver.*, material.texture.* and backdrop.* (both themes)
   },
   {
     name: "tokens: tokens.css",
     path: "../../packages/tokens/dist/tokens.css",
-    limit: "2.2 kB",
+    limit: "2.4 kB", // + material.texture.*, backdrop.* and radius.control.* (both themes)
     disablePlugins: ["@size-limit/esbuild"],
   },
   {
@@ -104,9 +104,9 @@ export default [
   },
   {
     name: "react: styles.css",
-    message: "includes the interaction layer, the liquid layer (liquid glass, icon-led controls, flows, reveal) and the precision layer (icon-first expand everywhere, brushed silver, glass radii)",
+    message: "includes the interaction layer, the liquid layer (liquid glass, icon-led controls, flows, reveal), the precision layer (icon-first expand everywhere, brushed silver, glass radii) and the shape and texture layer (pill buttons, tactile texture, fallbacks)",
     path: "../../packages/react/dist/styles.css",
-    limit: "14 kB",
+    limit: "14.75 kB",
     disablePlugins: ["@size-limit/esbuild"],
   },
   {
@@ -122,6 +122,30 @@ export default [
     name: "react: effects.css",
     path: "../../packages/react/dist/effects.css",
     limit: "7 kB",
+    disablePlugins: ["@size-limit/esbuild"],
+  },
+  {
+    name: "react: backdrops",
+    message: "the animated star backdrops (@northstar-js/react/backdrops): one component, fifteen variants, all geometry generated at runtime",
+    path: "../../packages/react/dist/backdrops/index.js",
+    import: "*",
+    modifyEsbuildConfig: esm,
+    ignore: ["react", "react-dom"],
+    limit: "6 kB",
+  },
+  {
+    name: "react: StarBackdrop alone",
+    message: "the variants are generators the component picks at runtime, so importing it carries all fifteen",
+    path: "../../packages/react/dist/backdrops/index.js",
+    import: "{ StarBackdrop }",
+    modifyEsbuildConfig: esm,
+    ignore: ["react", "react-dom"],
+    limit: "6 kB",
+  },
+  {
+    name: "react: backdrops.css",
+    path: "../../packages/react/dist/backdrops.css",
+    limit: "2.4 kB",
     disablePlugins: ["@size-limit/esbuild"],
   },
 ];

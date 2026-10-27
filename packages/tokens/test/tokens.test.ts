@@ -223,3 +223,36 @@ describe("glass radii", () => {
     expect(cssVar["radius.glass.panel" as keyof typeof cssVar]).toBe("--ns-radius-glass-panel");
   });
 });
+
+describe("button shapes and texture", () => {
+  it("buttons are pills by default, with a rounded opt-out", () => {
+    const s = tokens.scales as Record<string, string>;
+    expect(s["radius.control.pill"]).toBe(s["radius.full"]);
+    expect(parseFloat(s["radius.control.rounded"] ?? "NaN")).toBeLessThanOrEqual(8);
+    expect(cssVar["radius.control.pill" as keyof typeof cssVar]).toBe("--ns-radius-control-pill");
+  });
+
+  it("both themes define the tactile texture, tuned for the secondary body and the Glacier primary", () => {
+    const parts = ["light", "dark", "top", "bevel-hi", "bevel-lo"];
+    for (const theme of themes) {
+      const t = tokens.themes[theme] as Record<string, string>;
+      for (const p of parts) {
+        expect(t[`material.texture.${p}`], `${theme} ${p}`).toMatch(/^rgba\(/);
+        expect(t[`material.texture.signal-${p}`], `${theme} signal-${p}`).toMatch(/^rgba\(/);
+      }
+      expect(t["button.primary.hover"], theme).toMatch(/^#/);
+    }
+  });
+});
+
+describe("star backdrops", () => {
+  it("define a ground, ink, signal, line and faint role per theme; Day uses the pale ground", () => {
+    for (const theme of themes) {
+      const t = tokens.themes[theme] as Record<string, string>;
+      for (const r of ["ground", "ink", "signal", "line", "faint"]) expect(t[`backdrop.${r}`], `${theme} ${r}`).toMatch(/^#[0-9A-F]{6}$/i);
+      for (const g of ["nebula", "haze", "core", "core-soft", "band"]) expect(Number(t[`backdrop.glow.${g}`]), g).toBeLessThan(0.5);
+    }
+    expect(built.themes.night["backdrop.ground" as keyof typeof built.themes.night]).toBe("#08090C");
+    expect(built.themes.day["backdrop.ground" as keyof typeof built.themes.day]).toBe("#F4F6F8");
+  });
+});

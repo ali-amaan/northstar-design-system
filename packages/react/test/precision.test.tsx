@@ -232,10 +232,11 @@ describe('brushed silver on glass', () => {
     const sel = ".ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid']))";
     expect(css.split(sel).length - 1).toBeGreaterThanOrEqual(8);
     expect(css).toContain('var(--ns-material-silver-grain)');
-    expect(css).toContain('var(--ns-mx, 30%) var(--ns-my, 0%)');
+    // The glint follows the pointer, and holds still (--ns-sheen-*) under reduced motion.
+    expect(css).toContain('var(--ns-sheen-x, var(--ns-mx, 30%)) var(--ns-sheen-y, var(--ns-my, 0%))');
     for (const m of ['@media (prefers-reduced-transparency: reduce)', '@media (forced-colors: active)', '@media (prefers-contrast: more)']) {
-      const at = css.lastIndexOf(m);
-      expect(css.slice(at, at + 600), m).toContain(sel);
+      const blocks = css.split(m).slice(1).map((b) => b.slice(0, 600));
+      expect(blocks.some((b) => b.includes(sel)), m).toBe(true);
     }
   });
 
@@ -288,5 +289,79 @@ describe('precision radii', () => {
     expect(css).toContain('.ns-toolbar.ns-liquid { --ns-liquid-radius: var(--ns-radius-glass-bar); }');
     expect(css).toMatch(/:where\(\.ns-surface\.ns-material--glass\) \{ border-radius: var\(--ns-radius-glass-panel\); \}/);
     expect(css).not.toContain('--ns-liquid-radius: 14px');
+  });
+});
+
+describe('pill buttons and tactile texture', () => {
+  it('every button is a pill by default; shape="rounded" opts out', () => {
+    render(
+      <div>
+        <Button>Pill</Button>
+        <Button shape="rounded">Rounded</Button>
+        <IconButton label="Search" icon={<Glyph />} shape="rounded" />
+      </div>,
+    );
+    const pill = screen.getByRole('button', { name: 'Pill' });
+    expect(pill.getAttribute('data-shape')).toBe('pill');
+    expect(pill.className).not.toContain('ns-button--rounded');
+    expect(screen.getByRole('button', { name: 'Rounded' }).className).toContain('ns-button--rounded');
+    expect(screen.getByRole('button', { name: 'Search' }).className).toContain('ns-button--rounded');
+    expect(css).toMatch(/--ns-button-radius: var\(--ns-radius-control-pill\);\s+border-radius: var\(--ns-button-radius\);/);
+    expect(css).toContain('.ns-button.ns-button--rounded,');
+    expect(css).toMatch(/\.ns-button\.ns-button--rounded:is\(\.ns-button--glass, \.ns-button--silver\) \{ --ns-button-radius: var\(--ns-radius-glass-control\); \}/);
+    expect(parseFloat((tokens.scales as Record<string, string>)['radius.control.pill']!)).toBeGreaterThanOrEqual(999);
+  });
+
+  it('icon-only buttons are perfect circles with the icon centred; icon-led ones keep expand', () => {
+    render(
+      <Toolbar label="Tools">
+        <IconButton label="Add" icon={<Glyph />} />
+        <ToolbarItem label="Run" icon={<Glyph />} />
+      </Toolbar>,
+    );
+    const add = screen.getByRole('button', { name: 'Add' });
+    expect(add.className).toContain('ns-icon-button');
+    expect(add.classList.contains('ns-expand-host')).toBe(false);
+    expect(css).toContain('.ns-icon-button:not(.ns-expand-host) { aspect-ratio: 1; flex: none; }');
+    expect(css).toMatch(/\.ns-icon-button:not\(\.ns-expand-host\) > \.ns-button__label \{ display: inline-flex; align-items: center; justify-content: center;/);
+    expectHost(screen.getByRole('button', { name: 'Run' }), 'Run');
+    expect(css).toContain('.ns-toolbar .ns-toolbar__item { border-radius: var(--ns-button-radius); }');
+  });
+
+  it('tabs, pagination and the silver finish are pills too, each with a rounded opt-out', () => {
+    render(
+      <div>
+        <Tabs.Root defaultValue="a" indicator="glass" shape="rounded" data-testid="tabs">
+          <Tabs.List aria-label="T">
+            <Tabs.Trigger value="a">A</Tabs.Trigger>
+          </Tabs.List>
+        </Tabs.Root>
+        <Pagination pageCount={3} shape="rounded" data-testid="pages" />
+      </div>,
+    );
+    expect(screen.getByTestId('tabs').className).toContain('ns-tabs--rounded');
+    expect(screen.getByTestId('pages').className).toContain('ns-pagination--rounded');
+    expect(css).toContain('.ns-tabs--pill .ns-tabs__indicator { background: var(--ns-color-surface-3); box-shadow: inset 0 0 0 1px var(--ns-color-line-2); border-radius: var(--ns-radius-control-pill); }');
+    const silver = css.slice(css.indexOf('  --ns-silver-ring:'), css.indexOf('  --ns-silver-ring:') + 400);
+    expect(silver).toContain('border-radius: var(--ns-button-radius);');
+  });
+
+  it('carries a fine brushed texture per variant and theme, ghost only on hover, off on silver and glass', () => {
+    for (const t of ['night', 'day'] as const) {
+      const roles = tokens.themes[t] as Record<string, string>;
+      for (const k of ['light', 'dark', 'top', 'bevel-hi', 'bevel-lo']) {
+        expect(roles[`material.texture.${k}`], `${t} ${k}`).toBeDefined();
+        expect(roles[`material.texture.signal-${k}`], `${t} signal-${k}`).toBeDefined();
+      }
+    }
+    expect(css).toMatch(/\.ns-button::after \{[^}]*repeating-linear-gradient\(180deg, var\(--ns-tex-light\) 0 1px, transparent 1px 3px\)/);
+    expect(css).toMatch(/\.ns-button--primary \{\s+--ns-tex-light: var\(--ns-material-texture-signal-light\);/);
+    expect(css).toContain(".ns-button:is(.ns-button--secondary, .ns-button--primary) { --ns-tex-on: 1; }");
+    expect(css).toContain(".ns-button.ns-button--ghost:is(:hover, :focus-visible, [aria-expanded='true'], [aria-current='page']):not(:disabled, .ns-button--glass) { --ns-tex-on: 1; }");
+    const silver = css.slice(css.indexOf('  --ns-silver-ring:') - 200, css.indexOf('  --ns-silver-ring:') + 200);
+    expect(silver).toContain('--ns-tex-on: 0;');
+    const fallbacks = css.slice(css.indexOf('shape and texture fallbacks'));
+    for (const m of ['prefers-reduced-transparency: reduce', 'prefers-contrast: more', 'forced-colors: active', 'prefers-reduced-motion: reduce']) expect(fallbacks, m).toContain(m);
+    expect(fallbacks).toContain('--ns-sheen-x: 30%');
   });
 });

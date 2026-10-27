@@ -4,7 +4,8 @@
     "primary": {
       "$type": "color",
       "bg": { "$value": "{color.signal.fill}" },
-      "fg": { "$value": "{gray.8}", "$description": "Text on the glacier fill, in both themes." }
+      "fg": { "$value": "{gray.8}", "$description": "Text on the glacier fill, in both themes." },
+      "hover": { "$value": "{glacier.200}", "$description": "Primary fill on hover." }
     }
   }
 }

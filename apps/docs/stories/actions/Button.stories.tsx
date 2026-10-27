@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Button, LiquidGlass, Stack } from '@northstar-js/react';
-import { DuplicateIcon, ExportIcon, RunIcon } from '@northstar-js/icons';
+import { Button, ButtonGroup, IconButton, LiquidGlass, NorthstarProvider, Pagination, Stack, Tabs, Toolbar, ToolbarItem, type ResolvedTheme } from '@northstar-js/react';
+import { ConstellationButton } from '@northstar-js/react/effects';
+import { AddIcon, DuplicateIcon, ExportIcon, RunIcon, SearchIcon, SettingsIcon } from '@northstar-js/icons';
 import { Backdrop } from '../interactions/backdrop';
 
 const meta = { title: 'Actions/Button' } satisfies Meta;
@@ -104,5 +105,87 @@ export const Silver: Story = {
         </Stack>
       </Stack>
     </Backdrop>
+  ),
+};
+
+/** Every button in one place, for one theme: pills by default, circles when icon-only, the tactile texture per variant, silver on glass, and the rounded opt-out. */
+function ShapeBoard({ theme }: { theme: ResolvedTheme }) {
+  return (
+    <NorthstarProvider theme={theme} style={{ padding: 24, background: 'var(--ns-color-ground)' }} data-board={theme}>
+      <Stack gap={20}>
+        <Stack direction="row" gap={8} align="center" wrap>
+          <Button variant="primary" icon={<RunIcon size={16} />} data-hover-target={`${theme}-primary`}>
+            Run study
+          </Button>
+          <Button data-hover-target={`${theme}-secondary`}>Secondary</Button>
+          <Button variant="ghost" data-hover-target={`${theme}-ghost`}>
+            Ghost
+          </Button>
+          <Button tone="signal">Signal</Button>
+          <Button disabled>Disabled</Button>
+          <ConstellationButton variant="primary">Lock population</ConstellationButton>
+        </Stack>
+        <Stack direction="row" gap={8} align="center" wrap>
+          <IconButton size="sm" label="Search" icon={<SearchIcon size={16} />} />
+          <IconButton label="Add question" icon={<AddIcon size={16} />} data-hover-target={`${theme}-icon`} />
+          <IconButton size="lg" variant="primary" label="Run" icon={<RunIcon size={16} />} />
+          <IconButton size="xl" variant="ghost" label="Settings" icon={<SettingsIcon size={16} />} />
+          <IconButton label="Duplicate study" icon={<DuplicateIcon size={16} />} expand data-hover-target={`${theme}-expand`} />
+          <Button variant="ghost" icon={<ExportIcon size={16} />} expand>
+            Export results as a report
+          </Button>
+          <ButtonGroup attached label="View">
+            <Button size="sm">Day</Button>
+            <Button size="sm">Week</Button>
+            <Button size="sm">Month</Button>
+          </ButtonGroup>
+        </Stack>
+        <Stack direction="row" gap={16} align="center" wrap>
+          <Tabs.Root defaultValue="a" indicator="solid">
+            <Tabs.List aria-label={`Pill tabs, ${theme}`}>
+              <Tabs.Trigger value="a">Overview</Tabs.Trigger>
+              <Tabs.Trigger value="b">Responses</Tabs.Trigger>
+              <Tabs.Trigger value="c">Population</Tabs.Trigger>
+            </Tabs.List>
+          </Tabs.Root>
+          <Pagination pageCount={9} defaultPage={4} />
+        </Stack>
+        <LiquidGlass style={{ padding: 16, display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', alignSelf: 'flex-start' }}>
+          <Button variant="primary" icon={<RunIcon size={14} />} data-hover-target={`${theme}-silver`}>
+            Run study
+          </Button>
+          <Button>Silver secondary</Button>
+          <IconButton label="Add" icon={<AddIcon size={16} />} />
+          <Button variant="ghost">Ghost</Button>
+          <Toolbar label={`Glass toolbar, ${theme}`}>
+            <ToolbarItem label="Search" icon={<SearchIcon size={16} />} />
+            <ToolbarItem label="Export" icon={<ExportIcon size={16} />} />
+          </Toolbar>
+        </LiquidGlass>
+        <Stack direction="row" gap={8} align="center" wrap>
+          <span style={{ color: 'var(--ns-color-text-3)', fontSize: 12 }}>shape="rounded"</span>
+          <Button shape="rounded" variant="primary">
+            Rounded primary
+          </Button>
+          <Button shape="rounded">Rounded</Button>
+          <IconButton shape="rounded" label="Settings" icon={<SettingsIcon size={16} />} />
+          <Button shape="rounded" tone="silver">
+            Rounded silver
+          </Button>
+        </Stack>
+      </Stack>
+    </NorthstarProvider>
+  );
+}
+
+/** Pills, circles and texture side by side in Night and Day. Hover a button to see the ghost texture come in and the silver sheen turn. */
+export const ShapesAndTexture: Story = {
+  name: 'Shapes and texture',
+  parameters: { layout: 'fullscreen' },
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(620px, 1fr))' }}>
+      <ShapeBoard theme="night" />
+      <ShapeBoard theme="day" />
+    </div>
   ),
 };

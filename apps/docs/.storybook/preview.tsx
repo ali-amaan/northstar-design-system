@@ -4,6 +4,7 @@ import '@northstar-js/tokens/tokens.css';
 import '@northstar-js/fonts/fonts.css';
 import '@northstar-js/react/styles.css';
 import '@northstar-js/react/effects.css';
+import '@northstar-js/react/backdrops.css';
 import { NorthstarProvider, Toaster, type Density } from '@northstar-js/react';
 
 const withNorthstar: Decorator = (Story, context) => {

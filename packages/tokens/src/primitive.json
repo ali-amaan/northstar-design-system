@@ -5,6 +5,7 @@
     "$description": "Day neutrals, light to dark.",
     "0": { "$value": "#FFFFFF" },
     "1": { "$value": "#F8F9FA" },
+    "pale": { "$value": "#F4F6F8", "$description": "The pale Day ground behind star backdrops." },
     "2": { "$value": "#F1F3F5" },
     "3": { "$value": "#E9ECEF" },
     "4": { "$value": "#E6E8EB" },

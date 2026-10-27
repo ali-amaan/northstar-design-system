@@ -13,6 +13,12 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
  * anywhere, and `material="solid"` opts a button out on glass.
  */
 export type ButtonTone = Tone | 'silver';
+/**
+ * `pill` (default): a capsule (`radius.control.pill`), and a perfect circle
+ * when the button is square (icon-only). `rounded` opts out to tight corners
+ * (`radius.control.rounded`, or `radius.glass.control` on glass).
+ */
+export type ButtonShape = 'pill' | 'rounded';
 
 /** Where silver turns on by itself. */
 const GLASS_HOST = '.ns-liquid, .ns-material--glass, [data-material="glass"]';
@@ -21,6 +27,8 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: ButtonVariant;
   size?: Size;
   tone?: ButtonTone;
+  /** Default `pill`; `rounded` opts out of the pill shape. */
+  shape?: ButtonShape;
   /** Leading icon (decorative; the label names the button). */
   icon?: React.ReactNode;
   /**
@@ -65,6 +73,7 @@ export function Button({
   variant = 'secondary',
   size = 'md',
   tone = 'neutral',
+  shape = 'pill',
   icon,
   expand = false,
   loading = false,
@@ -102,12 +111,14 @@ export function Button({
         `ns-size-${size}`,
         tone === 'signal' && 'ns-tone-signal',
         silver && 'ns-button--silver',
+        shape === 'rounded' && 'ns-button--rounded',
         glass && 'ns-button--glass',
         expanding && 'ns-button--expand',
         host.className,
         className,
       )}
       data-expand={host['data-expand']}
+      data-shape={shape}
       data-material={material}
       disabled={disabled || loading}
       aria-busy={loading || undefined}

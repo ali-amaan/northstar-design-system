@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Liquid glass: an SVG displacement filter used as a backdrop-filter bends the backdrop at the rim (Chromium), with a specular highlight, rim light, inner glow and a faint glacier tint. Safari and Firefox get blur plus the specular layers; reduced transparency and forced colours get the opaque solid. `material="glass"` on Surface, Card, Panel, Button, Tabs and the overlays uses the same material. Corners are tight for precision (`radius.glass.*`: 10px panels and bars, 7px controls; never fully round), and buttons on glass are brushed silver.',
+          'Liquid glass: an SVG displacement filter used as a backdrop-filter bends the backdrop at the rim (Chromium), with a specular highlight, rim light, inner glow and a faint glacier tint. Safari and Firefox get blur plus the specular layers; reduced transparency and forced colours get the opaque solid. `material="glass"` on Surface, Card, Panel, Button, Tabs and the overlays uses the same material. Glass corners are tight for precision (`radius.glass.*`: 10px panels and bars, never fully round); buttons on glass are brushed silver pills (`shape="rounded"` gives them 7px corners).',
       },
     },
   },

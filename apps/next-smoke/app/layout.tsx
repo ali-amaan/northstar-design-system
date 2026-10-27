@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import "@northstar-js/tokens/tokens.css";
 import "@northstar-js/fonts/fonts.css";
 import "@northstar-js/react/styles.css";
+import "@northstar-js/react/backdrops.css";
 
 export const metadata = { title: "Northstar smoke" };
 

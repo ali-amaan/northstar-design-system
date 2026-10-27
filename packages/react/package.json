@@ -1,7 +1,7 @@
 {
   "name": "@northstar-js/react",
   "version": "0.1.0",
-  "description": "Northstar basic React components: provider, actions, forms, overlays, layout and data display, styled by --ns-* CSS variables.",
+  "description": "Northstar basic React components: provider, actions, forms, overlays, layout and data display, plus opt-in effects and animated star backdrops, styled by --ns-* CSS variables.",
   "license": "MIT",
   "type": "module",
   "sideEffects": [
@@ -32,8 +32,13 @@
       "types": "./dist/effects/index.d.ts",
       "import": "./dist/effects/index.js"
     },
+    "./backdrops": {
+      "types": "./dist/backdrops/index.d.ts",
+      "import": "./dist/backdrops/index.js"
+    },
     "./styles.css": "./dist/styles.css",
     "./effects.css": "./dist/effects.css",
+    "./backdrops.css": "./dist/backdrops.css",
     "./package.json": "./package.json"
   },
   "scripts": {
