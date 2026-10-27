@@ -1,6 +1,6 @@
 {
   "name": "@northstar-js/tooling-package-check",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "CI gate: publint and Are the Types Wrong on every public package's packed tarball, then size-limit budgets.",

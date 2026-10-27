@@ -1,6 +1,6 @@
 {
   "name": "next-smoke",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "description": "SPEC 4.1 smoke test: a Next.js 16 App Router build and hydration with every @northstar-js package.",

@@ -1,6 +1,6 @@
 {
   "name": "@northstar-js/contracts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "React-free shared types and placeholder fixtures for Northstar packages.",
   "license": "MIT",
   "type": "module",

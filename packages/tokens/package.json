@@ -1,6 +1,6 @@
 {
   "name": "@northstar-js/tokens",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Northstar design tokens: Night and Day themes as CSS variables, a Tailwind v4 theme, JSON and typed TS.",
   "license": "MIT",
   "type": "module",

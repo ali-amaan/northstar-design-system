@@ -1,6 +1,6 @@
 {
   "name": "@northstar-js/fonts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Inter and IBM Plex Mono as WOFF2 (Latin and Latin Extended, 400/500/600) with a font-display: swap stylesheet.",
   "license": "OFL-1.1",
   "type": "module",

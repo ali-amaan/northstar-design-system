@@ -1,0 +1,84 @@
+# @northstar-js/react
+
+## 0.2.0
+
+### Minor Changes
+
+- b34c4b8: Liquid glass, icon-first controls, guided flows and softer motion.
+
+  **Tokens.** New `material.liquid.*`: refraction scales `sm|md|lg`, `bevel`, `aberration`, `frost`, `fallback-blur`, and per-theme `tint` (glacier), `highlight`, `rim`, `rim-low`, `inner`, `shadow`. New `material.hairline` for the one border a borderless surface keeps. Motion gains `duration.micro|layout|reveal|stagger`, `easing.glide|hover` and `spring.layout`. `material.glass.fill` is lighter (Night 0.40, Day 0.50) so the glass reads as glass; the contrast gate still passes. `material.liquid.tint` turns solid under reduced transparency.
+
+  **React.** `LiquidGlass` is refractive glass: an SVG displacement filter used as a `backdrop-filter` bends the backdrop at the rim on Chromium, with a specular highlight, rim light and inner glow; Safari and Firefox get blur plus specular; reduced transparency, forced colours and no `backdrop-filter` get the opaque solid. `NorthstarProvider` inserts the shared filters once per document (`liquidGlass={false}` opts out), and `material="glass"` everywhere now uses this material. A numeric `scale` renders a filter measured to the element.
+
+  Surfaces are borderless by default (tone, shadow and a hairline), and the secondary button is a tonal fill. `IconButton` takes `expand` (`true` | `'always'`): the icon shows and the full label eases open on hover and focus. New `Toolbar` and `ToolbarItem` (icon-led, arrow-key roving, optional glass), `RevealLabel`, `Sidebar collapsed` (an icon rail that opens to full labels; labels now wrap instead of ending in an ellipsis), `Card revealActions` and `HoverActions` (secondary actions that ease in on hover and focus-within, always shown on touch).
+
+  New `FlowSteps`, `FlowStep` and `NextAction` (also as `Flow.*`, with `useFlow`): a guided sequence with progress, one clear next action, blocked steps, focus handed to the new step, and animated step changes. `StudyShell` takes `guided` (with `blockedTabs`, `stepHints`, `onFinish`, `finishLabel`) to run Brief → Population → Research → Responses as a flow. `Tabs.Root` takes `transition` for View Transitions; StudyShell's tabs use it with a sliding indicator.
+
+  New `Reveal` (IntersectionObserver scroll reveal, optional stagger; visible in server HTML), `withViewTransition` / `useViewTransition` / `canViewTransition`. Hovers ease in and out on one curve; layout moves use 400–700 ms glides. Everything holds still under `prefers-reduced-motion`. All new props are optional; existing defaults keep their API.
+
+- 43940da: Machined spin: the default finish of every button, on glass and off it.
+
+  **React.** Buttons are machined metal by default: a conic sweep of seven machined stops under a fine concentric grain, both centred on the button, so an icon-only circle is a turned knob. A light band slides across on hover and keyboard focus, the metal brightens a touch, and while hovered the sweep turns a few degrees with the pointer (an `@property` angle, so it eases; without a pointer it holds still). Pressing drops the button a pixel, scales it to 0.985, dims it and flips the bevel. Focus is a 2px Glacier ring standing 3px off. Primary and `tone="signal"` are Glacier-anodized. Ghost has no metal at rest and takes a faint wash of it on hover, focus, an open menu and the current page. Disabled is matte and flat (loading keeps its metal). It covers `Button`, `IconButton`, `ToolbarItem`, `Menu.Trigger`, icon-first expand hosts, `ButtonGroup`, `Pagination`, toast and layer close buttons, `RunCost`, `RunConfirm`, `ExportMenu` and the effects `ConstellationButton`; pills, circles and `shape="rounded"` are unchanged. Glass buttons (`material="glass"`) keep glass.
+
+  New `finish="spin" | "soft"` on `Button`, `IconButton`, `ToolbarItem`, `Menu.Trigger` and `ConstellationButton`, and `NorthstarProvider buttonFinish` (default `spin`). `soft` is the previous tonal fill with the tactile texture. The provider also writes `data-button-finish` on its root and on portals, so plain `.ns-button` elements follow it through CSS. Buttons emit `data-finish`. `usePointerTracking` also writes `--ns-pointer-x` and `--ns-pointer-y` (-1 to 1).
+
+  Spin replaces brushed silver as the one metal system. `tone="silver"` stays as an alias for `finish="spin"` (it still adds `ns-button--silver`). `material="solid"` no longer means anything special on glass; use `finish="soft"` to opt a button out. Fallbacks: reduced transparency drops the grain, `prefers-contrast: more` flattens to the lightest stop with an ink outline, forced colours use system button colours, and reduced motion removes the sliding band and the turning sweep.
+
+  **Tokens.** New per-theme `material.spin.*`: `stop.1`–`stop.7` and `signal-stop.1`–`signal-stop.7` (the secondary and Glacier bodies), `ink`, `signal-ink`, `grain-dark`, `grain-light`, `signal-grain-light`, `emboss`, `sheen`, `shadow`, `shadow-press`, `ghost` (wash opacity), `ghost-edge`, `matte` and `matte-ink`. New scales `material.spin.sweep` (700ms, zeroed under reduced motion), `sweep-easing`, `turn`, `angle` and `press`. Removed: `material.silver.*`. `material.texture.*` is now the soft finish's texture. The contrast gate checks the ink on the lightest stop of each body (light grain over it) and the darkest (dark grain over it, dimmed as when pressed) at 4.5:1, ghost text on the faint wash over every surface at 4.5:1, and the disabled ink on matte at 3:1, in Night and Day.
+
+- 9f16cf6: Add `@northstar-js/react/effects` and `effects.css`: opt-in Northstar variants themed on stars, orbits, navigation instruments and a little arithmetic.
+
+  **Actions.** `StarLink` (meridian-traced underline, a north star twinkles in), `ConstellationButton` (a press lets out a seeded, golden-angle constellation that joins and fades), `KbdKeycap` (physical depth, sinks while its key is held).
+
+  **Loaders and progress.** `OrbitSpinner` (two planets on Kepler periods), `FibonacciLoader` (Vogel sunflower, pulse along the parastichies), `LissajousLoader` (exact 3:2 figure from two sine-eased translations), `PrimeSkeleton` (shimmers on prime periods), `ProgressSextant` (graduated arc with a swinging index arm, `role="progressbar"`).
+
+  **Forms.** `CompassSwitch` (needle swings west to north), `SextantSlider` (native range, vernier ticks, Plex Mono readout, star detents that catch only while dragging), `ConstellationCheckbox` (tick drawn star to star, mixed state), `RadioOrbitGroup` / `RadioOrbit` (native radios; the chosen orbit gains a planet and a moon), `GraticuleInput` (focus draws a graduated rule; invalid is dashed plus a message).
+
+  **Navigation.** `MeridianTabs` (star indicator travels on an arc, full tabs keyboard pattern), `StarPagination`, `ConstellationBreadcrumb`.
+
+  **Display and feedback.** `RollingNumber` / `CountUp` (odometer reels), `HorizonDivider`, `StarfieldEmptyState` (golden-lattice sky, prime-period drift), `OrbitAvatar` (initials, orbit on hover), `TagOrbit` (remove: the star fades out), `SineDisclosure` / `SineAccordion` (sine-eased reveal), `TooltipCompass` (arrow is a settling needle), `ToastComet` (enters on a short arc).
+
+  Every effect animates transform and opacity only, uses seeded maths instead of `Math.random`, keeps native controls and keyboard parity, and stops under `prefers-reduced-motion` with its state still visible (loaders show their label). Glacier is the only signal colour; Night and Day both supported. The existing components are unchanged.
+
+- 42431c3: Add the Northstar interaction layer: a glass material, pointer light and spring motion for the basic components.
+
+  **Tokens.** New per-theme `material.*` roles (glass fill, tint, edge, rim, specular sheen, opaque `material.solid` fallback, glacier glow, spotlight, shadow), `material.blur.sm|md|lg`, `material.saturate`, `material.lift`, `material.press`, spring easings `motion.spring.press|release|settle` and durations `motion.duration.press|release|settle`. Under `prefers-reduced-transparency` the glass fills resolve to the solid fallback; under reduced motion the new durations go to 0 ms like the others. The contrast gate now checks text and icon roles on glass (over the ground and over `surface.3`) and on the solid fallback.
+
+  **React.** New `Surface` (glass primitive), `Card` and `Panel` (`variant="solid" | "glass" | "spotlight"`, `interactive` hover lift, `orbit` moving border). `Button` gains a press spring, a focus glow, a north-star loading spinner, and optional `success`, `material="glass"` and `magnetic` props. `Link` draws its underline in on hover and focus. `Tabs.Root` takes `indicator="line" | "solid" | "glass"` for a sliding indicator. `Dialog`, `Sheet`, `Popover`, `Menu`, `Tooltip` and `Toast` take `material`, and enter and exit on springs. `Table` takes `interactive` for hover-lift rows; inputs glow on focus and the switch thumb springs. `NorthstarProvider` takes a default `material`.
+
+  Pointer effects write CSS variables from a rAF-throttled listener and never re-render; each has a keyboard-focus twin. Motion stops under `prefers-reduced-motion` (state changes stay), glass turns solid under `prefers-reduced-transparency`, without `backdrop-filter` and in forced colours. Every new prop is optional and every default renders as before.
+
+- 2dae012: Pill buttons with a tactile texture, and animated star backdrops.
+
+  **Tokens.** New `radius.control.pill` (the full radius) and `radius.control.rounded` (6px): buttons are pills by default. New per-theme `material.texture.*` for the button texture (`light` and `dark` brushed lines, `top` highlight, `bevel-hi` and `bevel-lo`, and a `signal-*` set tuned for the Glacier primary), `button.primary.hover`, and `backdrop.*` for the star backdrops (`ground`, `ink`, `signal`, `line`, `faint` and `glow.*` opacities). Day backdrops sit on a new pale ground, `gray.pale` (#F4F6F8). `radius.glass.control` and `radius.glass.inner` are now the `shape="rounded"` opt-out on glass. The contrast gate checks text on every textured button body at its lightest point (top highlight over a light line) and its darkest (a dark line), the primary on its hover fill, the backdrop ground as a ground (glass included), and backdrop ink and signal as marks on it.
+
+  **React: pills.** Every button is a pill: `Button`, `IconButton` (a perfect circle when icon-only, icon centred), `ToolbarItem`, icon-first expand hosts (a circle while closed, a capsule when open), attached `ButtonGroup` ends, pill and glass `Tabs` (list, triggers and sliding indicator), `Menu.Trigger`, `Pagination` pages and steps (single pages are circles), `RunCost`, `RunConfirm`, `NextAction`, the `StudyShell` tabs and the effects `ConstellationButton`. Brushed silver on glass is a pill too. `shape="rounded"` opts out on `Button`, `IconButton`, `ToolbarItem`, `ConstellationButton`, `Tabs.Root` and `Pagination`: `radius.control.rounded` off glass, `radius.glass.control` on it.
+
+  **React: texture.** Every button carries a fine brushed micro-texture under its label: two periods of horizontal lines, a soft top highlight and a low inner bevel that flips when pressed. Secondary and primary always (primary in its Glacier-tuned set), ghost only on hover and focus, disabled never; silver keeps its own brushed finish and glass its specular. Reduced transparency drops the lines, `prefers-contrast: more` and forced colours remove the texture (forced colours use system button colours), and under reduced motion the silver glint holds still instead of following the pointer.
+
+  **React: backdrops.** New `@northstar-js/react/backdrops` entry and `@northstar-js/react/backdrops.css`. `<StarBackdrop variant theme? density? speed? paused? ground?>` fills its container (absolute, `aria-hidden`, no pointer events) and covers any aspect ratio. Fifteen interchangeable variants, ported from the approved designs with their maths and timings: `constellation-atlas`, `orrery`, `golden-angle`, `prime-lattice`, `meridian-sweep`, `interference`, `celestial-sphere`, and the 3D `fibonacci-sphere`, `star-torus`, `double-helix`, `wave-surface`, `mobius` and `galaxy-3d` (CSS preserve-3d, stars billboarded to face the viewer), plus `twin-vortex` and `drifting-blooms`. Geometry comes from the designs' own seeded LCG (no `Math.random`), so server and client agree; it is memoised per variant and density, and `density` (`low`, `medium`, `high`) thins it evenly and caps it (240, 480 and 1,800 marks), always keeping the Glacier stars. Animation is CSS only, scaled by `speed`, held by `paused`, paused by itself offscreen (IntersectionObserver) and while the page is hidden, and a still frame under reduced motion. Colours come from the `backdrop.*` tokens; `theme` forces Night or Day for one backdrop.
+
+- 9f16cf6: Icon-first everywhere, brushed silver on glass, and tighter glass corners.
+
+  **Tokens.** New `radius.glass.panel|bar|control|inner` (10, 10, 7 and 6px): liquid glass is precise, never fully round. New per-theme `material.silver.*` for brushed-metal buttons: `hi`, `lo` and the glacier-tinted `signal-hi`, `signal-lo` body ends, `ink`, `grain`, `sheen`, `highlight`, `shade`, `edge` and `shadow`. The contrast gate checks the silver ink against all four body ends (with the darkest grain line composited) at 4.5:1 in Night and Day. The Tailwind theme now names nested radii in full (`--radius-glass-panel`).
+
+  **React.** One shared ExpandLabel primitive (grid 0fr → 1fr on the glide curve) drives every icon-first control: the icon shows and the full label eases open on hover, keyboard focus, selection and an open menu, never truncated, and touch screens always show it. `Button` takes `icon` and `expand`; `IconButton`, `ToolbarItem` and `Sidebar` move onto the primitive; `Tabs.Trigger` takes `icon` and `expand` (the selected tab stays open, and the sliding indicator follows labels as they open); `Menu.Trigger` takes `icon` and `expand`; `Pagination` previous and next are icon-first by default (`expand={false}` keeps arrows only); `Breadcrumbs collapse` folds the middle crumbs to an icon or ellipsis that opens in full; `Tag` and `Badge` take `icon` and `expand`; `NextAction`'s Back is icon-first (`backExpand`). Northstar parts: `StudyShell iconTabs` (`true` by default leads each tab with its section icon, `'expand'` is icon-first), `ExportMenu expand`, `RunCost` gets the run icon and `expand`, `RunConfirm` confirms with the run icon, `ResearchBuilder` item actions are icon-first, and `StudyStatus expand` is an icon-first chip.
+
+  Buttons on liquid glass are brushed silver: secondary and primary buttons inside `.ns-liquid`, any `material="glass"` surface or a `[data-material="glass"]` ancestor take a fine grain, a conic sheen that turns on hover, a glint that follows the pointer, a crisp inner top edge and a bevel shadow; pressing tilts the light. Primary is glacier-tinted silver. `tone="silver"` asks for it anywhere; `material="solid"` opts a button out. Reduced transparency drops the sheen layers, `prefers-contrast: more` flattens to the light end with an ink outline, and forced colours use system button colours. Ghost buttons on glass hover with light instead of an opaque fill.
+
+  Glass corners are tighter: `LiquidGlass` defaults to `radius="panel"` (10px, was 16) and takes `panel | bar | control | inner | full` or px; `radius="pill"` is now the 10px bar radius (use `full` for a true capsule). Glass cards, panels, dialogs and sheets use 10px, toolbars and glass tab lists 10px with 6px items, and glass and silver buttons 7px. `Surface material="glass"` uses the panel radius unless `radius` is set.
+
+### Patch Changes
+
+- Updated dependencies [b34c4b8]
+- Updated dependencies [43940da]
+- Updated dependencies [42431c3]
+- Updated dependencies [2dae012]
+- Updated dependencies [9f16cf6]
+- Updated dependencies [43940da]
+  - @northstar-js/tokens@0.2.0
+  - @northstar-js/charts@0.2.0
+  - @northstar-js/maps@0.2.0
+  - @northstar-js/contracts@0.2.0
+  - @northstar-js/icons@0.2.0
+  - @northstar-js/motion@0.2.0

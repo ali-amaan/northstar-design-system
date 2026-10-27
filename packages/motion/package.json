@@ -1,6 +1,6 @@
 {
   "name": "@northstar-js/motion",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Northstar Lottie scenes with colour slots, in Night and Day, and a lottie-web React player that follows reduced motion.",
   "license": "MIT",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@northstar-js/react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Northstar basic React components: provider, actions, forms, overlays, layout and data display, plus opt-in effects and animated star backdrops, styled by --ns-* CSS variables.",
   "license": "MIT",
   "type": "module",
