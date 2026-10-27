@@ -1,5 +1,5 @@
 export { NorthstarProvider, useNorthstar, Portal, en } from './provider.js';
-export type { NorthstarProviderProps, NorthstarContextValue, Messages, ThemeSetting, ResolvedTheme, Density, Material } from './provider.js';
+export type { NorthstarProviderProps, NorthstarContextValue, Messages, ThemeSetting, ResolvedTheme, Density, Material, ButtonFinish } from './provider.js';
 
 export { Surface, Card, Panel, HoverActions } from './surface.js';
 export { LiquidGlass, LiquidFilter, displacementMap, useLiquidDefs, LIQUID } from './glass.js';

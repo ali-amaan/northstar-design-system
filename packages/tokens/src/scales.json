@@ -3,72 +3,240 @@
   "font": {
     "family": {
       "$type": "fontFamily",
-      "ui": { "$value": "Inter, ui-sans-serif, system-ui, sans-serif" },
-      "mono": { "$value": "'IBM Plex Mono', ui-monospace, monospace" }
+      "ui": {
+        "$value": "Inter, ui-sans-serif, system-ui, sans-serif"
+      },
+      "mono": {
+        "$value": "'IBM Plex Mono', ui-monospace, monospace"
+      }
     },
     "weight": {
       "$type": "fontWeight",
-      "regular": { "$value": 400 },
-      "medium": { "$value": 500 },
-      "semibold": { "$value": 600 }
+      "regular": {
+        "$value": 400
+      },
+      "medium": {
+        "$value": 500
+      },
+      "semibold": {
+        "$value": 600
+      }
     },
     "size": {
+      "11": {
+        "$value": "11px"
+      },
+      "12": {
+        "$value": "12px"
+      },
+      "13": {
+        "$value": "13px"
+      },
+      "15": {
+        "$value": "15px"
+      },
+      "18": {
+        "$value": "18px"
+      },
+      "24": {
+        "$value": "24px"
+      },
+      "32": {
+        "$value": "32px"
+      },
+      "48": {
+        "$value": "48px"
+      },
       "$type": "dimension",
-      "11": { "$value": "11px" },
-      "12": { "$value": "12px" },
-      "13": { "$value": "13px" },
-      "15": { "$value": "15px" },
-      "18": { "$value": "18px" },
-      "24": { "$value": "24px" },
-      "32": { "$value": "32px" },
-      "48": { "$value": "48px" },
-      "base": { "$value": "{font.size.13}" }
+      "base": {
+        "$value": "{font.size.13}"
+      }
     },
     "line-height": {
-      "$type": "dimension",
-      "11": { "$value": "16px" },
-      "12": { "$value": "18px" },
-      "13": { "$value": "20px" },
-      "15": { "$value": "22px" },
-      "18": { "$value": "26px" },
-      "24": { "$value": "32px" },
-      "32": { "$value": "40px" },
-      "48": { "$value": "52px" }
+      "11": {
+        "$value": "16px"
+      },
+      "12": {
+        "$value": "18px"
+      },
+      "13": {
+        "$value": "20px"
+      },
+      "15": {
+        "$value": "22px"
+      },
+      "18": {
+        "$value": "26px"
+      },
+      "24": {
+        "$value": "32px"
+      },
+      "32": {
+        "$value": "40px"
+      },
+      "48": {
+        "$value": "52px"
+      },
+      "$type": "dimension"
     },
-    "numeric": { "figures": { "$type": "other", "$value": "tabular-nums" } }
+    "numeric": {
+      "figures": {
+        "$type": "other",
+        "$value": "tabular-nums"
+      }
+    }
   },
   "space": {
+    "2": {
+      "$value": "2px"
+    },
+    "4": {
+      "$value": "4px"
+    },
+    "6": {
+      "$value": "6px"
+    },
+    "8": {
+      "$value": "8px"
+    },
+    "12": {
+      "$value": "12px"
+    },
+    "16": {
+      "$value": "16px"
+    },
+    "20": {
+      "$value": "20px"
+    },
+    "24": {
+      "$value": "24px"
+    },
+    "32": {
+      "$value": "32px"
+    },
+    "40": {
+      "$value": "40px"
+    },
+    "48": {
+      "$value": "48px"
+    },
+    "64": {
+      "$value": "64px"
+    },
+    "$type": "dimension"
+  },
+  "spacing": {
+    "$description": "Spacing roles, Option A (Instrument 4). Components use these, not raw steps.",
     "$type": "dimension",
-    "2": { "$value": "2px" },
-    "4": { "$value": "4px" },
-    "6": { "$value": "6px" },
-    "8": { "$value": "8px" },
-    "12": { "$value": "12px" },
-    "16": { "$value": "16px" },
-    "20": { "$value": "20px" },
-    "24": { "$value": "24px" },
-    "32": { "$value": "32px" },
-    "40": { "$value": "40px" },
-    "48": { "$value": "48px" },
-    "64": { "$value": "64px" }
+    "inline": {
+      "icon": {
+        "$value": "{space.6}"
+      },
+      "label": {
+        "$value": "{space.6}"
+      },
+      "toolbar": {
+        "$value": "{space.4}"
+      }
+    },
+    "stack": {
+      "default": {
+        "$value": "{space.12}"
+      },
+      "tight": {
+        "$value": "{space.8}"
+      }
+    },
+    "control": {
+      "button-x": {
+        "$value": "{space.16}"
+      },
+      "field-x": {
+        "$value": "{space.12}"
+      }
+    },
+    "card": {
+      "padding": {
+        "$value": "{space.20}"
+      }
+    },
+    "row": {
+      "y": {
+        "$value": "{space.8}"
+      },
+      "x": {
+        "$value": "{space.12}"
+      }
+    },
+    "section": {
+      "default": {
+        "$value": "{space.40}"
+      },
+      "phone": {
+        "$value": "{space.32}"
+      }
+    },
+    "page": {
+      "margin-phone": {
+        "$value": "{space.16}"
+      },
+      "margin-tablet": {
+        "$value": "{space.24}"
+      },
+      "margin-desktop": {
+        "$value": "{space.48}"
+      },
+      "gutter-phone": {
+        "$value": "{space.16}"
+      },
+      "gutter-tablet": {
+        "$value": "{space.20}"
+      },
+      "gutter-desktop": {
+        "$value": "{space.24}"
+      },
+      "content-max": {
+        "$value": "1280px"
+      }
+    }
   },
   "size": {
     "$type": "dimension",
     "control": {
-      "sm": { "$value": "28px" },
-      "md": { "$value": "32px" },
-      "lg": { "$value": "36px" },
-      "xl": { "$value": "44px" }
+      "sm": {
+        "$value": "28px"
+      },
+      "md": {
+        "$value": "32px"
+      },
+      "lg": {
+        "$value": "36px"
+      },
+      "xl": {
+        "$value": "44px"
+      }
     },
     "row": {
-      "sm": { "$value": "32px" },
-      "md": { "$value": "36px" },
-      "lg": { "$value": "40px" }
+      "sm": {
+        "$value": "32px"
+      },
+      "md": {
+        "$value": "36px"
+      },
+      "lg": {
+        "$value": "40px"
+      }
     },
     "icon": {
-      "sm": { "$value": "16px" },
-      "md": { "$value": "20px" },
-      "lg": { "$value": "24px" }
+      "sm": {
+        "$value": "16px"
+      },
+      "md": {
+        "$value": "20px"
+      },
+      "lg": {
+        "$value": "24px"
+      }
     },
     "target": {
       "coarse": {
@@ -80,101 +248,375 @@
   "density": {
     "$type": "dimension",
     "compact": {
-      "control-height": { "$value": "{size.control.sm}" },
-      "row-height": { "$value": "{size.row.sm}" },
-      "row-padding": { "$value": "{space.4}" }
+      "control-height": {
+        "$value": "{size.control.sm}"
+      },
+      "row-height": {
+        "$value": "{size.row.sm}"
+      },
+      "row-padding": {
+        "$value": "{space.4}"
+      },
+      "card-padding": {
+        "$value": "{space.16}"
+      },
+      "stack-gap": {
+        "$value": "{space.8}"
+      },
+      "section-gap": {
+        "$value": "{space.32}"
+      }
     },
     "default": {
-      "control-height": { "$value": "{size.control.md}" },
-      "row-height": { "$value": "{size.row.md}" },
-      "row-padding": { "$value": "{space.6}" }
+      "control-height": {
+        "$value": "{size.control.md}"
+      },
+      "row-height": {
+        "$value": "{size.row.md}"
+      },
+      "row-padding": {
+        "$value": "{space.6}"
+      },
+      "card-padding": {
+        "$value": "{space.20}"
+      },
+      "stack-gap": {
+        "$value": "{space.12}"
+      },
+      "section-gap": {
+        "$value": "{space.40}"
+      }
     },
     "comfortable": {
-      "control-height": { "$value": "{size.control.lg}" },
-      "row-height": { "$value": "{size.row.lg}" },
-      "row-padding": { "$value": "{space.8}" }
+      "control-height": {
+        "$value": "{size.control.lg}"
+      },
+      "row-height": {
+        "$value": "{size.row.lg}"
+      },
+      "row-padding": {
+        "$value": "{space.8}"
+      },
+      "card-padding": {
+        "$value": "{space.24}"
+      },
+      "stack-gap": {
+        "$value": "{space.16}"
+      },
+      "section-gap": {
+        "$value": "{space.48}"
+      }
     }
   },
   "radius": {
+    "4": {
+      "$value": "4px"
+    },
+    "6": {
+      "$value": "6px"
+    },
+    "8": {
+      "$value": "8px"
+    },
+    "12": {
+      "$value": "12px"
+    },
     "$type": "dimension",
-    "4": { "$value": "4px" },
-    "6": { "$value": "6px" },
-    "8": { "$value": "8px" },
-    "12": { "$value": "12px" },
-    "full": { "$value": "9999px" },
+    "full": {
+      "$value": "9999px"
+    },
     "control": {
       "$description": "Button shapes. Every button is a pill by default (an icon-only button is a circle); shape=\"rounded\" opts out.",
-      "pill": { "$value": "{radius.full}", "$description": "The default button shape: a capsule, or a circle when the button is square." },
-      "rounded": { "$value": "{radius.6}", "$description": "The shape=\"rounded\" opt-out off glass (on glass the opt-out is radius.glass.control)." }
+      "pill": {
+        "$value": "{radius.full}",
+        "$description": "The default button shape: a capsule, or a circle when the button is square."
+      },
+      "rounded": {
+        "$value": "{radius.6}",
+        "$description": "The shape=\"rounded\" opt-out off glass (on glass the opt-out is radius.glass.control)."
+      }
     },
     "glass": {
       "$description": "Liquid glass corners, kept tight for precision: glass panels and bars are never fully round. Buttons on glass are pills unless shape=\"rounded\".",
-      "panel": { "$value": "10px", "$description": "Cards, panels, dialogs and sheets on glass." },
-      "bar": { "$value": "10px", "$description": "Toolbars, pill bars and glass tab lists." },
-      "control": { "$value": "7px", "$description": "The shape=\"rounded\" opt-out for buttons on or of glass (silver included); by default they are pills (radius.control.pill)." },
-      "inner": { "$value": "6px", "$description": "A rounded (shape=\"rounded\") control nested in a bar: bar radius less the bar's 4px padding." }
+      "panel": {
+        "$value": "10px",
+        "$description": "Cards, panels, dialogs and sheets on glass."
+      },
+      "bar": {
+        "$value": "10px",
+        "$description": "Toolbars, pill bars and glass tab lists."
+      },
+      "control": {
+        "$value": "7px",
+        "$description": "The shape=\"rounded\" opt-out for buttons on glass; by default they are pills (radius.control.pill)."
+      },
+      "inner": {
+        "$value": "6px",
+        "$description": "A rounded (shape=\"rounded\") control nested in a bar: bar radius less the bar's 4px padding."
+      }
     }
   },
   "z": {
     "$type": "number",
-    "banner": { "$value": 30 },
-    "dropdown": { "$value": 40 },
-    "popover": { "$value": 50 },
-    "sheet": { "$value": 60 },
-    "dialog": { "$value": 70 },
-    "toast": { "$value": 80 },
-    "tooltip": { "$value": 90 }
+    "banner": {
+      "$value": 30
+    },
+    "dropdown": {
+      "$value": 40
+    },
+    "popover": {
+      "$value": 50
+    },
+    "sheet": {
+      "$value": 60
+    },
+    "dialog": {
+      "$value": 70
+    },
+    "toast": {
+      "$value": 80
+    },
+    "tooltip": {
+      "$value": 90
+    }
   },
   "motion": {
     "duration": {
+      "120": {
+        "$value": "120ms"
+      },
+      "200": {
+        "$value": "200ms"
+      },
+      "320": {
+        "$value": "320ms"
+      },
+      "600": {
+        "$value": "600ms"
+      },
       "$type": "duration",
-      "120": { "$value": "120ms" },
-      "200": { "$value": "200ms" },
-      "320": { "$value": "320ms" },
-      "600": { "$value": "600ms" },
-      "press": { "$value": "90ms", "$description": "Press-in: fast, so the control answers the finger." },
-      "release": { "$value": "280ms", "$description": "Release: long enough for the spring overshoot to read." },
-      "settle": { "$value": "420ms", "$description": "Layers and indicators coming to rest." },
-      "micro": { "$value": "180ms", "$description": "Hover and focus micro-transitions: eased in and out, never snapping." },
-      "layout": { "$value": "560ms", "$description": "Layout moves: shared indicators, expanding labels, step changes." },
-      "reveal": { "$value": "700ms", "$description": "Scroll-linked reveals and first appearance of a section." },
-      "stagger": { "$value": "45ms", "$description": "Delay between siblings in a staggered list." }
+      "press": {
+        "$value": "90ms",
+        "$description": "Press-in: fast, so the control answers the finger."
+      },
+      "release": {
+        "$value": "280ms",
+        "$description": "Release: long enough for the spring overshoot to read."
+      },
+      "settle": {
+        "$value": "420ms",
+        "$description": "Layers and indicators coming to rest."
+      },
+      "micro": {
+        "$value": "180ms",
+        "$description": "Hover and focus micro-transitions: eased in and out, never snapping."
+      },
+      "layout": {
+        "$value": "560ms",
+        "$description": "Layout moves: shared indicators, expanding labels, step changes."
+      },
+      "reveal": {
+        "$value": "700ms",
+        "$description": "Scroll-linked reveals and first appearance of a section."
+      },
+      "stagger": {
+        "$value": "45ms",
+        "$description": "Delay between siblings in a staggered list."
+      }
     },
     "easing": {
       "$type": "cubicBezier",
-      "settle": { "$value": [0.2, 0, 0, 1], "$description": "Comes to rest; state changes." },
-      "enter": { "$value": [0, 0, 0.2, 1], "$description": "Decelerates in." },
-      "travel": { "$value": [0.4, 0, 0.2, 1], "$description": "Moves across the screen." },
-      "exit": { "$value": [0.4, 0, 1, 1], "$description": "Accelerates out." },
-      "glide": { "$value": [0.22, 1, 0.36, 1], "$description": "Long, soft ease-out for layout and reveals." },
-      "hover": { "$value": [0.45, 0, 0.25, 1], "$description": "Symmetric ease-in-out for hover in and out." }
+      "settle": {
+        "$value": [
+          0.2,
+          0,
+          0,
+          1
+        ],
+        "$description": "Comes to rest; state changes."
+      },
+      "enter": {
+        "$value": [
+          0,
+          0,
+          0.2,
+          1
+        ],
+        "$description": "Decelerates in."
+      },
+      "travel": {
+        "$value": [
+          0.4,
+          0,
+          0.2,
+          1
+        ],
+        "$description": "Moves across the screen."
+      },
+      "exit": {
+        "$value": [
+          0.4,
+          0,
+          1,
+          1
+        ],
+        "$description": "Accelerates out."
+      },
+      "glide": {
+        "$value": [
+          0.22,
+          1,
+          0.36,
+          1
+        ],
+        "$description": "Long, soft ease-out for layout and reveals."
+      },
+      "hover": {
+        "$value": [
+          0.45,
+          0,
+          0.25,
+          1
+        ],
+        "$description": "Symmetric ease-in-out for hover in and out."
+      }
     },
     "spring": {
       "$type": "cubicBezier",
       "$description": "Spring-like curves for direct manipulation. Plain cubic-beziers, so they degrade to 0 ms with the durations.",
-      "press": { "$value": [0.3, 0, 0.5, 1], "$description": "Press-in. No overshoot." },
-      "release": { "$value": [0.34, 1.56, 0.64, 1], "$description": "Release. One small overshoot, then rest." },
-      "settle": { "$value": [0.22, 1.24, 0.36, 1], "$description": "Layers, thumbs and indicators settling into place." },
-      "layout": { "$value": [0.32, 0.72, 0, 1], "$description": "Shared-layout moves: quick start, very long settle, no overshoot." }
+      "press": {
+        "$value": [
+          0.3,
+          0,
+          0.5,
+          1
+        ],
+        "$description": "Press-in. No overshoot."
+      },
+      "release": {
+        "$value": [
+          0.34,
+          1.56,
+          0.64,
+          1
+        ],
+        "$description": "Release. One small overshoot, then rest."
+      },
+      "settle": {
+        "$value": [
+          0.22,
+          1.24,
+          0.36,
+          1
+        ],
+        "$description": "Layers, thumbs and indicators settling into place."
+      },
+      "layout": {
+        "$value": [
+          0.32,
+          0.72,
+          0,
+          1
+        ],
+        "$description": "Shared-layout moves: quick start, very long settle, no overshoot."
+      }
     }
   },
   "material": {
     "blur": {
       "$type": "dimension",
-      "sm": { "$value": "8px" },
-      "md": { "$value": "16px" },
-      "lg": { "$value": "28px" }
+      "sm": {
+        "$value": "8px"
+      },
+      "md": {
+        "$value": "16px"
+      },
+      "lg": {
+        "$value": "28px"
+      }
     },
-    "saturate": { "$type": "number", "$value": 1.7, "$description": "Backdrop saturation behind glass." },
-    "lift": { "$type": "dimension", "$value": "-2px", "$description": "Hover lift of interactive cards and rows." },
-    "press": { "$type": "number", "$value": 0.97, "$description": "Scale of a pressed control." },
+    "saturate": {
+      "$type": "number",
+      "$value": 1.7,
+      "$description": "Backdrop saturation behind glass."
+    },
+    "lift": {
+      "$type": "dimension",
+      "$value": "-2px",
+      "$description": "Hover lift of interactive cards and rows."
+    },
+    "press": {
+      "$type": "number",
+      "$value": 0.97,
+      "$description": "Scale of a pressed control."
+    },
+    "spin": {
+      "$description": "Motion of the machined spin button finish (the colours are per theme, in material.spin.*).",
+      "sweep": {
+        "$type": "duration",
+        "$value": "700ms",
+        "$description": "The light band sliding across on hover and focus. 0ms under reduced motion."
+      },
+      "sweep-easing": {
+        "$type": "cubicBezier",
+        "$value": [
+          0.2,
+          0.8,
+          0.2,
+          1
+        ],
+        "$description": "Fast start, long settle."
+      },
+      "turn": {
+        "$type": "dimension",
+        "$value": "16deg",
+        "$description": "How far the conic turns as the pointer crosses the button, end to end."
+      },
+      "angle": {
+        "$type": "dimension",
+        "$value": "200deg",
+        "$description": "Where the conic sweep starts at rest."
+      },
+      "press": {
+        "$type": "number",
+        "$value": 0.985,
+        "$description": "Scale of a pressed spin button (it also drops 1px)."
+      }
+    },
     "liquid": {
       "$description": "Liquid glass: SVG displacement refraction at the rim (Chromium), blur and specular elsewhere. Scales are feDisplacementMap px.",
-      "scale": { "$type": "number", "sm": { "$value": 14 }, "md": { "$value": 28 }, "lg": { "$value": 44 } },
-      "bevel": { "$type": "number", "$value": 0.16, "$description": "Rim width as a fraction of the shorter side." },
-      "aberration": { "$type": "number", "$value": 2, "$description": "Per-channel scale spread for the colour fringe at the rim." },
-      "frost": { "$type": "dimension", "$value": "0.6px", "$description": "Blur after refraction." },
-      "fallback-blur": { "$type": "dimension", "$value": "14px", "$description": "Frost where refraction is unavailable (Safari, Firefox)." }
+      "scale": {
+        "$type": "number",
+        "sm": {
+          "$value": 14
+        },
+        "md": {
+          "$value": 28
+        },
+        "lg": {
+          "$value": 44
+        }
+      },
+      "bevel": {
+        "$type": "number",
+        "$value": 0.16,
+        "$description": "Rim width as a fraction of the shorter side."
+      },
+      "aberration": {
+        "$type": "number",
+        "$value": 2,
+        "$description": "Per-channel scale spread for the colour fringe at the rim."
+      },
+      "frost": {
+        "$type": "dimension",
+        "$value": "0.6px",
+        "$description": "Blur after refraction."
+      },
+      "fallback-blur": {
+        "$type": "dimension",
+        "$value": "14px",
+        "$description": "Frost where refraction is unavailable (Safari, Firefox)."
+      }
     }
   }
 }

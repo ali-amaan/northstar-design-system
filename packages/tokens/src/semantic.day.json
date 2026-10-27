@@ -64,19 +64,43 @@
     "spotlight": { "$type": "color", "$value": "rgba(47, 93, 154, 0.09)", "$description": "Pointer-tracked spotlight wash." },
     "shadow": { "$type": "shadow", "$value": "0 16px 40px -12px rgba(6, 8, 12, 0.18)" },
     "hairline": { "$type": "color", "$value": "rgba(6, 8, 12, 0.06)", "$description": "The only border a borderless surface keeps, where separation needs it." },
-    "silver": {
-      "$description": "Brushed silver: the button finish on liquid glass. hi/lo are the opaque ends of the body gradient (ink is checked against both); signal-hi/lo are the glacier-tinted primary.",
-      "hi": { "$type": "color", "$value": "#FFFFFF" },
-      "lo": { "$type": "color", "$value": "#D3D8DF" },
-      "signal-hi": { "$type": "color", "$value": "#F1F6FC" },
-      "signal-lo": { "$type": "color", "$value": "#AFC5E5" },
-      "ink": { "$type": "color", "$value": "{gray.8}", "$description": "Text and icons on silver." },
-      "grain": { "$type": "other", "$value": "repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0 1px, rgba(255, 255, 255, 0) 1px 3px), repeating-linear-gradient(180deg, rgba(6, 8, 12, 0.035) 0 1px, rgba(6, 8, 12, 0) 1px 5px)", "$description": "Fine brushed lines (two coprime periods so the grain does not band)." },
-      "sheen": { "$type": "color", "$value": "rgba(255, 255, 255, 0.85)", "$description": "Moving light on the metal." },
-      "highlight": { "$type": "color", "$value": "rgba(255, 255, 255, 1)", "$description": "Crisp inner top edge." },
-      "shade": { "$type": "color", "$value": "rgba(6, 8, 12, 0.10)", "$description": "Inner lower edge of the bevel." },
-      "edge": { "$type": "color", "$value": "rgba(6, 8, 12, 0.16)", "$description": "Outer hairline." },
-      "shadow": { "$type": "shadow", "$value": "0 1px 1px rgba(6, 8, 12, 0.10), 0 3px 8px -3px rgba(6, 8, 12, 0.18)" }
+    "spin": {
+      "$description": "Machined spin: the default finish of every button, on glass and off it. A conic sweep of machined stops under a fine concentric grain, both centred on the button, so an icon-only circle is a turned knob. Ink is checked against the lightest and darkest stop of each body, ghost text on the faint wash and the disabled ink on matte (tooling/contrast).",
+      "stop": {
+        "$type": "color",
+        "$description": "The secondary body: seven machined stops round the conic sweep (the sweep closes on stop 1).",
+        "1": { "$value": "#C9CED5" },
+        "2": { "$value": "#F0F2F5", "$description": "Lightest stop; also the flat fill under prefers-contrast: more." },
+        "3": { "$value": "#B5BBC4" },
+        "4": { "$value": "#E4E7EB" },
+        "5": { "$value": "#AEB5BE", "$description": "Darkest stop." },
+        "6": { "$value": "#EAEDF0" },
+        "7": { "$value": "#B8BEC7" }
+      },
+      "signal-stop": {
+        "$type": "color",
+        "$description": "The Glacier-anodized primary (and tone=\"signal\") body.",
+        "1": { "$value": "#A9C0E2" },
+        "2": { "$value": "#D7E3F4", "$description": "Lightest stop." },
+        "3": { "$value": "#8FAAD2" },
+        "4": { "$value": "#C6D6EE" },
+        "5": { "$value": "#88A4CE", "$description": "Darkest stop." },
+        "6": { "$value": "#CCDBF0" },
+        "7": { "$value": "#93ADD4" }
+      },
+      "ink": { "$type": "color", "$value": "#0B0E12", "$description": "Text and icons on the secondary body." },
+      "signal-ink": { "$type": "color", "$value": "{gray.8}", "$description": "Text and icons on the Glacier body." },
+      "grain-dark": { "$type": "color", "$value": "rgba(0, 0, 0, 0.05)", "$description": "Dark ring of the concentric grain (1px of every 2px)." },
+      "grain-light": { "$type": "color", "$value": "rgba(255, 255, 255, 0.05)", "$description": "Light ring of the grain on the secondary body." },
+      "signal-grain-light": { "$type": "color", "$value": "rgba(255, 255, 255, 0.06)", "$description": "Light ring of the grain on the Glacier body." },
+      "emboss": { "$type": "color", "$value": "rgba(255, 255, 255, 0.4)", "$description": "The 1px light under the label: the text reads as cut into the metal." },
+      "sheen": { "$type": "color", "$value": "rgba(255, 255, 255, 0.38)", "$description": "Peak of the light band that slides across on hover and focus." },
+      "shadow": { "$type": "shadow", "$value": "inset 0 1px 0 #FFFFFF, inset 0 -1px 0 rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(6, 8, 12, 0.2), 0 1px 3px rgba(6, 8, 12, 0.14)", "$description": "Bevel (light top edge, dark lower edge), outer hairline and a short drop." },
+      "shadow-press": { "$type": "shadow", "$value": "inset 0 1px 2px rgba(6, 8, 12, 0.24), inset 0 -1px 0 rgba(255, 255, 255, 0.9), 0 0 0 1px rgba(6, 8, 12, 0.2), 0 1px 1px rgba(6, 8, 12, 0.08)", "$description": "Pressed: the bevel flips, so the face reads as pushed in." },
+      "ghost": { "$type": "number", "$value": 0.4, "$description": "Opacity of the faint metal a ghost button takes on hover, focus and selection." },
+      "ghost-edge": { "$type": "color", "$value": "rgba(6, 8, 12, 0.08)", "$description": "Hairline round the ghost wash, so it reads as metal, not a flat fill." },
+      "matte": { "$type": "color", "$value": "{gray.3}", "$description": "Disabled: a flat matte body, no grain or sheen; color.line.2 keeps its edge." },
+      "matte-ink": { "$type": "color", "$value": "#6B717B", "$description": "Disabled label on matte (3:1, it is not actionable)." }
     },
     "liquid": {
       "$description": "Liquid glass layers: glacier tint, specular highlight, rim, inner glow and drop shadow.",
@@ -88,7 +112,7 @@
       "shadow": { "$type": "shadow", "$value": "0 10px 30px -12px rgba(6, 8, 12, 0.16)" }
     },
     "texture": {
-      "$description": "Tactile button texture: fine brushed lines (light and dark, two coprime periods), a soft top highlight and a low inner bevel. signal-* is tuned for the Glacier primary. Text on every textured button body is checked with the lines and highlight composited (tooling/contrast).",
+      "$description": "Tactile texture of the soft button finish (finish=\"soft\"): fine brushed lines (light and dark, two coprime periods), a soft top highlight and a low inner bevel. signal-* is tuned for the Glacier primary. Text on every textured button body is checked with the lines and highlight composited (tooling/contrast).",
       "$type": "color",
       "light": { "$value": "rgba(255, 255, 255, 0.5)", "$description": "Light brushed line." },
       "dark": { "$value": "rgba(6, 8, 12, 0.03)", "$description": "Dark brushed line." },

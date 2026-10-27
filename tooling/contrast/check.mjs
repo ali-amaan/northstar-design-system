@@ -16,12 +16,14 @@
 //   - material.glass.tint / edge / rim / specular, material.glow / spotlight
 //                             decorative layers of the glass material; the fill they sit on is
 //                             checked as a ground below.
-//   - material.silver.grain / sheen / highlight / shade / edge / shadow
-//                             the brushed-metal finish over the silver body. The body's two opaque
-//                             ends (hi, lo, and the glacier-tinted signal-hi, signal-lo) are checked
-//                             against the silver ink as fixed pairs, with the grain's darkest line
-//                             composited over lo, so the label holds wherever the gradient lands.
-//   - material.texture.*      the tactile texture on every button (brushed lines, top highlight,
+//   - material.spin.grain-* / emboss / sheen / shadow* / ghost
+//                             the machined finish over the spin body. Every body is checked below
+//                             (SPIN) at its lightest stop with the light grain over it and at its
+//                             darkest stop with the dark grain over it and the press dimming
+//                             (brightness 0.96), so the label holds wherever the sweep lands under
+//                             it. Ghost text is checked on the faint wash (ghost opacity) over every
+//                             surface, and the disabled ink on matte at 3:1.
+//   - material.texture.*      the tactile texture of the soft finish (brushed lines, top highlight,
 //                             bevel). Not checked on its own: each textured button body is checked
 //                             below (TEXTURED) with its lightest and its darkest point composited,
 //                             so the label holds over every line of the grain.
@@ -69,11 +71,6 @@ const BACKDROP_MARKS = ["backdrop.ink", "backdrop.signal"];
 const PAIRS = [
   ["button.primary.fg", "button.primary.bg", 4.5],
   ["button.primary.fg", "button.primary.hover", 4.5],
-  // Brushed silver buttons on liquid glass (secondary and the glacier-tinted primary).
-  ["material.silver.ink", "material.silver.hi", 4.5],
-  ["material.silver.ink", "material.silver.lo", 4.5],
-  ["material.silver.ink", "material.silver.signal-hi", 4.5],
-  ["material.silver.ink", "material.silver.signal-lo", 4.5],
 ];
 /**
  * Textured buttons: [foreground, body, texture prefix, minimum]. Each body is checked twice:
@@ -88,8 +85,23 @@ const TEXTURED = [
   ["button.primary.fg", "button.primary.bg", "material.texture.signal", 4.5], // primary (Glacier)
   ["button.primary.fg", "button.primary.hover", "material.texture.signal", 4.5],
 ];
-/** The darkest grain line of the brushed finish, composited over the darker body end. */
-const GRAIN = { r: 6, g: 8, b: 12, a: 0.06 };
+/**
+ * Machined spin bodies: [ink, stop prefix, light grain]. Checked at the lightest stop (light
+ * grain over it) and the darkest (dark grain over it, then the press dimming), 4.5:1.
+ */
+const SPIN = [
+  ["material.spin.ink", "material.spin.stop", "material.spin.grain-light"], // secondary
+  ["material.spin.signal-ink", "material.spin.signal-stop", "material.spin.signal-grain-light"], // primary, tone="signal"
+];
+/** Ghost spin: [text, stop prefix] on the faint wash over each surface a ghost button sits on. */
+const SPIN_GHOST = [
+  ["color.text.1", "material.spin.stop"], // ghost on hover and selection
+  ["color.text.2", "material.spin.stop"], // ghost on keyboard focus (its resting text)
+  ["color.signal.default", "material.spin.stop"], // ghost tone="signal" (the wash stays neutral)
+];
+const SPIN_GROUNDS = ["color.ground", "color.surface.1", "color.surface.2", "color.surface.3", "backdrop.ground"];
+/** brightness(0.96) on press scales every sRGB channel. */
+const PRESS = 0.96;
 
 function parse(value) {
   const s = String(value).trim();
@@ -151,8 +163,7 @@ for (const [theme, roles] of Object.entries(tokens.themes)) {
 
   for (const [fg, bg, min, kind, back] of rows) {
     checks++;
-    let ground = back ? over(parse(roles[bg]), solid(back)) : solid(bg);
-    if (bg.startsWith("material.silver.") && bg.endsWith("lo")) ground = over(GRAIN, ground);
+    const ground = back ? over(parse(roles[bg]), solid(back)) : solid(bg);
     const r = ratio(solid(fg), ground);
     if (r < min) {
       failures++;
@@ -187,6 +198,51 @@ for (const [theme, roles] of Object.entries(tokens.themes)) {
       }
     }
   }
+}
+
+// Machined spin: every body at its lightest and darkest stop, the ghost wash, and matte.
+for (const [theme, roles] of Object.entries(tokens.themes)) {
+  const get = (path) => {
+    if (!(path in roles)) throw new Error(`${theme}: missing role ${path}`);
+    return parse(roles[path]);
+  };
+  const ground = get("color.ground");
+  const stops = (prefix) => {
+    const list = [];
+    for (let i = 1; `${prefix}.${i}` in roles; i++) list.push(over(get(`${prefix}.${i}`), ground));
+    if (list.length < 2) throw new Error(`${theme}: ${prefix} needs at least two stops`);
+    return list.sort((a, b) => luminance(b) - luminance(a));
+  };
+  const dim = (c) => ({ r: c.r * PRESS, g: c.g * PRESS, b: c.b * PRESS, a: 1 });
+  const report = (label, r, min) => {
+    checks++;
+    if (r < min) {
+      failures++;
+      console.error(`FAIL ${theme.padEnd(5)} ${label}: ${r.toFixed(2)} < ${min}`);
+    }
+  };
+  for (const [ink, prefix, grain] of SPIN) {
+    const list = stops(prefix);
+    const lightest = over(get(grain), list[0]);
+    const darkest = dim(over(get("material.spin.grain-dark"), list[list.length - 1]));
+    const fg = over(get(ink), ground);
+    report(`text ${ink} on ${prefix} (lightest)`, ratio(fg, lightest), 4.5);
+    report(`text ${ink} on ${prefix} (darkest, pressed)`, ratio(dim(fg), darkest), 4.5);
+  }
+  const alpha = Number(roles["material.spin.ghost"]);
+  if (!(alpha > 0 && alpha < 1)) throw new Error(`${theme}: material.spin.ghost must be an opacity`);
+  for (const [text, prefix] of SPIN_GHOST) {
+    const list = stops(prefix);
+    for (const g of SPIN_GROUNDS) {
+      const base = over(get(g), ground);
+      const fg = over(get(text), base);
+      for (const [where, stop] of [["lightest", list[0]], ["darkest", list[list.length - 1]]]) {
+        const wash = over({ ...stop, a: alpha }, base);
+        report(`text ${text} on ghost ${prefix} over ${g} (${where})`, ratio(fg, wash), 4.5);
+      }
+    }
+  }
+  report("text material.spin.matte-ink on material.spin.matte (disabled)", ratio(get("material.spin.matte-ink"), get("material.spin.matte")), 3);
 }
 
 if (failures) {

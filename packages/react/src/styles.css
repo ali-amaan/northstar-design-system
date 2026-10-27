@@ -1685,8 +1685,7 @@ html[data-ns-flow-dir='back']::view-transition-old(ns-step) { animation-name: ns
 }
 
 /* ==================================================== precision layer
-   Icon-first expand everywhere, brushed silver buttons on liquid glass, and
-   tighter glass corners (radius.glass.*). Loaded last. */
+   Icon-first expand everywhere and tighter glass corners (radius.glass.*). */
 
 /* ------------------------------------------------------ icon-first expand
    A host (`ns-expand-host`) shows its icon; its ExpandLabel is collapsed to
@@ -1781,89 +1780,9 @@ html[data-ns-flow-dir='back']::view-transition-old(ns-step) { animation-name: ns
 .ns-tabs--glass .ns-tabs__indicator { border-radius: var(--ns-radius-control-pill); }
 .ns-button--glass { border-radius: var(--ns-button-radius); }
 
-/* ------------------------------------------------- brushed silver buttons
-   On liquid glass, secondary and primary buttons are brushed metal: a fine
-   two-period grain over a vertical body gradient, a conic sheen that turns
-   on hover, a pointer-led glint (--ns-mx/--ns-my), a crisp inner top edge
-   and a small bevel shadow. Pressing tilts the light (the body gradient flips)
-   so the face reads as pushed in. Primary is glacier-tinted silver. The ink
-   on both ends of every body gradient is gated at 4.5:1 (tooling/contrast). */
-
-@property --ns-silver-angle { syntax: '<angle>'; inherits: false; initial-value: 210deg; }
-@property --ns-silver-dir { syntax: '<angle>'; inherits: false; initial-value: 180deg; }
-@property --ns-silver-spot { syntax: '<percentage>'; inherits: false; initial-value: 30%; }
-
-.ns-button--primary,
-.ns-button.ns-tone-signal {
-  --ns-silver-hi: var(--ns-material-silver-signal-hi);
-  --ns-silver-lo: var(--ns-material-silver-signal-lo);
-}
-.ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])) {
-  --ns-silver-angle: 210deg;
-  --ns-silver-dir: 180deg;
-  --ns-silver-spot: 30%;
-  --ns-silver-ring: inset 0 1px 0 var(--ns-material-silver-highlight), inset 0 -1px 0 var(--ns-material-silver-shade), 0 0 0 1px var(--ns-material-silver-edge);
-  --ns-tex-on: 0;
-  color: var(--ns-material-silver-ink);
-  border-color: transparent;
-  border-radius: var(--ns-button-radius);
-  background:
-    radial-gradient(80px 48px at var(--ns-sheen-x, var(--ns-mx, 30%)) var(--ns-sheen-y, var(--ns-my, 0%)), color-mix(in srgb, var(--ns-material-silver-sheen) var(--ns-silver-spot), transparent), transparent 72%),
-    conic-gradient(from var(--ns-silver-angle) at 50% 50%, transparent 0deg 18deg, color-mix(in srgb, var(--ns-material-silver-sheen) 60%, transparent) 48deg, transparent 86deg 186deg, color-mix(in srgb, var(--ns-material-silver-sheen) 45%, transparent) 222deg, transparent 262deg),
-    var(--ns-material-silver-grain),
-    linear-gradient(var(--ns-silver-dir), var(--ns-silver-hi, var(--ns-material-silver-hi)), var(--ns-silver-lo, var(--ns-material-silver-lo)));
-  box-shadow: var(--ns-silver-ring), var(--ns-material-silver-shadow);
-  text-shadow: 0 1px 0 color-mix(in srgb, var(--ns-material-silver-highlight) 55%, transparent);
-  transition: color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
-    box-shadow var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
-    padding var(--ns-motion-duration-layout) var(--ns-motion-spring-layout),
-    --ns-silver-angle var(--ns-motion-duration-layout) var(--ns-motion-easing-glide),
-    --ns-silver-dir var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
-    --ns-silver-spot var(--ns-motion-duration-320) var(--ns-motion-easing-hover),
-    transform var(--ns-motion-duration-release) var(--ns-motion-spring-release);
-}
-.ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])):is(:hover, [data-pointer]):not(:disabled) {
-  --ns-silver-angle: 236deg;
-  --ns-silver-spot: 100%;
-  box-shadow: var(--ns-silver-ring), var(--ns-material-silver-shadow), 0 6px 18px -10px var(--ns-material-glow);
-}
-.ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])):active:not(:disabled) {
-  --ns-silver-angle: 196deg;
-  --ns-silver-dir: 0deg;
-  --ns-silver-spot: 60%;
-  box-shadow: inset 0 1px 2px var(--ns-material-silver-shade), inset 0 -1px 0 var(--ns-material-silver-highlight), 0 0 0 1px var(--ns-material-silver-edge);
-}
-.ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])):focus-visible {
-  box-shadow: var(--ns-silver-ring), var(--ns-material-silver-shadow), 0 0 0 4px var(--ns-color-focus-halo), 0 0 18px 2px var(--ns-material-glow);
-}
-.ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])):disabled {
-  color: var(--ns-material-silver-ink);
-  opacity: 0.5;
-  box-shadow: var(--ns-silver-ring);
-}
-
 /* --------------------------------------------- precision layer fallbacks */
 
-@media (prefers-reduced-transparency: reduce) {
-  .ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])) {
-    background: linear-gradient(180deg, var(--ns-silver-hi, var(--ns-material-silver-hi)), var(--ns-silver-lo, var(--ns-material-silver-lo)));
-  }
-}
-@media (prefers-contrast: more) {
-  .ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])) {
-    background: var(--ns-silver-hi, var(--ns-material-silver-hi));
-    box-shadow: 0 0 0 1px var(--ns-material-silver-ink);
-    text-shadow: none;
-  }
-}
 @media (forced-colors: active) {
-  .ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid'])) {
-    background: ButtonFace;
-    color: ButtonText;
-    border: 1px solid ButtonText;
-    box-shadow: none;
-    text-shadow: none;
-  }
   .ns-expand-host .ns-expand { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1883,7 +1802,7 @@ html[data-ns-flow-dir='back']::view-transition-old(ns-step) { animation-name: ns
 .ns-button.ns-button--rounded,
 .ns-pagination--rounded .ns-button { --ns-button-radius: var(--ns-radius-control-rounded); }
 :where(.ns-liquid, .ns-material--glass, [data-material='glass']) .ns-button.ns-button--rounded,
-.ns-button.ns-button--rounded:is(.ns-button--glass, .ns-button--silver) { --ns-button-radius: var(--ns-radius-glass-control); }
+.ns-button.ns-button--rounded.ns-button--glass { --ns-button-radius: var(--ns-radius-glass-control); }
 .ns-tabs--rounded.ns-tabs--pill .ns-tabs__list { border-radius: var(--ns-radius-8); }
 .ns-tabs--rounded.ns-tabs--pill .ns-tabs__trigger,
 .ns-tabs--rounded.ns-tabs--pill .ns-tabs__indicator { border-radius: var(--ns-radius-6); }
@@ -1897,8 +1816,9 @@ html[data-ns-flow-dir='back']::view-transition-old(ns-step) { animation-name: ns
    ::after (z-index -1 inside the button's own stacking context), so it never
    fights the button's background or box-shadow. Per variant: secondary and
    primary always (primary in its Glacier-tuned signal-* set), ghost only on
-   hover and focus, disabled never. Silver keeps its own brushed finish and
-   glass its specular, so both switch it off. Per theme through
+   hover and focus, disabled never. This is the soft finish
+   (finish="soft"); the machined spin finish below and glass's specular
+   switch it off. Per theme through
    material.texture.*; text on every textured body is gated in
    tooling/contrast at its lightest and darkest point. */
 
@@ -1954,7 +1874,160 @@ html[data-ns-flow-dir='back']::view-transition-old(ns-step) { animation-name: ns
   .ns-button { border: 1px solid ButtonText; }
 }
 @media (prefers-reduced-motion: reduce) {
-  /* The silver glint holds still instead of following the pointer. */
-  .ns-button { --ns-sheen-x: 30%; --ns-sheen-y: 0%; }
   .ns-button::after { transition: none; }
+}
+
+/* ===================================================== machined spin
+   The default finish of every button, on glass and off it: Button,
+   IconButton, ToolbarItem, Menu.Trigger, pagination, toasts, layer close
+   buttons and the effects ConstellationButton. finish="soft" (or
+   NorthstarProvider buttonFinish="soft", which marks its root with
+   data-button-finish) keeps the soft finish above: tonal fill and tactile
+   texture. tone="silver" is an alias for spin. Glass buttons keep glass.
+
+   ::before is the metal: a conic sweep of seven machined stops under a fine
+   concentric grain, both centred on the button, so an icon-only circle is
+   a turned knob. It sits one pixel past the border, so the bevel ring is
+   flush. ::after is the light band that slides across on hover and focus.
+   While hovered, the sweep turns a few degrees with the pointer
+   (--ns-pointer-x/-y, written by usePointerTracking; @property eases it;
+   without a pointer it holds still). Primary and tone="signal" are
+   Glacier-anodized. Ghost has no metal at rest; a faint wash of it fades in
+   on hover, focus and selection. Disabled is matte and flat. Pressed drops
+   1px, dims a little and flips the bevel. Colours per theme through
+   material.spin.*, motion through the material.spin scale; ink on the
+   lightest and darkest stop of every body is gated in tooling/contrast. */
+
+@property --ns-spin-angle { syntax: '<angle>'; inherits: false; initial-value: 200deg; }
+
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])) {
+  --ns-tex-on: 0;
+  --ns-spin-on: 1;
+  --ns-spin-1: var(--ns-material-spin-stop-1);
+  --ns-spin-2: var(--ns-material-spin-stop-2);
+  --ns-spin-3: var(--ns-material-spin-stop-3);
+  --ns-spin-4: var(--ns-material-spin-stop-4);
+  --ns-spin-5: var(--ns-material-spin-stop-5);
+  --ns-spin-6: var(--ns-material-spin-stop-6);
+  --ns-spin-7: var(--ns-material-spin-stop-7);
+  --ns-spin-ink: var(--ns-material-spin-ink);
+  --ns-spin-grain: var(--ns-material-spin-grain-light);
+  --ns-spin-grain-dark: var(--ns-material-spin-grain-dark);
+  border-color: transparent;
+  transition: color var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    box-shadow var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    filter var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    padding var(--ns-motion-duration-layout) var(--ns-motion-spring-layout),
+    transform var(--ns-motion-duration-release) var(--ns-motion-spring-release);
+}
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):is(.ns-button--primary, .ns-fx-cbutton--primary, .ns-tone-signal:not(.ns-button--ghost)) {
+  --ns-spin-1: var(--ns-material-spin-signal-stop-1);
+  --ns-spin-2: var(--ns-material-spin-signal-stop-2);
+  --ns-spin-3: var(--ns-material-spin-signal-stop-3);
+  --ns-spin-4: var(--ns-material-spin-signal-stop-4);
+  --ns-spin-5: var(--ns-material-spin-signal-stop-5);
+  --ns-spin-6: var(--ns-material-spin-signal-stop-6);
+  --ns-spin-7: var(--ns-material-spin-signal-stop-7);
+  --ns-spin-ink: var(--ns-material-spin-signal-ink);
+  --ns-spin-grain: var(--ns-material-spin-signal-grain-light);
+}
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):not(.ns-button--ghost) {
+  color: var(--ns-spin-ink);
+  text-shadow: 0 1px 0 var(--ns-material-spin-emboss);
+  box-shadow: var(--ns-material-spin-shadow);
+}
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin']))::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  --ns-spin-angle: var(--ns-material-spin-angle);
+  background:
+    repeating-radial-gradient(circle at 50% 50%, var(--ns-spin-grain-dark) 0 1px, var(--ns-spin-grain) 1px 2px),
+    conic-gradient(from var(--ns-spin-angle) at 50% 50%, var(--ns-spin-1), var(--ns-spin-2) 8%, var(--ns-spin-3) 22%, var(--ns-spin-4) 38%, var(--ns-spin-5) 52%, var(--ns-spin-6) 68%, var(--ns-spin-7) 84%, var(--ns-spin-1));
+  opacity: var(--ns-spin-on);
+  transition: opacity var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    --ns-spin-angle var(--ns-motion-duration-layout) var(--ns-motion-easing-glide);
+}
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin']))::after {
+  inset: -1px;
+  box-shadow: none;
+  background: linear-gradient(100deg, transparent 30%, var(--ns-material-spin-sheen) 50%, transparent 70%) 120% 0 / 260% 100% no-repeat;
+  opacity: var(--ns-spin-on);
+  transition: opacity var(--ns-motion-duration-micro) var(--ns-motion-easing-hover),
+    background-position var(--ns-material-spin-sweep) var(--ns-material-spin-sweep-easing);
+}
+/* Hover: the band slides across, the metal brightens a touch and the sweep turns with the pointer. */
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):is(:hover, :focus-visible):not(:disabled)::after { background-position: -20% 0; }
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):hover:not(:disabled) { filter: brightness(1.04); }
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):hover:not(:disabled)::before {
+  --ns-spin-angle: calc(var(--ns-material-spin-angle) + var(--ns-pointer-x, 0) * var(--ns-material-spin-turn) / 2 + var(--ns-pointer-y, 0) * var(--ns-material-spin-turn) / 6);
+}
+/* Pressed: down a pixel, a little smaller and darker, and the bevel flips. */
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):active:not(:disabled) {
+  transform: translate(var(--ns-mag-x, 0px), calc(var(--ns-mag-y, 0px) + 1px)) scale(var(--ns-material-spin-press));
+  filter: brightness(0.96);
+  transition-duration: var(--ns-motion-duration-press);
+  transition-timing-function: var(--ns-motion-spring-press);
+}
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):not(.ns-button--ghost):active:not(:disabled) { box-shadow: var(--ns-material-spin-shadow-press); }
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):active:not(:disabled)::after { box-shadow: none; }
+/* Focus: the Glacier ring (color.focus), 2px, standing 3px off the metal. */
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):focus-visible { outline: 2px solid var(--ns-color-focus); outline-offset: 3px; }
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):not(.ns-button--ghost):focus-visible { box-shadow: var(--ns-material-spin-shadow); }
+/* Ghost: no metal at rest; the faint wash on hover, focus, an open menu and the current page. */
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])).ns-button--ghost { --ns-spin-on: 0; }
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])).ns-button--ghost:is(:hover, :focus-visible, [aria-expanded='true'], [aria-current='page']):not(:disabled) {
+  --ns-spin-on: var(--ns-material-spin-ghost);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--ns-material-spin-ghost-edge);
+}
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])) .ns-button__check { color: currentColor; }
+/* Disabled: matte and flat, no grain, sheen or bevel. Loading keeps its metal. */
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):disabled:not([data-loading]) {
+  --ns-spin-on: 1;
+  color: var(--ns-material-spin-matte-ink);
+  text-shadow: none;
+  box-shadow: inset 0 0 0 1px var(--ns-color-line-2);
+  filter: none;
+  opacity: 1;
+}
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):disabled:not([data-loading])::before { background: var(--ns-material-spin-matte); }
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):disabled:not([data-loading])::after { display: none; }
+:is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])).ns-button--ghost:disabled:not([data-loading]) { --ns-spin-on: 0; color: var(--ns-color-text-3); }
+
+/* ----------------------------------------------- machined spin fallbacks */
+
+@media (prefers-reduced-transparency: reduce) {
+  /* No grain: the sweep alone. */
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])) { --ns-spin-grain: transparent; --ns-spin-grain-dark: transparent; }
+}
+@media (prefers-contrast: more) {
+  /* A flat fill at the lightest stop, outlined in ink. */
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin']))::before { background: var(--ns-spin-2); }
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin']))::after { display: none; }
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):not(.ns-button--ghost) { box-shadow: 0 0 0 1px var(--ns-spin-ink); text-shadow: none; }
+}
+@media (forced-colors: active) {
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin']))::before,
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin']))::after { display: none; }
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])) {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+    box-shadow: none;
+    text-shadow: none;
+    filter: none;
+  }
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):disabled,
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):disabled:not([data-loading]) { background: ButtonFace; color: GrayText; border-color: GrayText; box-shadow: none; }
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):focus-visible { outline-color: Highlight; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* No sliding band and no turning sweep; the press holds still too. */
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin']))::after { display: none; }
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin'])):hover:not(:disabled)::before { --ns-spin-angle: var(--ns-material-spin-angle); }
+  :is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin']))::before { transition: none; }
 }

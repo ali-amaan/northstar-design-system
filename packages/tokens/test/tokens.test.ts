@@ -55,17 +55,20 @@ const MATERIAL_ROLES = [
   "material.liquid.rim-low",
   "material.liquid.inner",
   "material.liquid.shadow",
-  "material.silver.hi",
-  "material.silver.lo",
-  "material.silver.signal-hi",
-  "material.silver.signal-lo",
-  "material.silver.ink",
-  "material.silver.grain",
-  "material.silver.sheen",
-  "material.silver.highlight",
-  "material.silver.shade",
-  "material.silver.edge",
-  "material.silver.shadow",
+  ...[1, 2, 3, 4, 5, 6, 7].flatMap((i) => [`material.spin.stop.${i}`, `material.spin.signal-stop.${i}`]),
+  "material.spin.ink",
+  "material.spin.signal-ink",
+  "material.spin.grain-dark",
+  "material.spin.grain-light",
+  "material.spin.signal-grain-light",
+  "material.spin.emboss",
+  "material.spin.sheen",
+  "material.spin.shadow",
+  "material.spin.shadow-press",
+  "material.spin.ghost",
+  "material.spin.ghost-edge",
+  "material.spin.matte",
+  "material.spin.matte-ink",
 ];
 
 /** SPEC §3.2, verbatim. */
@@ -242,6 +245,36 @@ describe("button shapes and texture", () => {
       }
       expect(t["button.primary.hover"], theme).toMatch(/^#/);
     }
+  });
+});
+
+describe("machined spin", () => {
+  it("both themes define opaque body stops, both inks, a translucent grain and a ghost opacity", () => {
+    for (const theme of themes) {
+      const t = tokens.themes[theme] as Record<string, string>;
+      for (let i = 1; i <= 7; i++) {
+        expect(t[`material.spin.stop.${i}`], `${theme} stop ${i}`).toMatch(/^#[0-9A-F]{6}$/i);
+        expect(t[`material.spin.signal-stop.${i}`], `${theme} signal-stop ${i}`).toMatch(/^#[0-9A-F]{6}$/i);
+      }
+      for (const k of ["grain-dark", "grain-light", "signal-grain-light", "emboss", "sheen"]) expect(t[`material.spin.${k}`], `${theme} ${k}`).toMatch(/^rgba\(.+, 0\.\d+\)$/);
+      expect(t["material.spin.shadow"], theme).toContain("inset 0 1px 0");
+      expect(t["material.spin.shadow-press"], theme).toContain("inset 0 1px 2px");
+      const ghost = Number(t["material.spin.ghost"]);
+      expect(ghost, theme).toBeGreaterThan(0);
+      expect(ghost, theme).toBeLessThan(0.5);
+    }
+  });
+
+  it("replaces brushed silver: there is one metal system", () => {
+    for (const theme of themes) expect(Object.keys(tokens.themes[theme]).filter((k) => k.startsWith("material.silver."))).toEqual([]);
+  });
+
+  it("ships the sweep motion as scales, so reduced motion zeroes it", () => {
+    const s = tokens.scales as Record<string, string>;
+    expect(s["material.spin.sweep"]).toBe("700ms");
+    expect(s["material.spin.sweep-easing"]).toBe("cubic-bezier(0.2, 0.8, 0.2, 1)");
+    expect(parseFloat(s["material.spin.turn"] ?? "NaN")).toBeLessThanOrEqual(24);
+    expect(cssVar["material.spin.stop.1" as keyof typeof cssVar]).toBe("--ns-material-spin-stop-1");
   });
 });
 

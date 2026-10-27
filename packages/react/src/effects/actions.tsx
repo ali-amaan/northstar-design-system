@@ -55,6 +55,12 @@ export interface ConstellationButtonProps extends React.ButtonHTMLAttributes<HTM
   size?: 'sm' | 'md' | 'lg';
   /** Default `pill` like every button; `rounded` opts out. */
   shape?: 'pill' | 'rounded';
+  /**
+   * `spin` (machined metal, the default like every button) or `soft` (tonal
+   * fill and tactile texture). Unset, it follows the nearest
+   * NorthstarProvider's `buttonFinish` through CSS.
+   */
+  finish?: 'spin' | 'soft';
   /** Seed for the star scatter. Each press advances it, so presses differ but every run repeats. */
   seed?: number;
   /** Number of stars per press (3–8). Default 5. */
@@ -71,6 +77,7 @@ export function ConstellationButton({
   variant = 'secondary',
   size = 'md',
   shape = 'pill',
+  finish,
   seed = 7,
   stars = 5,
   className,
@@ -113,6 +120,7 @@ export function ConstellationButton({
       ref={ref}
       type={type}
       onClick={handleClick}
+      data-finish={finish}
       className={cx('ns-fx-cbutton', `ns-fx-cbutton--${variant}`, `ns-fx-size-${size}`, shape === 'rounded' && 'ns-fx-cbutton--rounded', className)}
     >
       <span className="ns-fx-cbutton__label">{children}</span>

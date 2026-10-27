@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Liquid glass: an SVG displacement filter used as a backdrop-filter bends the backdrop at the rim (Chromium), with a specular highlight, rim light, inner glow and a faint glacier tint. Safari and Firefox get blur plus the specular layers; reduced transparency and forced colours get the opaque solid. `material="glass"` on Surface, Card, Panel, Button, Tabs and the overlays uses the same material. Glass corners are tight for precision (`radius.glass.*`: 10px panels and bars, never fully round); buttons on glass are brushed silver pills (`shape="rounded"` gives them 7px corners).',
+          'Liquid glass: an SVG displacement filter used as a backdrop-filter bends the backdrop at the rim (Chromium), with a specular highlight, rim light, inner glow and a faint glacier tint. Safari and Firefox get blur plus the specular layers; reduced transparency and forced colours get the opaque solid. `material="glass"` on Surface, Card, Panel, Button, Tabs and the overlays uses the same material. Glass corners are tight for precision (`radius.glass.*`: 10px panels and bars, never fully round); buttons on glass keep the default machined spin finish, as pills (`shape="rounded"` gives them 7px corners).',
       },
     },
   },
@@ -66,21 +66,21 @@ export const NightAndDay: Story = {
   ),
 };
 
-function Silver({ theme }: { theme: ResolvedTheme }) {
+function SpinOnGlass({ theme }: { theme: ResolvedTheme }) {
   return (
     <NorthstarProvider theme={theme} style={{ padding: 24, background: 'var(--ns-color-ground)' }}>
       <Backdrop minHeight={300}>
         <Stack gap={20}>
-          <LiquidGlass style={{ padding: 20, maxWidth: 560 }} data-shot="silver-bar">
+          <LiquidGlass style={{ padding: 20, maxWidth: 560 }} data-shot="spin-bar">
             <Stack gap={12}>
-              <strong>Buttons on glass are brushed silver</strong>
+              <strong>Buttons on glass are machined spin</strong>
               <Stack direction="row" gap={8} align="center" wrap>
                 <Button variant="primary" icon={<RunIcon size={14} />}>
                   Run study
                 </Button>
                 <Button icon={<DuplicateIcon size={14} />}>Duplicate</Button>
                 <Button>Secondary</Button>
-                <Button variant="ghost">Ghost stays ghost</Button>
+                <Button variant="ghost">Ghost (hover for the wash)</Button>
                 <Button disabled>Disabled</Button>
               </Stack>
               <Stack direction="row" gap={8} align="center" wrap>
@@ -90,21 +90,19 @@ function Silver({ theme }: { theme: ResolvedTheme }) {
                 <Button size="lg" variant="primary">
                   Large primary
                 </Button>
-                <Button material="solid">Opted out (solid)</Button>
+                <Button finish="soft">Opted out (soft)</Button>
               </Stack>
             </Stack>
           </LiquidGlass>
           <Stack direction="row" gap={16} align="start" wrap>
-            <Card variant="glass" title="Glass card" description="10px corners; the actions are silver" footer={<Button variant="primary">Open</Button>} style={{ width: 260 }}>
+            <Card variant="glass" title="Glass card" description="10px corners; the actions are spin" footer={<Button variant="primary">Open</Button>} style={{ width: 260 }}>
               Header actions and footers on glass take the finish too.
             </Card>
             <Stack gap={8}>
-              <span style={{ color: 'var(--ns-color-text-2)' }}>Off glass, on request:</span>
+              <span style={{ color: 'var(--ns-color-text-2)' }}>Off glass, the same finish:</span>
               <Stack direction="row" gap={8}>
-                <Button tone="silver">tone=&quot;silver&quot;</Button>
-                <Button tone="silver" variant="primary">
-                  Silver primary
-                </Button>
+                <Button tone="silver">tone=&quot;silver&quot; (alias)</Button>
+                <Button variant="primary">Spin primary</Button>
               </Stack>
             </Stack>
           </Stack>
@@ -115,19 +113,19 @@ function Silver({ theme }: { theme: ResolvedTheme }) {
 }
 
 /**
- * Brushed silver: inside liquid glass, secondary and primary buttons take a
- * brushed-metal finish (fine grain, a conic sheen that turns on hover, a
- * glint that follows the pointer, a crisp top edge and a bevel shadow; the
- * light tilts when pressed). Primary is glacier-tinted silver. Ink holds 4.5:1
- * on both ends of the gradient (tooling/contrast).
+ * Machined spin on glass: the default button finish holds on liquid glass
+ * too (a conic sweep under a concentric grain that turns with the pointer, a
+ * light band that slides across on hover and focus, a bevel that flips when
+ * pressed). Primary is Glacier-anodized. Ink holds 4.5:1 on the lightest and
+ * darkest stop (tooling/contrast). `finish="soft"` opts a button out.
  */
-export const SilverOnGlass: Story = {
-  name: 'Silver buttons on glass',
+export const SpinOnGlassStory: Story = {
+  name: 'Spin buttons on glass',
   parameters: { layout: 'fullscreen' },
   render: () => (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(560px, 1fr))' }}>
-      <Silver theme="night" />
-      <Silver theme="day" />
+      <SpinOnGlass theme="night" />
+      <SpinOnGlass theme="day" />
     </div>
   ),
 };

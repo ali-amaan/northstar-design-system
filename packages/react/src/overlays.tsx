@@ -1,6 +1,6 @@
 'use client';
 import { cloneElement, createContext, isValidElement, useContext, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import { Portal, useNorthstar, type Material } from './provider.js';
+import { Portal, useNorthstar, type ButtonFinish, type Material } from './provider.js';
 import { usePresence } from './internal/interaction.js';
 import { useDismiss, useFocusTrap, rovingKeyDown } from './internal/layers.js';
 import { cx, mergeRefs, useControllable } from './internal/util.js';
@@ -440,15 +440,20 @@ export type MenuTriggerProps = TriggerProps & {
    * touch). `always` keeps it open. Default false.
    */
   expand?: Expand;
+  /**
+   * Button finish when the trigger is styled as a button (`ns-button`):
+   * `spin` or `soft`. Default: the provider's `buttonFinish`.
+   */
+  finish?: ButtonFinish;
 };
 
-function MenuTrigger({ icon, expand = false, ...triggerProps }: MenuTriggerProps) {
+function MenuTrigger({ icon, expand = false, finish, ...triggerProps }: MenuTriggerProps) {
   const ctx = useLayer(MenuContext, 'Menu.Trigger');
-  let props: TriggerProps = triggerProps;
+  let props: TriggerProps = finish ? ({ ...triggerProps, 'data-finish': finish } as TriggerProps) : triggerProps;
   if (!triggerProps.asChild && icon !== undefined && icon !== null && icon !== false) {
     const host = expandHost(expand);
     props = {
-      ...triggerProps,
+      ...props,
       className: cx(triggerProps.className, host.className && 'ns-button--expand', host.className),
       ...(host['data-expand'] ? ({ 'data-expand': host['data-expand'] } as Record<string, string>) : {}),
       children: (

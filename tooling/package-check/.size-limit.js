@@ -8,12 +8,12 @@ export default [
     path: "../../packages/tokens/dist/index.js",
     import: "*",
     modifyEsbuildConfig: esm,
-    limit: "3.4 kB", // radius.glass.*, radius.control.*, material.silver.*, material.texture.* and backdrop.* (both themes)
+    limit: "4 kB", // + spacing.* roles and density gaps; radius.glass.*, radius.control.*, material.spin.*, material.texture.* and backdrop.* (both themes)
   },
   {
     name: "tokens: tokens.css",
     path: "../../packages/tokens/dist/tokens.css",
-    limit: "2.4 kB", // + material.texture.*, backdrop.* and radius.control.* (both themes)
+    limit: "2.8 kB", // + spacing.* roles and density gaps; + material.spin.*, material.texture.*, backdrop.* and radius.control.* (both themes)
     disablePlugins: ["@size-limit/esbuild"],
   },
   {
@@ -104,9 +104,9 @@ export default [
   },
   {
     name: "react: styles.css",
-    message: "includes the interaction layer, the liquid layer (liquid glass, icon-led controls, flows, reveal), the precision layer (icon-first expand everywhere, brushed silver, glass radii) and the shape and texture layer (pill buttons, tactile texture, fallbacks)",
+    message: "includes the interaction layer, the liquid layer (liquid glass, icon-led controls, flows, reveal), the precision layer (icon-first expand everywhere, glass radii), the shape and texture layer (pill buttons, the soft finish's tactile texture, fallbacks) and the machined spin finish (every button, its fallbacks)",
     path: "../../packages/react/dist/styles.css",
-    limit: "14.75 kB",
+    limit: "15.25 kB",
     disablePlugins: ["@size-limit/esbuild"],
   },
   {

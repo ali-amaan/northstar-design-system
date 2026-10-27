@@ -11,6 +11,12 @@ export type ResolvedTheme = 'night' | 'day';
 export type Density = 'compact' | 'default' | 'comfortable';
 /** Surface material. `glass` is liquid glass (refraction on Chromium, blur and specular elsewhere); it falls back to solid on its own. */
 export type Material = 'solid' | 'glass';
+/**
+ * Button finish. `spin` (default) is machined metal: a conic sweep under a
+ * fine concentric grain, Glacier-anodized on primary. `soft` is the tonal
+ * fill with the tactile texture.
+ */
+export type ButtonFinish = 'spin' | 'soft';
 
 /** Every user-visible string the basic components render. English is the default. */
 export interface Messages {
@@ -74,6 +80,8 @@ export interface NorthstarContextValue {
   messages: Messages;
   /** Default material for overlays, toasts and surfaces that do not set their own. */
   material: Material;
+  /** Default finish for buttons that do not set their own. */
+  buttonFinish: ButtonFinish;
   setTheme: (theme: ThemeSetting) => void;
 }
 
@@ -83,6 +91,7 @@ const fallback: NorthstarContextValue = {
   density: 'default',
   messages: en,
   material: 'solid',
+  buttonFinish: 'spin',
   setTheme: () => {},
 };
 
@@ -99,6 +108,12 @@ export interface NorthstarProviderProps extends Omit<React.HTMLAttributes<HTMLDi
   messages?: Partial<Messages>;
   /** Default material for overlays, toasts and surfaces. Default `solid`. */
   material?: Material;
+  /**
+   * Default button finish. `spin` (default) or `soft`. Buttons that set
+   * `finish` keep their own. Also written as `data-button-finish` on the root,
+   * so plain `.ns-button` elements inside follow it too.
+   */
+  buttonFinish?: ButtonFinish;
   /** Also write data-theme/data-density on <html> (for full-page apps). */
   applyToDocument?: boolean;
   /** Insert the shared liquid-glass filter defs (once per document). Default true. */
@@ -122,6 +137,7 @@ export function NorthstarProvider({
   density = 'default',
   messages,
   material = 'solid',
+  buttonFinish = 'spin',
   applyToDocument = false,
   liquidGlass = true,
   onThemeChange,
@@ -161,26 +177,27 @@ export function NorthstarProvider({
       density,
       messages: { ...en, ...messages },
       material,
+      buttonFinish,
       setTheme: (t) => {
         setThemeState(t);
         onThemeChange?.(t);
       },
     }),
-    [theme, resolvedTheme, density, messages, material, onThemeChange],
+    [theme, resolvedTheme, density, messages, material, buttonFinish, onThemeChange],
   );
 
   return (
     <NorthstarContext.Provider value={value}>
-      <div {...rest} className={cx('ns-root', className)} data-theme={attrTheme} data-density={density}>
+      <div {...rest} className={cx('ns-root', className)} data-theme={attrTheme} data-density={density} data-button-finish={buttonFinish}>
         {children}
       </div>
     </NorthstarContext.Provider>
   );
 }
 
-/** Renders into document.body, carrying the provider's theme and density. */
+/** Renders into document.body, carrying the provider's theme, density and button finish. */
 export function Portal({ children }: { children: React.ReactNode }) {
-  const { theme, resolvedTheme, density } = useNorthstar();
+  const { theme, resolvedTheme, density, buttonFinish } = useNorthstar();
   // The host exists from the first client render and is attached in a layout
   // effect, so by the time any passive effect (focus trap, initial focus) runs
   // the content is in the document. On the server nothing is rendered.
@@ -194,7 +211,8 @@ export function Portal({ children }: { children: React.ReactNode }) {
     if (!host) return;
     host.setAttribute('data-theme', theme === 'system' ? resolvedTheme : theme);
     host.setAttribute('data-density', density);
-  }, [host, theme, resolvedTheme, density]);
+    host.setAttribute('data-button-finish', buttonFinish);
+  }, [host, theme, resolvedTheme, density, buttonFinish]);
   useIsoLayoutEffect(() => {
     if (!host) return;
     document.body.appendChild(host);

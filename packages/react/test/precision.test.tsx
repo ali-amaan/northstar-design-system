@@ -9,8 +9,9 @@ import { tokens } from '@northstar-js/tokens';
 import { studyAurora as study } from '@northstar-js/contracts/fixtures';
 import {
   Badge, Breadcrumbs, Button, Card, FlowStep, FlowSteps, IconButton, LIQUID, LiquidGlass, Menu, NextAction, Pagination, Surface, Tabs, Tag,
-  Toolbar, ToolbarItem,
+  NorthstarProvider, Portal, Toolbar, ToolbarItem,
 } from '../src/index.js';
+import { ConstellationButton } from '../src/effects/index.js';
 import { ExportMenu, ResearchBuilder, RunCost, StudyShell, StudyStatus } from '../src/northstar/index.js';
 import { expectNoAxeViolations } from './a11y.js';
 
@@ -216,46 +217,140 @@ describe('ExpandLabel across the system', () => {
   });
 });
 
-describe('brushed silver on glass', () => {
-  it('tone="silver" asks for silver anywhere; material="solid" marks the opt-out', () => {
+const SPIN = ":is(.ns-button, .ns-fx-cbutton):not(.ns-button--glass, [data-finish='soft'], [data-button-finish='soft'] :not([data-finish='spin']))";
+const fxCss = readFileSync(join(__dirname, '../src/effects.css'), 'utf8');
+
+describe('machined spin finish', () => {
+  it('is the default finish of every button; finish="soft" and the provider opt out; tone="silver" is an alias', () => {
     render(
       <div>
+        <Button>Default</Button>
+        <Button finish="soft">Soft</Button>
         <Button tone="silver">Silver</Button>
-        <Button material="solid">Solid</Button>
+        <IconButton label="Add" icon={<Glyph />} finish="soft" />
+        <NorthstarProvider buttonFinish="soft" data-testid="soft-root">
+          <Button>Inherits soft</Button>
+          <Button finish="spin">Own spin</Button>
+          <Button tone="silver">Silver alias</Button>
+          <Toolbar label="T">
+            <ToolbarItem label="Run" icon={<Glyph />} />
+          </Toolbar>
+        </NorthstarProvider>
       </div>,
     );
+    const finish = (name: string) => screen.getByRole('button', { name }).getAttribute('data-finish');
+    expect(finish('Default')).toBe('spin');
+    expect(finish('Soft')).toBe('soft');
+    expect(finish('Silver')).toBe('spin');
     expect(screen.getByRole('button', { name: 'Silver' }).className).toContain('ns-button--silver');
-    expect(screen.getByRole('button', { name: 'Solid' }).getAttribute('data-material')).toBe('solid');
+    expect(finish('Add')).toBe('soft');
+    expect(finish('Inherits soft')).toBe('soft');
+    expect(finish('Own spin')).toBe('spin');
+    expect(finish('Silver alias')).toBe('spin');
+    expect(finish('Run')).toBe('soft');
+    expect(screen.getByTestId('soft-root').getAttribute('data-button-finish')).toBe('soft');
   });
 
-  it('turns on by itself inside liquid glass, glass surfaces and [data-material=glass], with every fallback', () => {
-    const sel = ".ns-button:is(.ns-button--silver, :where(.ns-liquid, .ns-material--glass, [data-material='glass']) :is(.ns-button--secondary, .ns-button--primary):not(.ns-button--glass, [data-material='solid']))";
-    expect(css.split(sel).length - 1).toBeGreaterThanOrEqual(8);
-    expect(css).toContain('var(--ns-material-silver-grain)');
-    // The glint follows the pointer, and holds still (--ns-sheen-*) under reduced motion.
-    expect(css).toContain('var(--ns-sheen-x, var(--ns-mx, 30%)) var(--ns-sheen-y, var(--ns-my, 0%))');
-    for (const m of ['@media (prefers-reduced-transparency: reduce)', '@media (forced-colors: active)', '@media (prefers-contrast: more)']) {
-      const blocks = css.split(m).slice(1).map((b) => b.slice(0, 600));
-      expect(blocks.some((b) => b.includes(sel)), m).toBe(true);
-    }
-  });
-
-  it('a button on glass tracks the pointer for its sheen', () => {
+  it('marks the provider root and portals, so plain .ns-button elements follow it through CSS', () => {
     render(
-      <LiquidGlass>
-        <Button>On glass</Button>
-      </LiquidGlass>,
+      <NorthstarProvider buttonFinish="soft">
+        <Portal>
+          <button type="button" className="ns-button ns-button--secondary">
+            Plain
+          </button>
+        </Portal>
+      </NorthstarProvider>,
     );
-    const b = screen.getByRole('button', { name: 'On glass' });
-    fireEvent.pointerMove(b, { clientX: 4, clientY: 4 });
-    expect(b.hasAttribute('data-pointer')).toBe(true);
+    expect(document.querySelector('.ns-portal')?.getAttribute('data-button-finish')).toBe('soft');
+    expect(css).toContain("[data-button-finish='soft'] :not([data-finish='spin'])");
   });
 
-  it('ships silver tokens for both themes', () => {
+  it('Menu.Trigger and ConstellationButton take finish; unset they inherit', () => {
+    render(
+      <div>
+        <Menu.Root>
+          <Menu.Trigger className="ns-button ns-button--ghost ns-size-md" icon={<Glyph />} expand finish="soft">
+            More
+          </Menu.Trigger>
+          <Menu.Content>
+            <Menu.Item onSelect={() => {}}>Archive</Menu.Item>
+          </Menu.Content>
+        </Menu.Root>
+        <ConstellationButton finish="soft">Soft star</ConstellationButton>
+        <ConstellationButton>Spin star</ConstellationButton>
+      </div>,
+    );
+    expect(screen.getByRole('button', { name: 'More' }).getAttribute('data-finish')).toBe('soft');
+    expect(screen.getByRole('button', { name: 'Soft star' }).getAttribute('data-finish')).toBe('soft');
+    expect(screen.getByRole('button', { name: 'Spin star' }).hasAttribute('data-finish')).toBe(false);
+    expect(fxCss).toMatch(/\.ns-fx-cbutton::after \{[^}]*repeating-linear-gradient/);
+  });
+
+  it('a spin button tracks the pointer and writes -1..1 ratios for the turning sweep', async () => {
+    render(<Button>Spin</Button>);
+    const b = screen.getByRole('button', { name: 'Spin' });
+    b.getBoundingClientRect = () => ({ left: 0, top: 0, width: 100, height: 40, right: 100, bottom: 40, x: 0, y: 0, toJSON: () => ({}) });
+    // jsdom's PointerEvent carries no coordinates, so move with a MouseEvent of the same type.
+    b.dispatchEvent(new MouseEvent('pointermove', { clientX: 100, clientY: 10, bubbles: true }));
+    expect(b.hasAttribute('data-pointer')).toBe(true);
+    await new Promise((r) => setTimeout(r, 40));
+    expect(b.style.getPropertyValue('--ns-pointer-x')).toBe('1.000');
+    expect(b.style.getPropertyValue('--ns-pointer-y')).toBe('-0.500');
+    fireEvent.pointerLeave(b);
+    expect(b.style.getPropertyValue('--ns-pointer-x')).toBe('');
+  });
+
+  it('draws the metal in ::before (conic sweep and concentric grain, both centred) and the sliding band in ::after', () => {
+    expect(css).toContain("@property --ns-spin-angle { syntax: '<angle>'; inherits: false; initial-value: 200deg; }");
+    const before = css.slice(css.indexOf(`${SPIN}::before {`));
+    expect(before).toMatch(/repeating-radial-gradient\(circle at 50% 50%, var\(--ns-spin-grain-dark\) 0 1px, var\(--ns-spin-grain\) 1px 2px\)/);
+    expect(before).toMatch(/conic-gradient\(from var\(--ns-spin-angle\) at 50% 50%, var\(--ns-spin-1\), var\(--ns-spin-2\) 8%/);
+    expect(css).toContain(`${SPIN}::after {\n  inset: -1px;`);
+    expect(css).toContain('linear-gradient(100deg, transparent 30%, var(--ns-material-spin-sheen) 50%, transparent 70%) 120% 0 / 260% 100% no-repeat');
+    expect(css).toContain(`${SPIN}:is(:hover, :focus-visible):not(:disabled)::after { background-position: -20% 0; }`);
+    expect(css).toContain('var(--ns-pointer-x, 0) * var(--ns-material-spin-turn)');
+    expect(css).toContain(`${SPIN}:focus-visible { outline: 2px solid var(--ns-color-focus); outline-offset: 3px; }`);
+    // Glacier-anodized primary and signal; ghost wash; matte disabled.
+    expect(css).toContain(`${SPIN}:is(.ns-button--primary, .ns-fx-cbutton--primary, .ns-tone-signal:not(.ns-button--ghost)) {\n  --ns-spin-1: var(--ns-material-spin-signal-stop-1);`);
+    expect(css).toContain(`${SPIN}.ns-button--ghost { --ns-spin-on: 0; }`);
+    expect(css).toContain('--ns-spin-on: var(--ns-material-spin-ghost);');
+    expect(css).toContain(`${SPIN}:disabled:not([data-loading])::before { background: var(--ns-material-spin-matte); }`);
+    // One metal system: the brushed silver finish is gone.
+    expect(css).not.toContain('--ns-material-silver');
+  });
+
+  it('has every fallback: no grain, flat and outlined, system colours, and no motion', () => {
+    const tail = css.slice(css.indexOf('machined spin fallbacks'));
+    const block = (m: string) => tail.slice(tail.indexOf(m), tail.indexOf('\n}\n', tail.indexOf(m)));
+    expect(block('@media (prefers-reduced-transparency: reduce)')).toContain('--ns-spin-grain: transparent; --ns-spin-grain-dark: transparent;');
+    expect(block('@media (prefers-contrast: more)')).toContain('background: var(--ns-spin-2);');
+    expect(block('@media (prefers-contrast: more)')).toContain('box-shadow: 0 0 0 1px var(--ns-spin-ink);');
+    expect(block('@media (forced-colors: active)')).toContain('background: ButtonFace;');
+    const rm = block('@media (prefers-reduced-motion: reduce)');
+    expect(rm).toContain(`${SPIN}::after { display: none; }`);
+    expect(rm).toContain('--ns-spin-angle: var(--ns-material-spin-angle);');
+  });
+
+  it('ships spin tokens for both themes', () => {
     for (const t of ['night', 'day'] as const) {
       const roles = tokens.themes[t] as Record<string, string>;
-      for (const k of ['hi', 'lo', 'signal-hi', 'signal-lo', 'ink', 'grain', 'sheen']) expect(roles[`material.silver.${k}`], `${t} ${k}`).toBeDefined();
+      for (const k of ['stop.1', 'stop.7', 'signal-stop.1', 'ink', 'signal-ink', 'grain-dark', 'sheen', 'shadow', 'shadow-press', 'ghost', 'matte', 'matte-ink'])
+        expect(roles[`material.spin.${k}`], `${t} ${k}`).toBeDefined();
     }
+  });
+
+  it('every variant, size and the icon circles pass axe with the spin finish', async () => {
+    render(
+      <div>
+        <Button variant="primary">Run</Button>
+        <Button>Secondary</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button disabled>Disabled</Button>
+        <IconButton label="Search" icon={<Glyph />} size="lg" />
+        <IconButton label="Copy" icon={<Glyph />} expand />
+      </div>,
+    );
+    await expectNoAxeViolations();
   });
 });
 
@@ -308,7 +403,7 @@ describe('pill buttons and tactile texture', () => {
     expect(screen.getByRole('button', { name: 'Search' }).className).toContain('ns-button--rounded');
     expect(css).toMatch(/--ns-button-radius: var\(--ns-radius-control-pill\);\s+border-radius: var\(--ns-button-radius\);/);
     expect(css).toContain('.ns-button.ns-button--rounded,');
-    expect(css).toMatch(/\.ns-button\.ns-button--rounded:is\(\.ns-button--glass, \.ns-button--silver\) \{ --ns-button-radius: var\(--ns-radius-glass-control\); \}/);
+    expect(css).toContain('.ns-button.ns-button--rounded.ns-button--glass { --ns-button-radius: var(--ns-radius-glass-control); }');
     expect(parseFloat((tokens.scales as Record<string, string>)['radius.control.pill']!)).toBeGreaterThanOrEqual(999);
   });
 
@@ -328,7 +423,7 @@ describe('pill buttons and tactile texture', () => {
     expect(css).toContain('.ns-toolbar .ns-toolbar__item { border-radius: var(--ns-button-radius); }');
   });
 
-  it('tabs, pagination and the silver finish are pills too, each with a rounded opt-out', () => {
+  it('tabs, pagination and the spin finish are pills too, each with a rounded opt-out', () => {
     render(
       <div>
         <Tabs.Root defaultValue="a" indicator="glass" shape="rounded" data-testid="tabs">
@@ -342,11 +437,11 @@ describe('pill buttons and tactile texture', () => {
     expect(screen.getByTestId('tabs').className).toContain('ns-tabs--rounded');
     expect(screen.getByTestId('pages').className).toContain('ns-pagination--rounded');
     expect(css).toContain('.ns-tabs--pill .ns-tabs__indicator { background: var(--ns-color-surface-3); box-shadow: inset 0 0 0 1px var(--ns-color-line-2); border-radius: var(--ns-radius-control-pill); }');
-    const silver = css.slice(css.indexOf('  --ns-silver-ring:'), css.indexOf('  --ns-silver-ring:') + 400);
-    expect(silver).toContain('border-radius: var(--ns-button-radius);');
+    // The metal follows the button's radius, so pills, circles and rounded corners all hold.
+    expect(css).toMatch(/:not\(\[data-finish='spin'\]\)\)::before \{\s+content: '';\s+position: absolute;\s+inset: -1px;\s+z-index: -1;\s+border-radius: inherit;/);
   });
 
-  it('carries a fine brushed texture per variant and theme, ghost only on hover, off on silver and glass', () => {
+  it('the soft finish carries a fine brushed texture per variant and theme, ghost only on hover, off on spin and glass', () => {
     for (const t of ['night', 'day'] as const) {
       const roles = tokens.themes[t] as Record<string, string>;
       for (const k of ['light', 'dark', 'top', 'bevel-hi', 'bevel-lo']) {
@@ -358,10 +453,8 @@ describe('pill buttons and tactile texture', () => {
     expect(css).toMatch(/\.ns-button--primary \{\s+--ns-tex-light: var\(--ns-material-texture-signal-light\);/);
     expect(css).toContain(".ns-button:is(.ns-button--secondary, .ns-button--primary) { --ns-tex-on: 1; }");
     expect(css).toContain(".ns-button.ns-button--ghost:is(:hover, :focus-visible, [aria-expanded='true'], [aria-current='page']):not(:disabled, .ns-button--glass) { --ns-tex-on: 1; }");
-    const silver = css.slice(css.indexOf('  --ns-silver-ring:') - 200, css.indexOf('  --ns-silver-ring:') + 200);
-    expect(silver).toContain('--ns-tex-on: 0;');
+    expect(css).toContain(`${SPIN} {\n  --ns-tex-on: 0;`);
     const fallbacks = css.slice(css.indexOf('shape and texture fallbacks'));
     for (const m of ['prefers-reduced-transparency: reduce', 'prefers-contrast: more', 'forced-colors: active', 'prefers-reduced-motion: reduce']) expect(fallbacks, m).toContain(m);
-    expect(fallbacks).toContain('--ns-sheen-x: 30%');
   });
 });

@@ -1,5 +1,5 @@
 'use client';
-import { useNorthstar, type Material } from './provider.js';
+import { useNorthstar, type ButtonFinish, type Material } from './provider.js';
 import { usePointerTracking } from './internal/interaction.js';
 import { cx, mergeRefs, type Size, type Tone } from './internal/util.js';
 import { rovingKeyDown } from './internal/layers.js';
@@ -7,10 +7,8 @@ import { ExpandIcon, ExpandLabel, expandHost, type Expand } from './internal/exp
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 /**
- * `silver` is the brushed-metal finish. Secondary and primary buttons take it
- * on their own inside liquid glass (`.ns-liquid`, `material="glass"` surfaces,
- * or any `[data-material="glass"]` ancestor); `tone="silver"` asks for it
- * anywhere, and `material="solid"` opts a button out on glass.
+ * `silver` is an alias for the machined spin finish (`finish="spin"`), kept
+ * for the brushed-silver API it replaced. Spin is the default everywhere now.
  */
 export type ButtonTone = Tone | 'silver';
 /**
@@ -20,15 +18,20 @@ export type ButtonTone = Tone | 'silver';
  */
 export type ButtonShape = 'pill' | 'rounded';
 
-/** Where silver turns on by itself. */
-const GLASS_HOST = '.ns-liquid, .ns-material--glass, [data-material="glass"]';
-
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: Size;
   tone?: ButtonTone;
   /** Default `pill`; `rounded` opts out of the pill shape. */
   shape?: ButtonShape;
+  /**
+   * `spin`: machined metal, a conic sweep under a fine concentric grain that
+   * turns with the pointer, Glacier-anodized on primary; ghost takes a faint
+   * wash of it on hover and focus; icon-only circles are turned knobs.
+   * `soft`: the tonal fill with the tactile texture. Default: the provider's
+   * `buttonFinish` (`spin`). Glass buttons (`material="glass"`) keep glass.
+   */
+  finish?: ButtonFinish;
   /** Leading icon (decorative; the label names the button). */
   icon?: React.ReactNode;
   /**
@@ -74,6 +77,7 @@ export function Button({
   size = 'md',
   tone = 'neutral',
   shape = 'pill',
+  finish: finishProp,
   icon,
   expand = false,
   loading = false,
@@ -92,11 +96,10 @@ export function Button({
   const ns = useNorthstar();
   const glass = material === 'glass';
   const silver = tone === 'silver';
-  // Silver's sheen follows the pointer, so buttons that will be silver track it.
-  const track = usePointerTracking<HTMLButtonElement>(
-    magnetic || glass || silver || ((el) => variant !== 'ghost' && material !== 'solid' && !!el.parentElement?.closest(GLASS_HOST)),
-    { magnetic: magnetic ? 4 : 0 },
-  );
+  const finish: ButtonFinish = finishProp ?? (silver ? 'spin' : ns.buttonFinish);
+  const spin = finish === 'spin' && !glass;
+  // The spin sweep turns with the pointer and glass's spotlight follows it, so both track it.
+  const track = usePointerTracking<HTMLButtonElement>(magnetic || glass || spin, { magnetic: magnetic ? 4 : 0 });
   const done = success && !loading;
   const host = icon !== undefined && icon !== null && icon !== false ? expandHost(expand) : {};
   const expanding = !!host.className;
@@ -119,6 +122,7 @@ export function Button({
       )}
       data-expand={host['data-expand']}
       data-shape={shape}
+      data-finish={finish}
       data-material={material}
       disabled={disabled || loading}
       aria-busy={loading || undefined}

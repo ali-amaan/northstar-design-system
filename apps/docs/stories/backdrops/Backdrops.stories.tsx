@@ -37,7 +37,7 @@ const TITLES: Record<BackdropVariant, string> = {
   'galaxy-3d': 'Galaxy in depth',
 };
 
-/** A sample glass card on the backdrop: the glass has something to bend, and its buttons are silver pills. */
+/** A sample glass card on the backdrop: the glass has something to bend, and its buttons are machined spin pills. */
 function GlassCard({ title, compact = false }: { title: string; compact?: boolean }) {
   return (
     <LiquidGlass style={{ position: 'relative', width: compact ? 216 : 280, padding: compact ? 14 : 18 }}>
@@ -75,7 +75,7 @@ function Board({ theme }: { theme: ResolvedTheme }) {
   );
 }
 
-/** Every variant behind a sample liquid-glass card with silver pill buttons, in Night and in Day. */
+/** Every variant behind a sample liquid-glass card with machined spin pill buttons, in Night and in Day. */
 export const All: Story = {
   render: () => (
     <div>

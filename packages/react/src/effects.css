@@ -182,8 +182,10 @@
 .ns-fx-size-sm { height: var(--ns-size-control-sm); padding: 0 12px; font-size: var(--ns-font-size-12); }
 .ns-fx-size-lg { height: var(--ns-size-control-lg); padding: 0 20px; }
 .ns-fx-cbutton--rounded { border-radius: var(--ns-radius-control-rounded); }
-/* The same tactile texture as every button (styles.css): brushed lines, a
-   soft top highlight and a low bevel, under the label and the burst. */
+/* The soft finish (finish="soft"): the same tactile texture as every soft
+   button (styles.css), brushed lines, a soft top highlight and a low bevel,
+   under the label and the burst. The default machined spin finish lives in
+   styles.css with every other button's and overrides this. */
 .ns-fx-cbutton::after {
   content: '';
   position: absolute;

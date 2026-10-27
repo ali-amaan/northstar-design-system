@@ -26,7 +26,9 @@ export interface PointerOptions {
 /**
  * Tracks the pointer over an element, rAF-throttled, and writes
  * `--ns-mx` / `--ns-my` (px from the top-left, for spotlights and specular
- * highlights) and, when magnetic, `--ns-mag-x` / `--ns-mag-y`. Touch is
+ * highlights), `--ns-pointer-x` / `--ns-pointer-y` (unitless, -1 at the
+ * left/top edge to 1 at the right/bottom, for the spin finish's turning
+ * sweep) and, when magnetic, `--ns-mag-x` / `--ns-mag-y`. Touch is
  * ignored; the pointer effects are a hover affordance and keyboard focus gets
  * an equivalent centred highlight from CSS.
  */
@@ -53,9 +55,12 @@ export function usePointerTracking<T extends HTMLElement>(enabled: boolean | ((e
         const y = last.clientY - r.top;
         el.style.setProperty('--ns-mx', `${x.toFixed(1)}px`);
         el.style.setProperty('--ns-my', `${y.toFixed(1)}px`);
-        if (magnetic > 0 && !prefersReducedMotion() && r.width > 0 && r.height > 0) {
-          const dx = (x / r.width - 0.5) * 2;
-          const dy = (y / r.height - 0.5) * 2;
+        if (r.width <= 0 || r.height <= 0) return;
+        const dx = Math.max(-1, Math.min(1, (x / r.width - 0.5) * 2));
+        const dy = Math.max(-1, Math.min(1, (y / r.height - 0.5) * 2));
+        el.style.setProperty('--ns-pointer-x', dx.toFixed(3));
+        el.style.setProperty('--ns-pointer-y', dy.toFixed(3));
+        if (magnetic > 0 && !prefersReducedMotion()) {
           el.style.setProperty('--ns-mag-x', `${(dx * magnetic).toFixed(2)}px`);
           el.style.setProperty('--ns-mag-y', `${(dy * magnetic).toFixed(2)}px`);
         }
@@ -71,6 +76,8 @@ export function usePointerTracking<T extends HTMLElement>(enabled: boolean | ((e
         if (frame) caf(frame);
         frame = 0;
         el.removeAttribute('data-pointer');
+        el.style.removeProperty('--ns-pointer-x');
+        el.style.removeProperty('--ns-pointer-y');
         el.style.removeProperty('--ns-mag-x');
         el.style.removeProperty('--ns-mag-y');
       };

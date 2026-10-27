@@ -1,0 +1,14 @@
+---
+"@northstar-js/tokens": minor
+"@northstar-js/react": minor
+---
+
+Machined spin: the default finish of every button, on glass and off it.
+
+**React.** Buttons are machined metal by default: a conic sweep of seven machined stops under a fine concentric grain, both centred on the button, so an icon-only circle is a turned knob. A light band slides across on hover and keyboard focus, the metal brightens a touch, and while hovered the sweep turns a few degrees with the pointer (an `@property` angle, so it eases; without a pointer it holds still). Pressing drops the button a pixel, scales it to 0.985, dims it and flips the bevel. Focus is a 2px Glacier ring standing 3px off. Primary and `tone="signal"` are Glacier-anodized. Ghost has no metal at rest and takes a faint wash of it on hover, focus, an open menu and the current page. Disabled is matte and flat (loading keeps its metal). It covers `Button`, `IconButton`, `ToolbarItem`, `Menu.Trigger`, icon-first expand hosts, `ButtonGroup`, `Pagination`, toast and layer close buttons, `RunCost`, `RunConfirm`, `ExportMenu` and the effects `ConstellationButton`; pills, circles and `shape="rounded"` are unchanged. Glass buttons (`material="glass"`) keep glass.
+
+New `finish="spin" | "soft"` on `Button`, `IconButton`, `ToolbarItem`, `Menu.Trigger` and `ConstellationButton`, and `NorthstarProvider buttonFinish` (default `spin`). `soft` is the previous tonal fill with the tactile texture. The provider also writes `data-button-finish` on its root and on portals, so plain `.ns-button` elements follow it through CSS. Buttons emit `data-finish`. `usePointerTracking` also writes `--ns-pointer-x` and `--ns-pointer-y` (-1 to 1).
+
+Spin replaces brushed silver as the one metal system. `tone="silver"` stays as an alias for `finish="spin"` (it still adds `ns-button--silver`). `material="solid"` no longer means anything special on glass; use `finish="soft"` to opt a button out. Fallbacks: reduced transparency drops the grain, `prefers-contrast: more` flattens to the lightest stop with an ink outline, forced colours use system button colours, and reduced motion removes the sliding band and the turning sweep.
+
+**Tokens.** New per-theme `material.spin.*`: `stop.1`–`stop.7` and `signal-stop.1`–`signal-stop.7` (the secondary and Glacier bodies), `ink`, `signal-ink`, `grain-dark`, `grain-light`, `signal-grain-light`, `emboss`, `sheen`, `shadow`, `shadow-press`, `ghost` (wash opacity), `ghost-edge`, `matte` and `matte-ink`. New scales `material.spin.sweep` (700ms, zeroed under reduced motion), `sweep-easing`, `turn`, `angle` and `press`. Removed: `material.silver.*`. `material.texture.*` is now the soft finish's texture. The contrast gate checks the ink on the lightest stop of each body (light grain over it) and the darkest (dark grain over it, dimmed as when pressed) at 4.5:1, ghost text on the faint wash over every surface at 4.5:1, and the disabled ink on matte at 3:1, in Night and Day.
