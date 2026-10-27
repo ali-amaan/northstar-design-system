@@ -1,11 +1,18 @@
 {
   "name": "@northstar-js/tooling-icon-lint",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "CI gate: Northstar instrument icons sit on the 20×20 grid, use 1 / 1.5 strokes, currentColor only, kebab-case names and a title.",
-  "exports": { ".": { "types": "./src/types.d.ts", "default": "./src/index.js" } },
-  "bin": { "icon-lint": "./src/cli.js" },
+  "exports": {
+    ".": {
+      "types": "./src/types.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "bin": {
+    "icon-lint": "./src/cli.js"
+  },
   "scripts": {
     "check": "node src/cli.js ../../packages/icons/src/svg ../../packages/icons/src/manifest.json",
     "typecheck": "tsc -p tsconfig.json",

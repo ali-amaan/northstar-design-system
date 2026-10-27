@@ -1,6 +1,6 @@
 {
   "name": "@northstar-js/charts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Star-native figures and data visualisation for Northstar: React SVG components styled by --ns-* CSS variables.",
   "license": "MIT",
   "type": "module",

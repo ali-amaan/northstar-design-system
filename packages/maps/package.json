@@ -1,6 +1,6 @@
 {
   "name": "@northstar-js/maps",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "World and country star maps for Northstar: Equal Earth world, LAEA per country, market-status marks, 241 map files per theme.",
   "license": "MIT",
   "type": "module",
